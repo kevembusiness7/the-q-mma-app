@@ -3,19 +3,21 @@ import { AthletesPage } from './pages/AthletesPage';
 import { TheQPage } from './pages/TheQPage';
 import { ShopPage } from './pages/ShopPage';
 import { ProductPage } from './pages/ProductPage';
+import { FighterPage } from './pages/FighterPage';
 import { CartPage } from './pages/CartPage';
 import { CoachesPage, SponsorsPage, YouPage } from './pages/AccountAndInfoPages';
 import { CartProvider } from './context/CartContext';
 import { NavigationProvider, useNav, type Tab } from './context/NavigationContext';
 
 /**
- * Decide o que renderizar. Telas internas (produto, coaches, sponsors) ficam
- * por cima da aba — o botão de voltar fecha e devolve a aba de trás.
+ * Decide o que renderizar. Telas internas (produto, atleta, coaches, sponsors)
+ * ficam por cima da aba — o botão de voltar fecha e devolve a aba de trás.
  */
 function Screens() {
   const { tab, overlay, goToTab, openOverlay } = useNav();
 
   if (overlay?.name === 'product') return <ProductPage productId={overlay.productId} />;
+  if (overlay?.name === 'fighter') return <FighterPage slug={overlay.slug} />;
   if (overlay?.name === 'coaches') return <CoachesPage />;
   if (overlay?.name === 'sponsors') return <SponsorsPage />;
 

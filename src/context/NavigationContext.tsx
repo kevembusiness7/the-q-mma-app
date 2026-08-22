@@ -5,12 +5,13 @@ export type Tab = 'theq' | 'athletes' | 'shop' | 'cart' | 'you';
 
 /**
  * Telas que não são abas — abrem por cima e voltam com o botão de voltar.
- * `product` guarda qual produto está aberto.
+ * `product` guarda qual produto está aberto, `fighter` qual atleta.
  */
 export type Overlay =
   | { name: 'coaches' }
   | { name: 'sponsors' }
   | { name: 'product'; productId: string }
+  | { name: 'fighter'; slug: string }
   | null;
 
 interface NavValue {

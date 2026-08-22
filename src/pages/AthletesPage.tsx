@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAthletes } from '../hooks/useAthletes'
+import { useNav } from '../context/NavigationContext'
 import { AthleteHeader } from '../components/athletes/AthleteHeader'
 import { AthleteSelector } from '../components/athletes/AthleteSelector'
 import { AthleteHero } from '../components/athletes/AthleteHero'
@@ -9,6 +10,7 @@ import { AthleteAbout } from '../components/athletes/AthleteAbout'
 
 export function AthletesPage() {
   const { athletes, loading, error, usingMockData } = useAthletes()
+  const { openOverlay } = useNav()
   const [selectedId, setSelectedId] = useState<string | null>(null)
 
   const selected = athletes.find((a) => a.id === selectedId) ?? athletes[0]
@@ -54,7 +56,11 @@ export function AthletesPage() {
       <AthleteHero athlete={selected} />
 
       <div className="flex gap-2.5 px-4 mt-4">
-        <button className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-gold-metallic px-4 py-3.5 text-xs font-semibold uppercase tracking-wide text-black glow-gold active:scale-[0.98] transition-transform">
+        <button
+          type="button"
+          onClick={() => openOverlay({ name: 'fighter', slug: selected.slug })}
+          className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-gold-metallic px-4 py-3.5 text-xs font-semibold uppercase tracking-wide text-black glow-gold active:scale-[0.98] transition-transform"
+        >
           View Full Profile
           <span aria-hidden>→</span>
         </button>

@@ -1,0 +1,420 @@
+/* Perfil completo do atleta. Valores copiados do mockup. */
+
+.fighter-hero {
+  position: relative;
+  height: 270px;
+  overflow: hidden;
+  background: #0b0908;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 18px;
+}
+
+.fighter-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.22) 0 1px, transparent 1px 6px);
+}
+
+.fh-back {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 6;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(10, 9, 8, 0.6);
+  display: grid;
+  place-items: center;
+  color: var(--q-bone, #ede7de);
+  border: none;
+  cursor: pointer;
+}
+
+.fh-back svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* A foto é PNG recortado, então fica contida e centralizada — não cortada. */
+.fh-photo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  height: 90%;
+  width: auto;
+  max-width: 86%;
+  object-fit: contain;
+  z-index: 2;
+  filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.5)) saturate(0.95) contrast(1.04);
+}
+
+/* Escurece a base para o nome ficar legível por cima da foto. */
+.fh-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 9, 8, 0.15) 0%,
+    rgba(11, 9, 8, 0) 32%,
+    rgba(11, 9, 8, 0.72) 74%,
+    rgba(11, 9, 8, 0.94) 100%
+  );
+}
+
+.fighter-hero .nick,
+.fighter-hero h2,
+.fighter-hero .recordrow {
+  position: relative;
+  z-index: 4;
+  text-align: center;
+}
+
+.fighter-hero .nick {
+  font-family: var(--q-mono, monospace);
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--q-gold, #c8a03c);
+}
+
+.fighter-hero h2 {
+  font-family: var(--q-display, Impact, sans-serif);
+  font-size: 44px;
+  line-height: 0.86;
+  margin: 8px 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+  text-shadow: 0 3px 18px rgba(11, 9, 8, 0.85);
+}
+
+.recordrow {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.recordrow div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.recordrow b {
+  font-family: var(--q-mono, monospace);
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.recordrow i {
+  font-style: normal;
+  font-family: var(--q-mono, monospace);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--q-dust, #948a81);
+  text-transform: uppercase;
+}
+
+.followbar {
+  display: flex;
+  gap: 10px;
+  padding: 14px 18px;
+}
+
+.followbar .btn {
+  flex: 1;
+}
+
+/* ------------------------------------------------------------ abas ------ */
+
+.tabs {
+  display: flex;
+  gap: 6px;
+  padding: 4px 18px 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--q-line, #332c29);
+  margin-bottom: 18px;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  flex: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-family: var(--q-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--q-dust, #948a81);
+  border: 1px solid transparent;
+  background: none;
+  cursor: pointer;
+}
+
+.tab.on {
+  color: var(--q-bone, #ede7de);
+  border-color: var(--q-line, #332c29);
+  background: var(--q-canvas, #1d1917);
+}
+
+.panel {
+  padding: 0 18px 8px;
+}
+
+.panel-intro {
+  font-size: 12px;
+  color: var(--q-dust, #948a81);
+  line-height: 1.6;
+  margin: 0 0 14px;
+}
+
+/* A grade dentro do painel já tem padding do .panel. */
+.grid-flush {
+  padding: 0 0 26px;
+}
+
+/* ------------------------------------------------------- luta / card ---- */
+
+.fightcard {
+  border: 1px solid var(--q-line, #332c29);
+  border-radius: 12px;
+  background: var(--q-canvas, #1d1917);
+  padding: 14px;
+  margin-bottom: 14px;
+}
+
+.fightcard.next {
+  border-color: var(--q-blood, #b0301f);
+  background: linear-gradient(150deg, #2a1512, var(--q-canvas, #1d1917));
+}
+
+.fightcard .when {
+  font-family: var(--q-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--q-gold, #c8a03c);
+  margin-bottom: 8px;
+}
+
+.fightcard .vs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.fightcard .vs strong {
+  font-family: var(--q-display, Impact, sans-serif);
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-weight: 400;
+}
+
+.fightcard .vs em {
+  font-style: normal;
+  font-family: var(--q-mono, monospace);
+  font-size: 10px;
+  color: var(--q-dust, #948a81);
+}
+
+.fightcard .where {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--q-dust, #948a81);
+}
+
+.boutresult {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.boutpill {
+  font-family: var(--q-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 3px;
+}
+
+.boutpill.win {
+  background: var(--q-live, #4fb477);
+  color: #0a0908;
+}
+
+.boutpill.loss {
+  background: var(--q-blood, #b0301f);
+  color: #fff;
+}
+
+.boutresult small {
+  font-family: var(--q-mono, monospace);
+  font-size: 10px;
+  color: var(--q-dust, #948a81);
+}
+
+/* --------------------------------------------------------- cartel ------- */
+
+.recsum {
+  margin-top: 14px;
+  border: 1px solid var(--q-line, #332c29);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  background: var(--q-canvas, #1d1917);
+}
+
+.recsum div {
+  text-align: center;
+}
+
+.recsum b {
+  display: block;
+  font-family: var(--q-mono, monospace);
+  font-size: 16px;
+}
+
+.recsum i {
+  font-style: normal;
+  display: block;
+  font-family: var(--q-mono, monospace);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--q-dust, #948a81);
+  margin-top: 3px;
+}
+
+.reclist {
+  margin-top: 12px;
+  margin-bottom: 26px;
+  border: 1px solid var(--q-line, #332c29);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.boutrow {
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+  padding: 12px 13px;
+  border-bottom: 1px solid var(--q-line, #332c29);
+}
+
+.boutrow:last-child {
+  border-bottom: 0;
+}
+
+.boutres {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  display: grid;
+  place-items: center;
+  font-family: var(--q-mono, monospace);
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--q-live, #4fb477);
+  color: #0a0908;
+}
+
+.boutres.l {
+  background: var(--q-blood, #b0301f);
+  color: #fff;
+}
+
+.boutres.u {
+  background: #100d0c;
+  color: var(--q-dust, #948a81);
+  border: 1px solid var(--q-line, #332c29);
+  font-size: 9px;
+}
+
+.boutmain {
+  flex: 1;
+  min-width: 0;
+}
+
+.boutmain b {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+
+.boutmain small {
+  display: block;
+  font-family: var(--q-mono, monospace);
+  font-size: 10px;
+  color: var(--q-dust, #948a81);
+  margin-top: 3px;
+  line-height: 1.45;
+}
+
+.boutrec {
+  flex: none;
+  font-family: var(--q-mono, monospace);
+  font-size: 11px;
+  color: var(--q-dust, #948a81);
+  padding-top: 3px;
+}
+
+/* ------------------------------------------------------- aba Profile ---- */
+
+.camplist {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--q-line, #332c29);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 26px;
+}
+
+.camprow {
+  display: flex;
+  gap: 12px;
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--q-line, #332c29);
+  align-items: center;
+}
+
+.camprow:last-child {
+  border-bottom: 0;
+}
+
+.camprow small {
+  display: block;
+  color: var(--q-gold, #c8a03c);
+  font-family: var(--q-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.camprow .what {
+  font-size: 12.5px;
+  flex: 1;
+}
