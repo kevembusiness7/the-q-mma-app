@@ -1,3 +1,4 @@
+@import './styles/ios-webview.css';
 @import "tailwindcss";
 
 @theme {
