@@ -5,18 +5,25 @@ import '../styles/shop.css';
 
 export function CartPage() {
   const { lines, subtotal, setQuantity, remove } = useCart();
-  const { goToTab } = useNav();
+  const { closeOverlay, openOverlay } = useNav();
 
   if (lines.length === 0) {
     return (
       <div className="cart-screen">
         <header className="appbar">
-          <span className="wordmark">Cart</span>
+          <div className="appbar-lead">
+            <button type="button" className="appbar-back" onClick={closeOverlay} aria-label="Voltar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+                <path d="M15 5l-7 7 7 7" />
+              </svg>
+            </button>
+            <span className="wordmark">Cart</span>
+          </div>
         </header>
         <p className="empty">
           Seu carrinho está vazio.
           <br />
-          <button type="button" className="empty-link" onClick={() => goToTab('shop')}>
+          <button type="button" className="empty-link" onClick={() => openOverlay({ name: 'shop' })}>
             Ver a loja
           </button>
         </p>
@@ -27,7 +34,14 @@ export function CartPage() {
   return (
     <div className="cart-screen">
       <header className="appbar">
-        <span className="wordmark">Cart</span>
+        <div className="appbar-lead">
+          <button type="button" className="appbar-back" onClick={closeOverlay} aria-label="Voltar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+              <path d="M15 5l-7 7 7 7" />
+            </svg>
+          </button>
+          <span className="wordmark">Cart</span>
+        </div>
       </header>
 
       <div className="pad">

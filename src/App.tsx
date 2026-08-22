@@ -7,33 +7,17 @@ import { FighterPage } from './pages/FighterPage';
 import { CartPage } from './pages/CartPage';
 import { CoachesPage, SponsorsPage, YouPage } from './pages/AccountAndInfoPages';
 import { CartProvider } from './context/CartContext';
-import { NavigationProvider, useNav, type Tab } from './context/NavigationContext';
+import { NavigationProvider, useNav } from './context/NavigationContext';
 
 /**
- * Decide o que renderizar. Telas internas (produto, atleta, coaches, sponsors)
- * ficam por cima da aba — o botão de voltar fecha e devolve a aba de trás.
+ * The Q é a raiz do app. Todo o resto abre por cima dela, empilhado, e o
+ * botão de voltar de cada tela desempilha uma de cada vez — por isso
+ * Loja → Produto → voltar devolve para a loja, e não para a home.
  */
 function Screens() {
-  const { tab, overlay, goToTab, openOverlay } = useNav();
+  const { overlay, openOverlay } = useNav();
 
-  if (overlay?.name === 'product') return <ProductPage productId={overlay.productId} />;
-  if (overlay?.name === 'fighter') return <FighterPage slug={overlay.slug} />;
-  if (overlay?.name === 'coaches') return <CoachesPage />;
-  if (overlay?.name === 'sponsors') return <SponsorsPage />;
-
-  switch (tab) {
-    case 'theq':
-      return (
-        <TheQPage
-          onNavigate={(destino) => {
-            if (destino === 'coaches' || destino === 'sponsors') {
-              openOverlay({ name: destino });
-            } else {
-              goToTab(destino as Tab);
-            }
-          }}
-        />
-      );
+  switch (overlay?.name) {
     case 'athletes':
       return <AthletesPage />;
     case 'shop':
@@ -42,26 +26,26 @@ function Screens() {
       return <CartPage />;
     case 'you':
       return <YouPage />;
+    case 'coaches':
+      return <CoachesPage />;
+    case 'sponsors':
+      return <SponsorsPage />;
+    case 'product':
+      return <ProductPage productId={overlay.productId} />;
+    case 'fighter':
+      return <FighterPage slug={overlay.slug} />;
     default:
-      return null;
+      return <TheQPage onNavigate={(destino) => openOverlay({ name: destino })} />;
   }
-}
-
-function Shell() {
-  const { tab, goToTab } = useNav();
-
-  return (
-    <AppShell activeTab={tab} onTabChange={(next) => goToTab(next as Tab)}>
-      <Screens />
-    </AppShell>
-  );
 }
 
 function App() {
   return (
-    <NavigationProvider initialTab="theq">
+    <NavigationProvider>
       <CartProvider>
-        <Shell />
+        <AppShell>
+          <Screens />
+        </AppShell>
       </CartProvider>
     </NavigationProvider>
   );

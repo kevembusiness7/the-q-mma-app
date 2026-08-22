@@ -13,6 +13,51 @@
   padding: 0;
 }
 
+/* Âncora para o botão de conta, que flutua sobre a arte do hero. */
+.theq-hero {
+  position: relative;
+}
+
+/* Canto superior direito do hero. O respiro de cima cresce com a notch do
+   iPhone, senão o botão fica embaixo do relógio no modo tela cheia. */
+.theq-you {
+  position: absolute;
+  top: calc(12px + env(safe-area-inset-top, 0px));
+  right: 14px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--gold, #c8a03c);
+  border-radius: 50%;
+  color: var(--gold, #c8a03c);
+  /* A arte do hero é clara em algumas áreas; o fundo escuro garante que o
+     ícone continue legível independente do que estiver atrás. */
+  background: rgba(11, 9, 8, 0.62);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.theq-you svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.theq-you:active {
+  transform: scale(0.94);
+}
+
+.theq-you:focus-visible {
+  outline: 2px solid var(--gold, #c8a03c);
+  outline-offset: 2px;
+}
+
 .theq-hero img,
 .theq-section-banner img {
   width: 100%;

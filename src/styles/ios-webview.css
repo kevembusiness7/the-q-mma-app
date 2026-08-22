@@ -2,9 +2,9 @@
  * Ajustes de comportamento para quando o app roda em tela cheia no iPhone
  * (ícone na tela inicial ou dentro da WebView do shell Expo).
  *
- * O espaçamento da TabBar e do conteúdo agora é resolvido direto no
- * AppShell.tsx e no TabBar.tsx — aqui ficam só os ajustes de comportamento,
- * que não têm equivalente em classe do Tailwind.
+ * O espaçamento do conteúdo é resolvido direto no AppShell.tsx — aqui ficam
+ * só os ajustes de comportamento, que não têm equivalente em classe do
+ * Tailwind.
  */
 
 /* iOS aplica um destaque cinza ao tocar em qualquer coisa clicável.

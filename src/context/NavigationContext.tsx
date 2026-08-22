@@ -1,52 +1,54 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 
-/** As 5 abas da barra inferior. */
-export type Tab = 'theq' | 'athletes' | 'shop' | 'cart' | 'you';
-
 /**
- * Telas que não são abas — abrem por cima e voltam com o botão de voltar.
+ * Telas do app. The Q é a raiz e não entra na pilha — é o que aparece
+ * quando não há nada empilhado por cima.
+ *
  * `product` guarda qual produto está aberto, `fighter` qual atleta.
  */
-export type Overlay =
+export type Screen =
+  | { name: 'athletes' }
+  | { name: 'shop' }
+  | { name: 'cart' }
+  | { name: 'you' }
   | { name: 'coaches' }
   | { name: 'sponsors' }
   | { name: 'product'; productId: string }
-  | { name: 'fighter'; slug: string }
-  | null;
+  | { name: 'fighter'; slug: string };
 
 interface NavValue {
-  tab: Tab;
-  overlay: Overlay;
-  /** Troca de aba e fecha qualquer tela interna aberta. */
-  goToTab: (tab: Tab) => void;
-  openOverlay: (overlay: NonNullable<Overlay>) => void;
+  /** Pilha de telas abertas por cima da The Q. Vazia = está na home. */
+  stack: Screen[];
+  /** Topo da pilha, ou `null` quando o usuário está na The Q. */
+  overlay: Screen | null;
+  /** Empilha uma tela. O voltar dela devolve para a tela de baixo. */
+  openOverlay: (screen: Screen) => void;
+  /** Desempilha uma tela — o botão de voltar. */
   closeOverlay: () => void;
+  /** Esvazia a pilha e volta para a The Q. */
+  goHome: () => void;
 }
 
 const NavContext = createContext<NavValue | null>(null);
 
-export function NavigationProvider({
-  children,
-  initialTab = 'theq',
-}: {
-  children: ReactNode;
-  initialTab?: Tab;
-}) {
-  const [tab, setTab] = useState<Tab>(initialTab);
-  const [overlay, setOverlay] = useState<Overlay>(null);
+export function NavigationProvider({ children }: { children: ReactNode }) {
+  const [stack, setStack] = useState<Screen[]>([]);
 
   const value = useMemo<NavValue>(
     () => ({
-      tab,
-      overlay,
-      goToTab(next) {
-        setOverlay(null);
-        setTab(next);
+      stack,
+      overlay: stack.length > 0 ? stack[stack.length - 1] : null,
+      openOverlay(screen) {
+        setStack((current) => [...current, screen]);
       },
-      openOverlay: setOverlay,
-      closeOverlay: () => setOverlay(null),
+      closeOverlay() {
+        setStack((current) => current.slice(0, -1));
+      },
+      goHome() {
+        setStack([]);
+      },
     }),
-    [tab, overlay],
+    [stack],
   );
 
   return <NavContext.Provider value={value}>{children}</NavContext.Provider>;

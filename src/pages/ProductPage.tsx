@@ -8,7 +8,7 @@ import '../styles/shop.css';
 
 export function ProductPage({ productId }: { productId: string }) {
   const product = products.find((p) => p.id === productId);
-  const { closeOverlay, goToTab } = useNav();
+  const { closeOverlay, openOverlay } = useNav();
   const { add } = useCart();
 
   const [colorIndex, setColorIndex] = useState(0);
@@ -138,7 +138,7 @@ export function ProductPage({ productId }: { productId: string }) {
         </button>
 
         {added && (
-          <button type="button" className="btn ghost pdp-gocart" onClick={() => goToTab('cart')}>
+          <button type="button" className="btn ghost pdp-gocart" onClick={() => openOverlay({ name: 'cart' })}>
             View cart
           </button>
         )}

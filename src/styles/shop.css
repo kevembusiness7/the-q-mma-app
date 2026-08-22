@@ -25,6 +25,31 @@
   padding: 6px 18px 14px;
 }
 
+/* Voltar + título andam juntos à esquerda da appbar, para o espaço entre
+   eles não crescer com o justify-content: space-between do pai. */
+.appbar-lead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.appbar-back {
+  display: flex;
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--q-gold);
+  cursor: pointer;
+}
+
+.appbar-back svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
 .wordmark {
   font-family: var(--q-display);
   font-size: 22px;

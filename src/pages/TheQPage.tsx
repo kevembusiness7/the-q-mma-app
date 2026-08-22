@@ -3,11 +3,11 @@ import { NewsCard } from '../components/theq/NewsCard';
 import { useNews } from '../hooks/useNews';
 import './TheQPage.css';
 
-/** Destinos que os banners desta tela abrem. */
-export type TheQDestination = 'athletes' | 'shop' | 'sponsors' | 'coaches';
+/** Destinos que esta tela abre — pelos banners ou pelo botão de conta. */
+export type TheQDestination = 'athletes' | 'shop' | 'sponsors' | 'coaches' | 'you';
 
 interface TheQPageProps {
-  /** Chamado quando um banner é tocado. Ligue na navegação do App. */
+  /** Chamado quando um banner ou o botão de conta é tocado. */
   onNavigate?: (destination: TheQDestination) => void;
 }
 
@@ -22,6 +22,14 @@ export function TheQPage({ onNavigate }: TheQPageProps) {
     <div className="theq-screen">
       <div className="theq-hero">
         <img src="/images/brand/theq-hero.jpg" alt="The Q MMA — Las Vegas, NV" />
+        {/* Conta do usuário. Fica sobre a arte do hero porque, sem a barra
+            de abas, este é o único ponto de entrada para a tela You. */}
+        <button type="button" className="theq-you" onClick={go('you')} aria-label="Minha conta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+            <circle cx="12" cy="8.5" r="3.5" />
+            <path d="M5 20a7 7 0 0 1 14 0" />
+          </svg>
+        </button>
       </div>
 
       <BannerLink

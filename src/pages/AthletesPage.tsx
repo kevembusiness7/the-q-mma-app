@@ -15,26 +15,26 @@ export function AthletesPage() {
 
   const selected = athletes.find((a) => a.id === selectedId) ?? athletes[0]
 
-  if (loading) {
+  /* O header entra também nos estados de carregando/erro/vazio: sem a barra
+     de abas ele é o único caminho de volta, e sem isso essas telas viram
+     beco sem saída quando o Supabase demora ou falha. */
+  if (loading || error || !selected) {
     return (
-      <div className="px-4 pt-10 text-center text-sm text-(--color-text-secondary)">
-        Loading roster…
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="px-4 pt-10 text-center text-sm text-red-400">
-        Couldn't load athletes: {error}
-      </div>
-    )
-  }
-
-  if (!selected) {
-    return (
-      <div className="px-4 pt-10 text-center text-sm text-(--color-text-secondary)">
-        No athletes on the roster yet.
+      <div className="bg-honeycomb">
+        <AthleteHeader />
+        {loading ? (
+          <p className="px-4 pt-10 text-center text-sm text-(--color-text-secondary)">
+            Loading roster…
+          </p>
+        ) : error ? (
+          <p className="px-4 pt-10 text-center text-sm text-red-400">
+            Couldn't load athletes: {error}
+          </p>
+        ) : (
+          <p className="px-4 pt-10 text-center text-sm text-(--color-text-secondary)">
+            No athletes on the roster yet.
+          </p>
+        )}
       </div>
     )
   }

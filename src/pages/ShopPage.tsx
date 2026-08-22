@@ -9,7 +9,7 @@ const CATEGORIES = ['All', 'Shirts', 'Caps', 'Kids'];
 
 export function ShopPage() {
   const [category, setCategory] = useState('All');
-  const { openOverlay, goToTab } = useNav();
+  const { openOverlay, closeOverlay } = useNav();
   const { count } = useCart();
 
   const visible =
@@ -20,11 +20,18 @@ export function ShopPage() {
   return (
     <div className="shop-screen">
       <header className="appbar">
-        <span className="wordmark">SHOP</span>
+        <div className="appbar-lead">
+          <button type="button" className="appbar-back" onClick={closeOverlay} aria-label="Voltar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+              <path d="M15 5l-7 7 7 7" />
+            </svg>
+          </button>
+          <span className="wordmark">SHOP</span>
+        </div>
         <button
           type="button"
           className="bagbtn"
-          onClick={() => goToTab('cart')}
+          onClick={() => openOverlay({ name: 'cart' })}
           aria-label={`Carrinho, ${count} ${count === 1 ? 'item' : 'itens'}`}
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">

@@ -8,12 +8,19 @@ import '../styles/shop.css';
 
 export function YouPage() {
   const { count } = useCart();
-  const { goToTab } = useNav();
+  const { closeOverlay, openOverlay } = useNav();
 
   return (
     <div className="you-screen">
       <header className="appbar">
-        <span className="wordmark">My account</span>
+        <div className="appbar-lead">
+          <button type="button" className="appbar-back" onClick={closeOverlay} aria-label="Voltar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+              <path d="M15 5l-7 7 7 7" />
+            </svg>
+          </button>
+          <span className="wordmark">My account</span>
+        </div>
       </header>
 
       <div className="memcard">
@@ -26,13 +33,13 @@ export function YouPage() {
         <p>Order updates, athlete news, and exclusive app releases.</p>
       </div>
 
-      <button type="button" className="listrow" onClick={() => goToTab('cart')}>
+      <button type="button" className="listrow" onClick={() => openOverlay({ name: 'cart' })}>
         Cart <span>{count}</span>
       </button>
-      <button type="button" className="listrow" onClick={() => goToTab('athletes')}>
+      <button type="button" className="listrow" onClick={() => openOverlay({ name: 'athletes' })}>
         Athletes <span>›</span>
       </button>
-      <button type="button" className="listrow" onClick={() => goToTab('shop')}>
+      <button type="button" className="listrow" onClick={() => openOverlay({ name: 'shop' })}>
         Shop <span>›</span>
       </button>
 

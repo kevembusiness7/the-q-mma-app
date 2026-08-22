@@ -16,7 +16,7 @@ export interface CartLine {
 
 interface CartValue {
   lines: CartLine[];
-  /** Soma das quantidades — é o número no badge do TabBar. */
+  /** Soma das quantidades — é o número no badge da sacola. */
   count: number;
   subtotal: number;
   add: (product: Product, color: string, size: string, quantity: number, image?: string) => void;
