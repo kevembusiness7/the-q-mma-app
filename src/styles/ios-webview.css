@@ -1,0 +1,55 @@
+/*
+ * Ajustes para quando o app roda dentro da WebView do iOS.
+ *
+ * Importe este arquivo no src/index.css do projeto WEB (não do shell Expo):
+ *   @import './styles/ios-webview.css';
+ *
+ * Sem isso, a TabBar de 82px fica parcialmente atrás do indicador de home
+ * do iPhone, e os últimos itens de cada tela ficam inalcançáveis.
+ */
+
+/* A TabBar cresce o suficiente para o indicador de home passar por baixo. */
+nav[class*='bottom-0'] {
+  height: calc(82px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+}
+
+/* O conteúdo rolável precisa do mesmo respiro, senão o último card
+   fica escondido atrás da TabBar. */
+.theq-screen,
+.shop-screen,
+.cart-screen,
+.you-screen,
+.sub-screen,
+.pdp-screen,
+.fighter-screen {
+  padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+}
+
+/* iOS aplica um destaque cinza ao tocar em qualquer coisa clicável.
+   Fica estranho num app; o :active de cada componente já dá o retorno. */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Impede o "arrasta e mostra fundo branco" ao puxar além do fim da página. */
+html,
+body {
+  overscroll-behavior-y: none;
+  background: #0b0908;
+}
+
+/* Textos de interface não devem poder ser selecionados por toque longo —
+   deixa o app com cara de site. Campos de formulário seguem selecionáveis. */
+button,
+nav,
+h1,
+h2,
+h3,
+h4,
+.wordmark,
+.tab,
+.chip {
+  -webkit-user-select: none;
+  user-select: none;
+}
