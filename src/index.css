@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme {
+  /* Backgrounds */
+  --color-bg-main: #050505;
+  --color-bg-secondary: #0a0a0a;
+  --color-bg-card: #0d0d0d;
+  --color-bg-elevated: #111111;
+
+  /* Gold */
+  --color-gold: #d6a62e;
+  --color-gold-bright: #f2c24e;
+  --color-gold-dark: #8f6815;
+
+  /* White / Silver */
+  --color-text-primary: #f5f5f5;
+  --color-text-secondary: #afafaf;
+  --color-silver-start: #f7f7f7;
+  --color-silver-end: #b7b7b7;
+
+  /* Borders */
+  --color-border-gold: rgba(214, 166, 46, 0.55);
+  --color-border-gold-strong: rgba(242, 194, 78, 0.9);
+
+  --font-display: "Barlow Condensed", "Oswald", "Anton", sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+    background: var(--color-bg-main);
+  }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--color-text-primary);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  .bg-gold-metallic {
+    background: linear-gradient(180deg, #8b6414 0%, #e4b83d 35%, #ffd86a 55%, #b5841d 100%);
+  }
+
+  .text-silver-metallic {
+    background: linear-gradient(180deg, var(--color-silver-start) 0%, var(--color-silver-end) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .text-gold-metallic {
+    background: linear-gradient(180deg, #8b6414 0%, #e4b83d 35%, #ffd86a 55%, #b5841d 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .bg-honeycomb {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath d='M28 0L0 16v34l28 16 28-16V16z' fill='none' stroke='%23D6A62E' stroke-opacity='0.05' stroke-width='1'/%3E%3C/svg%3E");
+    background-size: 56px 100px;
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 24px 0 rgba(214, 166, 46, 0.18);
+  }
+
+  .glow-gold-sm {
+    box-shadow: 0 0 14px 0 rgba(214, 166, 46, 0.14);
+  }
+
+  .diagline {
+    position: absolute;
+    width: 1.5px;
+    background: linear-gradient(180deg, transparent, var(--color-gold), transparent);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
