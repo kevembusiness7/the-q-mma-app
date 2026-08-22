@@ -15,7 +15,16 @@ interface TabBarProps {
 
 export function TabBar({ active, onChange }: TabBarProps) {
   return (
-    <nav className="absolute bottom-0 left-0 right-0 z-30 h-[82px] px-1.5 pt-2.5 pb-5 bg-black/95 backdrop-blur-md border-t border-(--color-border-gold)/30 grid grid-cols-5">
+    <nav
+      className="absolute bottom-0 left-0 right-0 z-30 px-1.5 pt-2.5 bg-black/95 backdrop-blur-md border-t border-(--color-border-gold)/30 grid grid-cols-5"
+      /* Grows by the home indicator height on iPhone, so the labels never sit
+         under it. On devices without one, env() resolves to 0 and nothing
+         changes. */
+      style={{
+        height: 'calc(82px + env(safe-area-inset-bottom, 0px))',
+        paddingBottom: 'calc(20px + env(safe-area-inset-bottom, 0px))',
+      }}
+    >
       {TABS.map(({ id, label, icon: Icon }) => {
         const isActive = active === id
         return (

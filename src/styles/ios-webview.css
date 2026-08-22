@@ -1,30 +1,11 @@
 /*
- * Ajustes para quando o app roda dentro da WebView do iOS.
+ * Ajustes de comportamento para quando o app roda em tela cheia no iPhone
+ * (ícone na tela inicial ou dentro da WebView do shell Expo).
  *
- * Importe este arquivo no src/index.css do projeto WEB (não do shell Expo):
- *   @import './styles/ios-webview.css';
- *
- * Sem isso, a TabBar de 82px fica parcialmente atrás do indicador de home
- * do iPhone, e os últimos itens de cada tela ficam inalcançáveis.
+ * O espaçamento da TabBar e do conteúdo agora é resolvido direto no
+ * AppShell.tsx e no TabBar.tsx — aqui ficam só os ajustes de comportamento,
+ * que não têm equivalente em classe do Tailwind.
  */
-
-/* A TabBar cresce o suficiente para o indicador de home passar por baixo. */
-nav[class*='bottom-0'] {
-  height: calc(82px + env(safe-area-inset-bottom, 0px));
-  padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-}
-
-/* O conteúdo rolável precisa do mesmo respiro, senão o último card
-   fica escondido atrás da TabBar. */
-.theq-screen,
-.shop-screen,
-.cart-screen,
-.you-screen,
-.sub-screen,
-.pdp-screen,
-.fighter-screen {
-  padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
-}
 
 /* iOS aplica um destaque cinza ao tocar em qualquer coisa clicável.
    Fica estranho num app; o :active de cada componente já dá o retorno. */
@@ -32,15 +13,16 @@ nav[class*='bottom-0'] {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Impede o "arrasta e mostra fundo branco" ao puxar além do fim da página. */
+/* Impede o efeito de "arrastar e revelar fundo branco" ao puxar além do fim
+   da página, que denuncia que é um site. */
 html,
 body {
   overscroll-behavior-y: none;
   background: #0b0908;
 }
 
-/* Textos de interface não devem poder ser selecionados por toque longo —
-   deixa o app com cara de site. Campos de formulário seguem selecionáveis. */
+/* Textos de interface não devem poder ser selecionados por toque longo.
+   Campos de formulário e o corpo das notícias seguem selecionáveis. */
 button,
 nav,
 h1,
@@ -49,7 +31,16 @@ h3,
 h4,
 .wordmark,
 .tab,
-.chip {
+.chip,
+.label {
   -webkit-user-select: none;
   user-select: none;
+}
+
+/* Impede o zoom automático que o iOS faz ao focar um campo com fonte
+   menor que 16px. Vale para quando o checkout e o login existirem. */
+input,
+select,
+textarea {
+  font-size: max(16px, 1em);
 }
