@@ -1,0 +1,196 @@
+/* Tela The Q — valores copiados do mockup (the-q-mma-mockup-v2_2.html).
+   Usa as variáveis já definidas no :root do projeto (--gold, --canvas-2, etc.).
+   Se alguma não existir no seu index.css, veja o bloco comentado no final. */
+
+.theq-screen {
+  background: radial-gradient(140% 60% at 50% 0%, #221a12, #0b0908 55%);
+  min-height: 100%;
+}
+
+/* Banners ocupam a largura toda, sem padding — o texto faz parte da arte. */
+.theq-hero,
+.theq-section-banner {
+  padding: 0;
+}
+
+.theq-hero img,
+.theq-section-banner img {
+  width: 100%;
+  display: block;
+}
+
+/* Respiro entre o banner de Coaches e o de News & Events, para os dois
+   blocos não lerem como uma coisa só. */
+.theq-section-banner {
+  margin-top: 24px;
+}
+
+.banner-btn {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.banner-btn img {
+  width: 100%;
+  display: block;
+}
+
+.banner-btn:focus-visible {
+  outline: 2px solid var(--gold, #c8a03c);
+  outline-offset: -2px;
+}
+
+/* O último banner (Instagram) fica separado do feed. */
+.news-feed + .banner-btn {
+  margin-top: 18px;
+}
+
+/* Feed rolável, com no máximo ~2,5 cards visíveis. */
+.news-feed {
+  padding: 0 12px 26px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 340px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold, #c8a03c) transparent;
+}
+
+.news-feed::-webkit-scrollbar {
+  width: 6px;
+}
+
+.news-feed::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.news-feed::-webkit-scrollbar-thumb {
+  background: var(--gold, #c8a03c);
+  border-radius: 3px;
+}
+
+.news-empty {
+  margin: 0;
+  padding: 18px 6px;
+  font-size: 12px;
+  color: var(--dust, #948a81);
+}
+
+.news-card {
+  flex: none;
+  display: flex;
+  gap: 12px;
+  background: var(--canvas-2, #262120);
+  border: 1px solid var(--gold, #c8a03c);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(200, 160, 60, 0.1);
+}
+
+.news-card .nimg {
+  flex: none;
+  width: 110px;
+  align-self: stretch;
+  background: linear-gradient(160deg, var(--canvas-2, #262120), #171312);
+}
+
+.news-card .nimg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.news-card .nbody {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 12px 12px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.news-card .ntag {
+  display: inline-block;
+  align-self: flex-start;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.news-card .ntag.result {
+  background: var(--live, #4fb477);
+  color: #0a0908;
+}
+
+.news-card .ntag.next {
+  background: var(--blood, #b0301f);
+  color: #fff;
+}
+
+.news-card .ntag.event {
+  background: var(--gold, #c8a03c);
+  color: #171312;
+}
+
+.news-card h4 {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.news-card p {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--dust, #948a81);
+}
+
+.news-card .ndate {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 10px;
+  color: var(--dust, #948a81);
+  letter-spacing: 0.04em;
+}
+
+.news-card .ndate svg {
+  width: 11px;
+  height: 11px;
+  flex: none;
+}
+
+/* Se o seu index.css ainda não tiver estas variáveis, cole no :root:
+
+:root {
+  --ink: #14110F;
+  --canvas: #1D1917;
+  --canvas-2: #262120;
+  --line: #332C29;
+  --bone: #EDE7DE;
+  --dust: #948A81;
+  --blood: #B0301F;
+  --blood-hot: #D8402A;
+  --gold: #C8A03C;
+  --live: #4FB477;
+  --steel: #3E6B8C;
+  --display: Impact, "Haettenschweiler", "Arial Narrow Bold", sans-serif;
+  --body: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Consolas, "Roboto Mono", monospace;
+}
+*/

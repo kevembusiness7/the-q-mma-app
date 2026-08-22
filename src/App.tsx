@@ -1,27 +1,68 @@
-import { useState } from 'react'
-import { AppShell } from './components/layout/AppShell'
-import { AthletesPage } from './pages/AthletesPage'
+import { AppShell } from './components/layout/AppShell';
+import { AthletesPage } from './pages/AthletesPage';
+import { TheQPage } from './pages/TheQPage';
+import { ShopPage } from './pages/ShopPage';
+import { ProductPage } from './pages/ProductPage';
+import { CartPage } from './pages/CartPage';
+import { CoachesPage, SponsorsPage, YouPage } from './pages/AccountAndInfoPages';
+import { CartProvider } from './context/CartContext';
+import { NavigationProvider, useNav, type Tab } from './context/NavigationContext';
 
-function App() {
-  const [activeTab, setActiveTab] = useState('athletes')
+/**
+ * Decide o que renderizar. Telas internas (produto, coaches, sponsors) ficam
+ * por cima da aba — o botão de voltar fecha e devolve a aba de trás.
+ */
+function Screens() {
+  const { tab, overlay, goToTab, openOverlay } = useNav();
 
-  return (
-    <AppShell activeTab={activeTab} onTabChange={setActiveTab}>
-      {activeTab === 'athletes' ? (
-        <AthletesPage />
-      ) : (
-        <div className="px-4 pt-16 text-center text-sm text-(--color-text-secondary)">
-          <p className="font-(family-name:--font-display) text-2xl uppercase text-silver-metallic mb-2">
-            Coming soon
-          </p>
-          <p>
-            This build focuses on the <span className="text-(--color-gold)">Athletes</span> tab.
-            The Q, Shop, Cart and You are next.
-          </p>
-        </div>
-      )}
-    </AppShell>
-  )
+  if (overlay?.name === 'product') return <ProductPage productId={overlay.productId} />;
+  if (overlay?.name === 'coaches') return <CoachesPage />;
+  if (overlay?.name === 'sponsors') return <SponsorsPage />;
+
+  switch (tab) {
+    case 'theq':
+      return (
+        <TheQPage
+          onNavigate={(destino) => {
+            if (destino === 'coaches' || destino === 'sponsors') {
+              openOverlay({ name: destino });
+            } else {
+              goToTab(destino as Tab);
+            }
+          }}
+        />
+      );
+    case 'athletes':
+      return <AthletesPage />;
+    case 'shop':
+      return <ShopPage />;
+    case 'cart':
+      return <CartPage />;
+    case 'you':
+      return <YouPage />;
+    default:
+      return null;
+  }
 }
 
-export default App
+function Shell() {
+  const { tab, goToTab } = useNav();
+
+  return (
+    <AppShell activeTab={tab} onTabChange={(next) => goToTab(next as Tab)}>
+      <Screens />
+    </AppShell>
+  );
+}
+
+function App() {
+  return (
+    <NavigationProvider initialTab="theq">
+      <CartProvider>
+        <Shell />
+      </CartProvider>
+    </NavigationProvider>
+  );
+}
+
+export default App;
