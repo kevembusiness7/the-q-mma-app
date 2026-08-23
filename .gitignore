@@ -7,3 +7,6 @@ dist-ssr
 !.env.example
 *.log
 .DS_Store
+
+# Arquivos temporarios do Supabase CLI
+supabase/.temp/
