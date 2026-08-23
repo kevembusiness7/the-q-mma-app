@@ -48,6 +48,24 @@ const jpLastFight: FightRecord = {
   isNextFight: false,
 }
 
+const shaneLastFight: FightRecord = {
+  id: 'fight-shane-last',
+  athleteId: 'shane-collins',
+  opponentName: 'Otari Tanzilovi',
+  opponentRecord: '10-1',
+  opponentImageUrl: null,
+  result: 'win',
+  method: 'Decision · unanimous',
+  round: null,
+  time: null,
+  eventName: 'UFC Fight Night: Kape vs. Horiguchi 2',
+  eventDate: '2026-06-20',
+  venue: 'Meta APEX',
+  city: 'Las Vegas, NV',
+  broadcaster: 'Paramount+',
+  isNextFight: false,
+}
+
 const ozzyNextFight: FightRecord = {
   id: 'fight-ozzy-next',
   athleteId: 'ozzy-diaz',
@@ -167,6 +185,37 @@ export const ATHLETES: AthleteWithFights[] = [
     bornIn: 'Hermosa Beach, CA, USA',
     fightingOutOf: 'Hermosa Beach, CA, USA',
     lastFight: jpLastFight,
+    nextFight: null,
+  },
+  {
+    id: 'shane-collins',
+    slug: 'shane-collins',
+    name: 'Shane Collins',
+    firstName: 'Shane',
+    lastName: 'Collins',
+    nickname: 'Hollywood',
+    division: 'Featherweight',
+    organization: 'UFC',
+    imageUrl: '/images/athletes/shane-collins.png',
+    heroImageUrl: '/images/athletes/shane-collins-hero.png',
+    imageAlt: 'Shane "Hollywood" Collins',
+    age: 26,
+    heightLabel: `5'9"`,
+    // A pesagem foi 145.5 lbs; a coluna weight_lbs do Supabase é inteira,
+    // então fica arredondado.
+    weightLbs: 146,
+    reachLabel: '71.0"',
+    record: '8-0-0',
+    wins: 8,
+    losses: 0,
+    draws: 0,
+    bio: 'Shane "Hollywood" Collins is an undefeated featherweight competing in the UFC, fighting out of Los Angeles, CA. He is 8-0 as a professional, with 5 of those wins coming by knockout or submission.',
+    // Diferente dos outros: a ficha aponta Team Cobra MMA, não THE Q MMA.
+    team: 'Team Cobra MMA',
+    headCoach: null,
+    bornIn: 'United States',
+    fightingOutOf: 'Los Angeles, CA, USA',
+    lastFight: shaneLastFight,
     nextFight: null,
   },
 ]
