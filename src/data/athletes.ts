@@ -103,7 +103,7 @@ export const ATHLETES: AthleteWithFights[] = [
     division: 'Middleweight',
     organization: 'UFC',
     imageUrl: '/images/athletes/osman-diaz.png',
-    heroImageUrl: null,
+    heroImageUrl: '/images/athletes/osman-diaz-hero.png',
     imageAlt: 'Osman "Ozzy" Diaz',
     age: 35,
     heightLabel: `6'4"`,
