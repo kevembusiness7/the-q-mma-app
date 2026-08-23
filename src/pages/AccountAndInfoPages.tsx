@@ -99,6 +99,24 @@ export function YouPage() {
         </span>
         <span>›</span>
       </button>
+
+      {/* Esconder a linha é conveniência, não segurança: quem barra de fato é
+          o RLS no Supabase, que só entrega os chamados a quem é admin. */}
+      {ehAdmin && (
+        <button
+          type="button"
+          className="listrow"
+          onClick={() => openOverlay({ name: 'admin-support' })}
+        >
+          <span className="listrow-titulo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+              <path d="M4 5h16v11H8l-4 4z" />
+            </svg>
+            Support inbox
+          </span>
+          <span>›</span>
+        </button>
+      )}
     </div>
   );
 }
