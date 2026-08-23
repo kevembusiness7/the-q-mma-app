@@ -401,3 +401,28 @@
   gap: 12px;
   padding: 0 18px;
 }
+
+/* Conversa do lado do cliente, dentro de My requests. */
+.support-conversa {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 18px;
+}
+
+.support-voltar {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--q-gold);
+  font-family: var(--q-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.support-conversa .admin-conversa {
+  padding: 0;
+}

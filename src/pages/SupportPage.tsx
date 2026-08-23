@@ -9,7 +9,9 @@ import {
   useEnviarChamado,
   useMeusChamados,
   type CategoriaChamado,
+  type Chamado,
 } from '../hooks/useSupport'
+import { useConversa } from '../hooks/useAdminSupport'
 import '../styles/shop.css'
 import '../styles/auth.css'
 import '../styles/support.css'
@@ -260,6 +262,7 @@ function MeusChamados({
   aoEntrar: () => void
 }) {
   const { chamados, carregando, erro } = useMeusChamados(usuarioId)
+  const [aberto, setAberto] = useState<Chamado | null>(null)
 
   if (!usuarioId) {
     return (
@@ -280,10 +283,12 @@ function MeusChamados({
   if (erro) return <p className="empty">Could not load your requests: {erro}</p>
   if (chamados.length === 0) return <p className="empty">You haven&rsquo;t sent any messages yet.</p>
 
+  if (aberto) return <MinhaConversa chamado={aberto} aoVoltar={() => setAberto(null)} />
+
   return (
     <div className="support-lista">
       {chamados.map((c) => (
-        <article key={c.id} className="ticket">
+        <button key={c.id} type="button" className="ticket ticket-clicavel" onClick={() => setAberto(c)}>
           <div className="ticket-topo">
             <span className={`ticket-status s-${c.status}`}>{ROTULO_STATUS[c.status]}</span>
             <span className="ticket-ref">#{c.id.slice(0, 8).toUpperCase()}</span>
@@ -293,16 +298,97 @@ function MeusChamados({
           </div>
           <p className="ticket-msg">{c.message}</p>
           <time className="ticket-data" dateTime={c.createdAt}>
-            {new Date(c.createdAt).toLocaleString('en-US', {
-              month: 'short',
-              day: 'numeric',
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-            })}
+            {formatarData(c.createdAt)}
           </time>
-        </article>
+        </button>
       ))}
     </div>
   )
+}
+
+/**
+ * Conversa do lado do cliente. Ele responde como cliente — o RLS impede
+ * marcar a própria resposta como sendo da equipe.
+ */
+function MinhaConversa({ chamado, aoVoltar }: { chamado: Chamado; aoVoltar: () => void }) {
+  const { usuario } = useAuth()
+  const { mensagens, responder } = useConversa(chamado.id)
+  const [texto, setTexto] = useState('')
+  const [enviando, setEnviando] = useState(false)
+  const [erro, setErro] = useState<string | null>(null)
+
+  async function enviar() {
+    if (texto.trim().length < 2 || !usuario) return
+    setEnviando(true)
+    const falha = await responder(texto.trim(), usuario.id, false)
+    setEnviando(false)
+    if (falha) return setErro(falha)
+    setTexto('')
+    setErro(null)
+  }
+
+  return (
+    <div className="support-conversa">
+      <button type="button" className="support-voltar" onClick={aoVoltar}>
+        ‹ All requests
+      </button>
+
+      <div className="ticket-topo">
+        <span className={`ticket-status s-${chamado.status}`}>{ROTULO_STATUS[chamado.status]}</span>
+        <span className="ticket-ref">#{chamado.id.slice(0, 8).toUpperCase()}</span>
+      </div>
+
+      <div className="admin-conversa">
+        <div className="balao cliente">
+          <div className="balao-quem">You</div>
+          <p>{chamado.message}</p>
+          <time dateTime={chamado.createdAt}>{formatarData(chamado.createdAt)}</time>
+        </div>
+
+        {mensagens.map((m) => (
+          <div key={m.id} className={`balao ${m.isStaff ? 'equipe' : 'cliente'}`}>
+            <div className="balao-quem">{m.isStaff ? 'The Q MMA' : 'You'}</div>
+            <p>{m.body}</p>
+            <time dateTime={m.createdAt}>{formatarData(m.createdAt)}</time>
+          </div>
+        ))}
+      </div>
+
+      {chamado.status === 'resolved' ? (
+        <p className="support-nota">
+          This request is marked as resolved. Send a new message if you still need help.
+        </p>
+      ) : (
+        <>
+          <label className="campo">
+            <span>Reply</span>
+            <textarea
+              rows={4}
+              value={texto}
+              onChange={(e) => setTexto(e.target.value)}
+              placeholder="Add more details…"
+            />
+          </label>
+          {erro && (
+            <p className="auth-erro" role="alert">
+              {erro}
+            </p>
+          )}
+          <button type="button" className="btn" onClick={enviar} disabled={enviando}>
+            {enviando ? 'Sending…' : 'Send reply'}
+          </button>
+        </>
+      )}
+    </div>
+  )
+}
+
+function formatarData(iso: string): string {
+  return new Date(iso).toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
 }
