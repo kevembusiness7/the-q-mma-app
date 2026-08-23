@@ -1,14 +1,17 @@
 /**
- * RASCUNHO — conteúdo não revisado.
+ * Perguntas frequentes do Help & Support.
  *
- * Estas perguntas foram escritas por mim a partir do que o app faz hoje
- * (loja, carrinho, conta, atletas). As respostas são plausíveis, mas NÃO são
- * a política real da The Q MMA: prazos, valores e regras de troca precisam
- * ser confirmados antes de ir ao ar.
+ * Revisado e aprovado pela The Q MMA em 23/08/2026.
  *
- * Enquanto `revisado` for false, a tela mostra um aviso de rascunho.
+ * Vale reler quando o checkout entrar no ar: quatro respostas falam de prazo
+ * de entrega, troca e devolução, orientação de tamanho e rastreio, e essas
+ * dependem da operação real da loja. Hoje descrevem o comportamento esperado,
+ * não uma política publicada.
+ *
+ * Com FAQ_REVISADO em false, a tela exibe um aviso de rascunho por cima da
+ * lista — útil se um dia o conteúdo precisar de nova revisão.
  */
-export const FAQ_REVISADO = false
+export const FAQ_REVISADO = true
 
 export interface PerguntaFrequente {
   pergunta: string
