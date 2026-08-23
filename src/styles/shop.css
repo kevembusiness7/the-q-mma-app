@@ -195,7 +195,10 @@
   border-color: var(--q-bone);
 }
 
-.grid {
+/* Renomeado de ".grid": esse nome colide com o utilitario .grid do Tailwind
+   e vazava para o app inteiro, forcando duas colunas e padding em qualquer
+   elemento que usasse "grid" — era o que quebrava os tiles do atleta. */
+.shop-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;

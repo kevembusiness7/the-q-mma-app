@@ -70,7 +70,7 @@ export function ShopPage() {
       {visible.length === 0 ? (
         <p className="empty">Nada nesta categoria ainda.</p>
       ) : (
-        <div className="grid">
+        <div className="shop-grid">
           {visible.map((product) => (
             <ProductCard
               key={product.id}
