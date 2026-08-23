@@ -19,6 +19,9 @@ interface AuthValue {
   carregando: boolean
   /** Vem da coluna is_admin em `profiles`, não do app. */
   ehAdmin: boolean
+  /** true logo depois de voltar do link de confirmação de e-mail. */
+  confirmouEmail: boolean
+  descartarConfirmacao: () => void
   entrar: (email: string, senha: string) => Promise<ResultadoAuth>
   cadastrar: (nome: string, email: string, senha: string) => Promise<ResultadoCadastro>
   sair: () => Promise<void>
@@ -45,6 +48,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [sessao, setSessao] = useState<Session | null>(null)
   const [carregando, setCarregando] = useState(isSupabaseConfigured)
   const [ehAdmin, setEhAdmin] = useState(false)
+
+  /* Lido uma única vez, na primeira renderização: o supabase-js consome o
+     hash da URL e o apaga logo em seguida, então depois disso não há mais como
+     saber que o usuário chegou por um link de confirmação. */
+  const [confirmouEmail, setConfirmouEmail] = useState(() => {
+    if (typeof window === 'undefined') return false
+    const hash = window.location.hash
+    return hash.includes('access_token') && hash.includes('type=signup')
+  })
 
   useEffect(() => {
     if (!supabase) {
@@ -94,6 +106,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       sessao,
       carregando,
       ehAdmin,
+      confirmouEmail,
+      descartarConfirmacao: () => setConfirmouEmail(false),
 
       async entrar(email, senha) {
         if (!supabase) return { erro: 'Supabase não está configurado.' }
@@ -106,7 +120,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { data, error } = await supabase.auth.signUp({
           email,
           password: senha,
-          options: { data: { full_name: nome } },
+          options: {
+            data: { full_name: nome },
+            /* Manda o link de confirmação de volta para o endereço onde o app
+               está rodando agora, em vez de depender só da Site URL fixa do
+               painel. Esse endereço precisa estar na lista de Redirect URLs
+               do Supabase, senão ele ignora e usa a Site URL. */
+            emailRedirectTo: window.location.origin,
+          },
         })
         if (error) return { erro: traduzErro(error.message), precisaConfirmar: false }
         // Sem sessão na resposta = o projeto exige confirmar o e-mail.
@@ -117,7 +138,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await supabase?.auth.signOut()
       },
     }),
-    [sessao, carregando, ehAdmin],
+    [sessao, carregando, ehAdmin, confirmouEmail],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
