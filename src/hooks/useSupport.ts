@@ -96,24 +96,31 @@ export function useEnviarChamado() {
           caminhoAnexo = nome
         }
 
-        const { data, error } = await supabase
-          .from('support_tickets')
-          .insert({
-            user_id: dados.usuarioId,
-            name: dados.nome,
-            email: dados.email,
-            category: dados.categoria,
-            message: dados.mensagem,
-            screenshot_path: caminhoAnexo,
-          })
-          .select('id')
-          .single()
+        /* O id é gerado aqui, e não lido de volta do banco.
+           Pedir a linha inserida de volta (`.select()`) faz o PostgREST usar
+           INSERT ... RETURNING, e isso exige permissão de LEITURA além da de
+           escrita. O visitante anônimo não tem leitura — nem deve ter, senão
+           enxergaria os chamados dos outros. O resultado era o insert falhar
+           com "violates row-level security policy" mesmo com a política de
+           escrita correta. Gerando o uuid no cliente, o protocolo sai sem
+           precisar ler nada. */
+        const id = crypto.randomUUID()
+
+        const { error } = await supabase.from('support_tickets').insert({
+          id,
+          user_id: dados.usuarioId,
+          name: dados.nome,
+          email: dados.email,
+          category: dados.categoria,
+          message: dados.mensagem,
+          screenshot_path: caminhoAnexo,
+        })
 
         if (error) return { erro: error.message, protocolo: null }
 
         // Os 8 primeiros caracteres do uuid bastam como protocolo para o
         // usuário citar, sem expor o id inteiro.
-        return { erro: null, protocolo: (data.id as string).slice(0, 8).toUpperCase() }
+        return { erro: null, protocolo: id.slice(0, 8).toUpperCase() }
       } finally {
         setEnviando(false)
       }
