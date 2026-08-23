@@ -1,6 +1,7 @@
-import { User, Ruler, Weight, Move3d } from 'lucide-react'
+import { User, Ruler, Weight, Trophy } from 'lucide-react'
 import type { Athlete } from '../../types/athlete'
 import { AthleteStatCard } from './AthleteStatCard'
+import { FighterPhoto } from './FighterPhoto'
 
 interface AthleteHeroProps {
   athlete: Athlete
@@ -9,57 +10,60 @@ interface AthleteHeroProps {
 export function AthleteHero({ athlete }: AthleteHeroProps) {
   return (
     <section className="px-4">
-      <div className="relative overflow-hidden rounded-2xl border border-(--color-border-gold)/40 bg-(--color-bg-card) flex min-h-[260px]">
+      <div className="relative overflow-hidden rounded-2xl border border-(--color-border-gold) bg-(--color-bg-card) bg-honeycomb glow-gold-sm">
         <span
           className="diagline"
-          style={{ top: -40, right: 56, height: 150, transform: 'rotate(20deg)' }}
+          style={{ top: -40, right: 46, height: 170, transform: 'rotate(20deg)' }}
+          aria-hidden
+        />
+        <span
+          className="diagline"
+          style={{ bottom: -30, left: 30, height: 120, transform: 'rotate(20deg)' }}
           aria-hidden
         />
 
-        {/* Photo — bleeds to the edges, no inner card */}
-        <div className="relative flex-[0_0_46%] bg-gradient-to-b from-[#3A211C] via-[#241B19] to-(--color-bg-main) overflow-hidden">
-          {athlete.imageUrl ? (
-            <img
+        <div className="relative flex min-h-[290px]">
+          {/* Foto sangrando até as bordas, como no mockup — sem moldura interna. */}
+          <div className="relative w-[47%] shrink-0">
+            <FighterPhoto
               src={athlete.imageUrl}
               alt={athlete.imageAlt}
               className="absolute inset-0 h-full w-full object-cover object-top"
             />
-          ) : (
-            <div className="absolute inset-3 flex items-center justify-center rounded-lg border border-dashed border-(--color-border-gold)/50 text-center text-[10px] text-(--color-text-secondary) px-2">
-              Photo slot — cut-out PNG of the athlete
-            </div>
-          )}
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-        </div>
-
-        {/* Name / record */}
-        <div className="flex-1 min-w-0 flex flex-col justify-center px-4 py-4">
-          <span className="self-start rounded-md border border-(--color-gold) px-2.5 py-1 mb-3 text-[10px] font-mono uppercase tracking-[0.14em] text-(--color-gold) whitespace-nowrap">
-            "{athlete.nickname}"
-          </span>
-
-          <h1 className="font-(family-name:--font-display) uppercase leading-[0.86] text-[32px] text-silver-metallic break-words">
-            <span className="block">{athlete.firstName}</span>
-            <span className="block">{athlete.lastName}</span>
-          </h1>
-
-          <div className="h-px my-3.5 bg-gradient-to-r from-(--color-gold) to-transparent opacity-60" />
-
-          <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-(--color-gold) mb-0.5">
-            Pro Record
+            {/* Dissolve a borda direita da foto no fundo do card, para a imagem
+                não terminar num corte reto no meio do card. */}
+            <div className="pointer-events-none absolute inset-y-0 -right-px w-16 bg-gradient-to-r from-transparent to-(--color-bg-card)" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-(--color-bg-card) to-transparent" />
           </div>
-          <div className="font-(family-name:--font-display) text-[28px] leading-none text-(--color-text-primary)">
-            {athlete.record}
+
+          <div className="relative flex-1 min-w-0 flex flex-col justify-center py-4 pr-3.5 -ml-6">
+            <span className="self-start mb-2 border border-(--color-gold) bg-black/50 px-2.5 py-1 text-[10px] font-mono uppercase tracking-[0.12em] text-(--color-gold) whitespace-nowrap [clip-path:polygon(0_0,100%_0,calc(100%-8px)_100%,0_100%)] pr-4">
+              &ldquo;{athlete.nickname}&rdquo;
+            </span>
+
+            <h1 className="font-(family-name:--font-display) font-black italic uppercase leading-[0.84] text-[38px] text-silver-metallic break-words drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]">
+              <span className="block">{athlete.firstName}</span>
+              <span className="block">{athlete.lastName}</span>
+            </h1>
+
+            {/* Bloco do cartel, destacado do nome por uma linha dourada. */}
+            <div className="mt-3.5 border-t border-(--color-border-gold) bg-black/40 pt-2.5 pb-1">
+              <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-(--color-gold)">
+                Pro Record
+              </div>
+              <div className="font-(family-name:--font-display) font-black italic text-[30px] leading-none text-silver-metallic">
+                {athlete.record}
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Stats grid */}
       <div className="grid grid-cols-4 gap-2 mt-3">
         <AthleteStatCard icon={User} label="Age" value={String(athlete.age)} />
         <AthleteStatCard icon={Ruler} label="Height" value={athlete.heightLabel} />
         <AthleteStatCard icon={Weight} label="Weight" value={String(athlete.weightLbs)} unit="lbs" />
-        <AthleteStatCard icon={Move3d} label="Reach" value={athlete.reachLabel} />
+        <AthleteStatCard icon={Trophy} label="Record" value={athlete.record} />
       </div>
     </section>
   )

@@ -1,5 +1,6 @@
 import { Calendar, MapPin } from 'lucide-react'
 import type { Athlete, FightRecord } from '../../types/athlete'
+import { FighterPhoto } from './FighterPhoto'
 
 interface LastFightCardProps {
   athlete: Athlete
@@ -21,43 +22,86 @@ export function LastFightCard({ athlete, fight }: LastFightCardProps) {
   })
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-(--color-border-gold)/40 bg-(--color-bg-card)">
-      <span className="absolute top-3 left-3 z-10 rounded-md border border-(--color-gold) bg-black/70 px-2.5 py-1 text-[9px] font-mono uppercase tracking-[0.14em] text-(--color-gold)">
-        Last Fight
+    <div className="relative overflow-hidden rounded-2xl border border-(--color-border-gold) bg-(--color-bg-card) bg-honeycomb glow-gold-sm">
+      <span
+        className="diagline"
+        style={{ top: -20, left: 74, height: 110, transform: 'rotate(20deg)' }}
+        aria-hidden
+      />
+      <span
+        className="diagline"
+        style={{ top: -20, right: 74, height: 110, transform: 'rotate(-20deg)' }}
+        aria-hidden
+      />
+
+      {/* Aba com o canto direito chanfrado, como no mockup. */}
+      <span className="absolute top-0 left-0 z-20 border-r border-b border-(--color-gold) bg-black/80 pl-3 pr-5 py-1.5 text-[9px] font-mono uppercase tracking-[0.14em] text-(--color-gold) [clip-path:polygon(0_0,100%_0,calc(100%-10px)_100%,0_100%)]">
+        {fight.isNextFight ? 'Next Fight' : 'Last Fight'}
       </span>
 
-      <div className="px-4 pt-11 pb-3 text-center">
-        <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-(--color-text-secondary)">
-          {fight.eventName}
+      {/* Altura fixa para as fotos preencherem o card de cima a baixo, como no
+          mockup. Sem ela a <img> assume a proporção do arquivo e fica baixinha
+          num canto. object-top mantém o rosto no enquadramento ao cortar. */}
+      <div className="relative flex items-stretch h-[196px]">
+        {/* As colunas são estreitas de propósito: numa tela de ~390px o bloco
+            central precisa da largura para o nome do oponente não quebrar. */}
+        <div className="relative w-[25%] shrink-0">
+          <FighterPhoto
+            src={athlete.imageUrl}
+            alt={athlete.imageAlt}
+            className="absolute inset-0 h-full w-full object-cover object-top"
+          />
+          <div className="pointer-events-none absolute inset-y-0 -right-px w-10 bg-gradient-to-r from-transparent to-(--color-bg-card)" />
         </div>
-        <div className="font-(family-name:--font-display) text-xl uppercase text-silver-metallic mt-1">
-          {athlete.name}
-        </div>
-        <div className="text-xs uppercase tracking-wide text-(--color-gold) mt-1">
-          {resultLabel[fight.result]} {fight.opponentName}
-        </div>
-        {fight.method && (
-          <div className="text-[11px] text-(--color-text-primary) mt-1">{fight.method}</div>
-        )}
-        {(fight.round || fight.time) && (
-          <div className="text-[10px] text-(--color-text-secondary) mt-0.5">
-            {[fight.round, fight.time].filter(Boolean).join(' · ')}
+
+        <div className="relative z-10 flex-1 min-w-0 self-center text-center px-1 pt-6 pb-2">
+          <div className="text-[9px] font-mono uppercase tracking-[0.16em] text-(--color-gold)">
+            {fight.eventName}
           </div>
-        )}
+
+          <div className="mt-1.5 font-(family-name:--font-display) font-black italic uppercase text-[19px] leading-[0.98] text-silver-metallic">
+            {athlete.name}
+          </div>
+          <div className="font-(family-name:--font-display) font-black italic uppercase text-[19px] leading-[0.98] text-gold-metallic">
+            {resultLabel[fight.result]} {fight.opponentName}
+          </div>
+
+          {fight.method && (
+            <div className="mt-1.5 text-[11px] uppercase tracking-[0.06em] text-(--color-text-primary)">
+              {fight.method}
+            </div>
+          )}
+          {(fight.round || fight.time) && (
+            <div className="mt-1 text-[10px] uppercase tracking-[0.1em] text-(--color-text-secondary)">
+              {[fight.round, fight.time].filter(Boolean).join(' • ')}
+            </div>
+          )}
+        </div>
+
+        <div className="relative w-[25%] shrink-0">
+          <FighterPhoto
+            src={fight.opponentImageUrl}
+            alt={fight.opponentName}
+            className="absolute inset-0 h-full w-full object-cover object-top"
+          />
+          <div className="pointer-events-none absolute inset-y-0 -left-px w-10 bg-gradient-to-l from-transparent to-(--color-bg-card)" />
+        </div>
       </div>
 
-      <div className="flex items-center justify-center gap-4 border-t border-(--color-border-gold)/25 px-4 py-2.5 text-[10px] text-(--color-text-secondary)">
+      <div className="relative z-10 flex items-center justify-center gap-3 border-t border-(--color-border-gold) bg-black/40 px-3 py-2.5 text-[10px] uppercase tracking-[0.08em] text-(--color-text-secondary)">
         <span className="flex items-center gap-1.5">
-          <Calendar size={12} className="text-(--color-gold)" />
+          <Calendar size={12} className="shrink-0 text-(--color-gold)" />
           {formattedDate}
         </span>
         {fight.venue && (
           <>
-            <span className="h-3 w-px bg-(--color-border-gold)" />
-            <span className="flex items-center gap-1.5">
-              <MapPin size={12} className="text-(--color-gold)" />
-              {fight.venue}
-              {fight.city ? `, ${fight.city}` : ''}
+            <span className="h-3 w-px shrink-0 bg-(--color-border-gold)" />
+            <span className="flex items-center gap-1.5 min-w-0">
+              <MapPin size={12} className="shrink-0 text-(--color-gold)" />
+              <span className="truncate">
+                {fight.venue}
+                {fight.city ? `, ${fight.city}` : ''}
+              </span>
             </span>
           </>
         )}

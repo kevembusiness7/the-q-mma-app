@@ -1,7 +1,48 @@
 import { useEffect, useState } from 'react'
 import { ATHLETES } from '../data/athletes'
 import { isSupabaseConfigured, supabase } from '../lib/supabase'
-import type { AthleteWithFights } from '../types/athlete'
+import type { AthleteWithFights, FightRecord } from '../types/athlete'
+
+/** "Anna Melisano" -> "anna-melisano" */
+function slugify(name: string): string {
+  return name
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+/**
+ * Preenche as fotos que faltam, para nenhum componente precisar adivinhar
+ * nome de arquivo.
+ *
+ * Hoje o Supabase devolve `image_url` nulo e nem o mock tem foto de oponente,
+ * embora os PNGs estejam versionados em public/images/athletes.
+ *
+ * A foto do atleta vem do mock, e não do slug: os dois nem sempre batem — o
+ * slug 'ozzy-diaz' usa o arquivo osman-diaz.png. Já a do oponente é derivada
+ * do nome, que é a única chave que existe para ele.
+ */
+function withPhotos(athletes: AthleteWithFights[]): AthleteWithFights[] {
+  return athletes.map((athlete) => ({
+    ...athlete,
+    imageUrl:
+      athlete.imageUrl ?? ATHLETES.find((m) => m.slug === athlete.slug)?.imageUrl ?? null,
+    lastFight: withOpponentPhoto(athlete.lastFight),
+    nextFight: withOpponentPhoto(athlete.nextFight),
+  }))
+}
+
+function withOpponentPhoto(fight: FightRecord | null): FightRecord | null {
+  if (!fight) return null
+  return {
+    ...fight,
+    opponentImageUrl:
+      fight.opponentImageUrl ?? `/images/athletes/opp-${slugify(fight.opponentName)}.png`,
+  }
+}
 
 interface UseAthletesResult {
   athletes: AthleteWithFights[]
@@ -24,7 +65,7 @@ interface UseAthletesResult {
  */
 export function useAthletes(): UseAthletesResult {
   const [athletes, setAthletes] = useState<AthleteWithFights[]>(
-    isSupabaseConfigured ? [] : ATHLETES,
+    isSupabaseConfigured ? [] : withPhotos(ATHLETES),
   )
   const [loading, setLoading] = useState(isSupabaseConfigured)
   const [error, setError] = useState<string | null>(null)
@@ -64,7 +105,7 @@ export function useAthletes(): UseAthletesResult {
 
       if (!cancelled) {
         const shaped = shapeAthletes(athleteRows ?? [], fightRows ?? [])
-        setAthletes(shaped)
+        setAthletes(withPhotos(shaped))
         setLoading(false)
       }
     }
