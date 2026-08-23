@@ -5,7 +5,6 @@ import { AthleteHeader } from '../components/athletes/AthleteHeader'
 import { AthleteSelector } from '../components/athletes/AthleteSelector'
 import { AthleteHero } from '../components/athletes/AthleteHero'
 import { FightHubSection } from '../components/athletes/FightHubSection'
-import { AthleteQuickLinks } from '../components/athletes/AthleteQuickLinks'
 import { AthleteAbout } from '../components/athletes/AthleteAbout'
 
 export function AthletesPage() {
@@ -73,7 +72,6 @@ export function AthletesPage() {
       </div>
 
       <FightHubSection athlete={selected} />
-      <AthleteQuickLinks />
       <AthleteAbout athlete={selected} />
     </div>
   )

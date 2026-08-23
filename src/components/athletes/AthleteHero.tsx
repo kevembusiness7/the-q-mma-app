@@ -1,4 +1,4 @@
-import { User, Ruler, Weight, Trophy } from 'lucide-react'
+import { User, Ruler, Weight, Move3d } from 'lucide-react'
 import type { Athlete } from '../../types/athlete'
 import { AthleteStatCard } from './AthleteStatCard'
 import { FighterPhoto } from './FighterPhoto'
@@ -63,7 +63,7 @@ export function AthleteHero({ athlete }: AthleteHeroProps) {
         <AthleteStatCard icon={User} label="Age" value={String(athlete.age)} />
         <AthleteStatCard icon={Ruler} label="Height" value={athlete.heightLabel} />
         <AthleteStatCard icon={Weight} label="Weight" value={String(athlete.weightLbs)} unit="lbs" />
-        <AthleteStatCard icon={Trophy} label="Record" value={athlete.record} />
+        <AthleteStatCard icon={Move3d} label="Reach" value={athlete.reachLabel} />
       </div>
     </section>
   )

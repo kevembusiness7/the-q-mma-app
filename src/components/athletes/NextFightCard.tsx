@@ -53,7 +53,7 @@ export function NextFightCard({ athlete, fight }: NextFightCardProps) {
       </span>
 
       <div className="relative flex items-stretch h-[196px]">
-        <div className="relative w-[25%] shrink-0">
+        <div className="relative w-[20%] shrink-0">
           <FighterPhoto
             src={athlete.imageUrl}
             alt={athlete.imageAlt}
@@ -67,13 +67,13 @@ export function NextFightCard({ athlete, fight }: NextFightCardProps) {
             {fight.eventName}
           </div>
 
-          <div className="mt-1.5 font-(family-name:--font-display) font-black italic uppercase text-[19px] leading-[0.98] text-silver-metallic">
+          <div className="mt-1.5 font-(family-name:--font-display) font-black italic uppercase text-[17px] leading-[0.98] text-silver-metallic">
             {athlete.name}
           </div>
           <div className="my-0.5 text-[10px] font-mono uppercase tracking-[0.24em] text-(--color-gold)">
             vs
           </div>
-          <div className="font-(family-name:--font-display) font-black italic uppercase text-[19px] leading-[0.98] text-gold-metallic">
+          <div className="font-(family-name:--font-display) font-black italic uppercase text-[17px] leading-[0.98] text-gold-metallic">
             {fight.opponentName}
           </div>
 
@@ -84,7 +84,7 @@ export function NextFightCard({ athlete, fight }: NextFightCardProps) {
           )}
         </div>
 
-        <div className="relative w-[25%] shrink-0">
+        <div className="relative w-[20%] shrink-0">
           <FighterPhoto
             src={fight.opponentImageUrl}
             alt={fight.opponentName}

@@ -43,9 +43,12 @@ export function LastFightCard({ athlete, fight }: LastFightCardProps) {
           mockup. Sem ela a <img> assume a proporção do arquivo e fica baixinha
           num canto. object-top mantém o rosto no enquadramento ao cortar. */}
       <div className="relative flex items-stretch h-[196px]">
-        {/* As colunas são estreitas de propósito: numa tela de ~390px o bloco
-            central precisa da largura para o nome do oponente não quebrar. */}
-        <div className="relative w-[25%] shrink-0">
+        {/* 20% medido, não chutado: com 25% sobravam 181px no centro e
+            "DEF. ANNA MELISANO" só cabia em uma linha a 14px, pequeno demais.
+            A 20% o centro fica com 218px e o nome cabe a 17px, com folga para
+            nomes um pouco maiores. Mais longos que isso quebram em duas linhas,
+            que é a saída elegante. */}
+        <div className="relative w-[20%] shrink-0">
           <FighterPhoto
             src={athlete.imageUrl}
             alt={athlete.imageAlt}
@@ -59,10 +62,10 @@ export function LastFightCard({ athlete, fight }: LastFightCardProps) {
             {fight.eventName}
           </div>
 
-          <div className="mt-1.5 font-(family-name:--font-display) font-black italic uppercase text-[19px] leading-[0.98] text-silver-metallic">
+          <div className="mt-1.5 font-(family-name:--font-display) font-black italic uppercase text-[17px] leading-[0.98] text-silver-metallic">
             {athlete.name}
           </div>
-          <div className="font-(family-name:--font-display) font-black italic uppercase text-[19px] leading-[0.98] text-gold-metallic">
+          <div className="font-(family-name:--font-display) font-black italic uppercase text-[17px] leading-[0.98] text-gold-metallic">
             {resultLabel[fight.result]} {fight.opponentName}
           </div>
 
@@ -78,7 +81,7 @@ export function LastFightCard({ athlete, fight }: LastFightCardProps) {
           )}
         </div>
 
-        <div className="relative w-[25%] shrink-0">
+        <div className="relative w-[20%] shrink-0">
           <FighterPhoto
             src={fight.opponentImageUrl}
             alt={fight.opponentName}

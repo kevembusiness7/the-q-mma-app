@@ -57,4 +57,3 @@ export interface AthleteWithFights extends Athlete {
   nextFight: FightRecord | null
 }
 
-export type QuickLinkKey = 'career-stats' | 'fight-history' | 'highlights' | 'news'
