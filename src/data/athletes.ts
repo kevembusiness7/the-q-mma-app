@@ -210,9 +210,8 @@ export const ATHLETES: AthleteWithFights[] = [
     losses: 0,
     draws: 0,
     bio: 'Shane "Hollywood" Collins is an undefeated featherweight competing in the UFC, fighting out of Los Angeles, CA. He is 8-0 as a professional, with 5 of those wins coming by knockout or submission.',
-    // Diferente dos outros: a ficha aponta Team Cobra MMA, não THE Q MMA.
-    team: 'Team Cobra MMA',
-    headCoach: null,
+    team: 'THE Q MMA',
+    headCoach: 'Matheus Naccache',
     bornIn: 'United States',
     fightingOutOf: 'Los Angeles, CA, USA',
     lastFight: shaneLastFight,

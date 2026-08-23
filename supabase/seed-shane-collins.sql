@@ -30,8 +30,8 @@ insert into athletes (
   0,
   0,
   'Shane "Hollywood" Collins is an undefeated featherweight competing in the UFC, fighting out of Los Angeles, CA. He is 8-0 as a professional, with 5 of those wins coming by knockout or submission.',
-  'Team Cobra MMA',   -- a ficha aponta este time, e não THE Q MMA
-  null,               -- treinador não informado
+  'THE Q MMA',
+  'Matheus Naccache',
   'United States',
   'Los Angeles, CA, USA'
 )

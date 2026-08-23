@@ -228,7 +228,7 @@ export const fighters: FighterProfile[] = [
       ['Weight class', 'Featherweight'],
       ['Born in', 'United States'],
       ['Fighting out of', 'Los Angeles, CA, USA'],
-      ['Team', 'Team Cobra MMA'],
+      ['Head coach', 'Matheus Naccache'],
       ['Current streak', '8 wins'],
     ],
     lastFight: {
