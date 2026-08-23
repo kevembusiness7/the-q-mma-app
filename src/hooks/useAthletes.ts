@@ -26,13 +26,16 @@ function slugify(name: string): string {
  * do nome, que é a única chave que existe para ele.
  */
 function withPhotos(athletes: AthleteWithFights[]): AthleteWithFights[] {
-  return athletes.map((athlete) => ({
-    ...athlete,
-    imageUrl:
-      athlete.imageUrl ?? ATHLETES.find((m) => m.slug === athlete.slug)?.imageUrl ?? null,
-    lastFight: withOpponentPhoto(athlete.lastFight),
-    nextFight: withOpponentPhoto(athlete.nextFight),
-  }))
+  return athletes.map((athlete) => {
+    const local = ATHLETES.find((m) => m.slug === athlete.slug)
+    return {
+      ...athlete,
+      imageUrl: athlete.imageUrl ?? local?.imageUrl ?? null,
+      heroImageUrl: athlete.heroImageUrl ?? local?.heroImageUrl ?? null,
+      lastFight: withOpponentPhoto(athlete.lastFight),
+      nextFight: withOpponentPhoto(athlete.nextFight),
+    }
+  })
 }
 
 function withOpponentPhoto(fight: FightRecord | null): FightRecord | null {
@@ -155,6 +158,7 @@ function shapeAthletes(athleteRows: any[], fightRows: any[]): AthleteWithFights[
       division: row.division,
       organization: row.organization,
       imageUrl: row.image_url,
+      heroImageUrl: row.hero_image_url ?? null,
       imageAlt: row.image_alt ?? row.name,
       age: row.age,
       heightLabel: row.height_label,

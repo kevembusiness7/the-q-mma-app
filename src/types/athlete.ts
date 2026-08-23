@@ -35,7 +35,14 @@ export interface Athlete {
   nickname: string
   division: string
   organization: string // e.g. "UFC", "THE Q MMA"
+  /** Foto usada nos cards do Fight Hub. */
   imageUrl: string | null
+  /**
+   * Foto só do hero da aba Athletes, quando o atleta tem uma pose diferente
+   * para o destaque. Nulo usa a `imageUrl`; se o arquivo não existir, o hero
+   * também cai de volta nela.
+   */
+  heroImageUrl: string | null
   imageAlt: string
   age: number
   heightLabel: string // e.g. "5'6\""

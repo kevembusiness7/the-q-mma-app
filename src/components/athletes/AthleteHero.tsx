@@ -26,7 +26,8 @@ export function AthleteHero({ athlete }: AthleteHeroProps) {
           {/* Foto sangrando até as bordas, como no mockup — sem moldura interna. */}
           <div className="relative w-[47%] shrink-0">
             <FighterPhoto
-              src={athlete.imageUrl}
+              src={athlete.heroImageUrl ?? athlete.imageUrl}
+              fallbackSrc={athlete.imageUrl}
               alt={athlete.imageAlt}
               className="absolute inset-0 h-full w-full object-cover object-top"
             />
