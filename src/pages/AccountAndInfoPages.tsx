@@ -5,6 +5,7 @@ import { coaches, sponsors } from '../data/shop';
 import { BackBar } from '../components/shop/ShopParts';
 import '../styles/shop.css';
 import '../styles/auth.css';
+import '../styles/support.css';
 
 /* ---------------------------------------------------------------- You ---- */
 
@@ -82,8 +83,21 @@ export function YouPage() {
       <button type="button" className="listrow" disabled>
         Addresses &amp; payment <span>{usuario ? 'Em breve' : 'Sign in'}</span>
       </button>
-      <button type="button" className="listrow" disabled>
-        Help &amp; returns <span>Em breve</span>
+      <button
+        type="button"
+        className="listrow"
+        onClick={() => openOverlay({ name: 'support' })}
+      >
+        <span className="listrow-titulo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+            <path d="M4 14v-2a8 8 0 0116 0v2" />
+            <path d="M4 14h2a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1z" />
+            <path d="M20 14h-2a1 1 0 00-1 1v3a1 1 0 001 1h1a1 1 0 001-1z" />
+            <path d="M20 19a3 3 0 01-3 3h-2" />
+          </svg>
+          Help &amp; Support
+        </span>
+        <span>›</span>
       </button>
     </div>
   );

@@ -1,0 +1,234 @@
+/* Help & Support. Reaproveita .campo, .btn e .auth-aba do auth.css/shop.css. */
+
+.support-screen {
+  padding-bottom: 40px;
+}
+
+.support-abas {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  padding: 0 18px 16px;
+}
+
+.support-intro {
+  margin: 0 18px 16px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--q-dust);
+}
+
+.support-nota {
+  margin: 2px 0 0;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--q-dust);
+}
+
+.support-protocolo {
+  margin: 0 0 18px !important;
+  font-family: var(--q-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+
+.support-protocolo b {
+  color: var(--q-gold);
+}
+
+/* O input de arquivo padrão não aceita estilo, então some e o texto ao lado
+   faz o papel do botão. */
+.support-anexo {
+  display: block;
+  padding: 12px 13px;
+  border: 1px dashed var(--q-line);
+  border-radius: 10px;
+  background: var(--q-canvas-2);
+  color: var(--q-dust);
+  font-size: 12.5px;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.support-anexo input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.support-anexo:focus-within {
+  border-color: var(--q-gold);
+}
+
+.support-remover {
+  align-self: flex-start;
+  margin-top: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--q-blood-hot);
+  font: inherit;
+  font-size: 11.5px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ----------------------------------------------------------------- FAQ --- */
+
+.support-faq {
+  padding: 0 18px;
+}
+
+.support-rascunho {
+  margin: 0 0 16px;
+  padding: 11px 12px;
+  border: 1px solid var(--q-gold);
+  border-radius: 9px;
+  background: rgba(200, 160, 60, 0.1);
+  color: var(--q-bone);
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+.support-rascunho b {
+  color: var(--q-gold);
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--q-line);
+}
+
+.faq-pergunta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 0;
+  border: 0;
+  background: none;
+  color: var(--q-bone);
+  font: inherit;
+  font-size: 13.5px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.faq-pergunta span {
+  flex: 1;
+}
+
+.faq-pergunta b {
+  flex: none;
+  color: var(--q-gold);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.faq-resposta {
+  margin: 0;
+  padding: 0 0 16px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--q-dust);
+}
+
+/* -------------------------------------------------------- meus chamados -- */
+
+.support-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 18px;
+}
+
+.ticket {
+  padding: 14px;
+  border: 1px solid var(--q-line);
+  border-radius: 12px;
+  background: var(--q-canvas-2);
+}
+
+.ticket-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.ticket-status {
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-family: var(--q-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ticket-status.s-new {
+  background: var(--q-gold);
+  color: var(--q-ink);
+}
+
+.ticket-status.s-in_progress {
+  background: #3e6b8c;
+  color: #fff;
+}
+
+.ticket-status.s-resolved {
+  background: #4fb477;
+  color: var(--q-ink);
+}
+
+.ticket-ref {
+  font-family: var(--q-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--q-dust);
+}
+
+.ticket-cat {
+  font-family: var(--q-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--q-gold);
+  margin-bottom: 6px;
+}
+
+.ticket-msg {
+  margin: 0 0 10px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--q-bone);
+  /* Corta mensagens longas na lista; a conversa completa vem no painel. */
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ticket-data {
+  display: block;
+  font-family: var(--q-mono);
+  font-size: 10px;
+  color: var(--q-dust);
+}
+
+/* Linha de menu com ícone (o fone de atendimento em My account). */
+.listrow-titulo {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.listrow-titulo svg {
+  width: 17px;
+  height: 17px;
+  flex: none;
+  color: var(--q-gold);
+}

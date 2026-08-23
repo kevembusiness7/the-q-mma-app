@@ -12,6 +12,7 @@ export type Screen =
   | { name: 'cart' }
   | { name: 'you' }
   | { name: 'auth' }
+  | { name: 'support' }
   | { name: 'coaches' }
   | { name: 'sponsors' }
   | { name: 'product'; productId: string }

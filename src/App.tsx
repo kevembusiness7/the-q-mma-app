@@ -7,6 +7,7 @@ import { FighterPage } from './pages/FighterPage';
 import { CartPage } from './pages/CartPage';
 import { CoachesPage, SponsorsPage, YouPage } from './pages/AccountAndInfoPages';
 import { AuthPage } from './pages/AuthPage';
+import { SupportPage } from './pages/SupportPage';
 import { CartProvider } from './context/CartContext';
 import { NavigationProvider, useNav } from './context/NavigationContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -31,6 +32,8 @@ function Screens() {
       return <YouPage />;
     case 'auth':
       return <AuthPage />;
+    case 'support':
+      return <SupportPage />;
     case 'coaches':
       return <CoachesPage />;
     case 'sponsors':
