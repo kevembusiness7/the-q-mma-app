@@ -765,9 +765,12 @@
 
 /* ------------------------------------------- coaches e sponsors --------- */
 
+/* Uma coluna só, sempre: cada coach ocupa a largura inteira da tela e a lista
+   rola na vertical. Antes eram duas colunas fixas ("1fr 1fr"), o que deixava
+   o coach preso na metade esquerda com uma coluna vazia do lado. */
 .coach-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 14px;
   padding: 0 18px 26px;
 }
@@ -780,8 +783,11 @@
   text-align: left;
 }
 
+/* Era 4/5.6, proporção pensada para o card de meia largura. Ocupando a tela
+   toda isso passaria de 500px de altura e empurraria nome e bio para fora da
+   dobra, então a foto fica mais larga que alta. */
 .coach-photo {
-  aspect-ratio: 4 / 5.6;
+  aspect-ratio: 4 / 3.6;
   background: linear-gradient(160deg, var(--q-canvas-2), #171312);
   border-bottom: 1px solid var(--q-line);
 }
@@ -793,27 +799,29 @@
   display: block;
 }
 
+/* Tipografia dimensionada para o card de largura total — nos 13px/11px de
+   antes o texto ficava pequeno demais espalhado pela tela inteira. */
 .coach-body {
-  padding: 10px 12px 14px;
+  padding: 14px 16px 18px;
 }
 
 .coach-body h4 {
   margin: 0 0 2px;
-  font-size: 13px;
+  font-size: 17px;
   font-weight: 600;
 }
 
 .coach-body .spec {
   font-family: var(--q-mono);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--q-gold);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .coach-body .bio {
-  font-size: 11px;
+  font-size: 12.5px;
   line-height: 1.5;
   color: var(--q-dust);
   margin: 0 0 8px;
