@@ -40,10 +40,9 @@ const jpLastFight: FightRecord = {
   time: null,
   eventName: 'UFC Fight Night: Du Plessis vs. Usman',
   eventDate: '2026-07-18',
-  // Só a cidade foi informada, sem o nome da arena. A emissora segue nula.
-  venue: null,
+  venue: 'Paycom Center',
   city: 'Oklahoma City, OK',
-  broadcaster: null,
+  broadcaster: 'Paramount+',
   isNextFight: false,
 }
 
@@ -77,9 +76,9 @@ const ozzyLastFight: FightRecord = {
   time: '1:10',
   eventName: 'UFC 328: Chimaev vs. Strickland',
   eventDate: '2026-05-09',
-  venue: null,
-  city: null,
-  broadcaster: null,
+  venue: 'Prudential Center',
+  city: 'Newark, NJ',
+  broadcaster: 'Paramount+',
   isNextFight: false,
 }
 

@@ -76,9 +76,9 @@ insert into fights (
   null,
   'UFC Fight Night: Du Plessis vs. Usman',
   '2026-07-18',
-  null,               -- só a cidade foi informada, sem o nome da arena
+  'Paycom Center',
   'Oklahoma City, OK',
-  null,               -- emissora não informada
+  'Paramount+',
   false
 );
 
