@@ -20,11 +20,13 @@ const dioneLastFight: FightRecord = {
   method: 'Submission · standing rear-naked choke',
   round: 'Round 1',
   time: '4:04',
-  eventName: 'UFC Fight Night',
+  // Mesmo card do JP: 18/07/2026, Paycom Center. Antes constava UFC APEX em
+  // Las Vegas pela ESPN+, o que não batia com a data.
+  eventName: 'UFC Fight Night: Du Plessis vs. Usman',
   eventDate: '2026-07-18',
-  venue: 'UFC APEX',
-  city: 'Las Vegas, NV',
-  broadcaster: 'ESPN+',
+  venue: 'Paycom Center',
+  city: 'Oklahoma City, OK',
+  broadcaster: 'Paramount+',
   isNextFight: false,
 }
 

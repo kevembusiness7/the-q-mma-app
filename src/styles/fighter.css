@@ -1,14 +1,18 @@
 /* Perfil completo do atleta. Valores copiados do mockup. */
 
+/* O topo era 270px e a foto ficava centralizada atrás do texto, que passava
+   por cima do corpo do atleta. Agora a área é bem mais alta, a foto ocupa a
+   parte de cima inteira e o texto desce para o espaço vazio abaixo dela. O
+   clamp evita que num aparelho baixo o topo empurre o resto da tela. */
 .fighter-hero {
   position: relative;
-  height: 270px;
+  height: clamp(460px, 72dvh, 620px);
   overflow: hidden;
   background: #0b0908;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 18px;
+  padding: 18px 18px 26px;
 }
 
 .fighter-hero::before {
@@ -48,7 +52,9 @@
 .fh-flag {
   position: absolute;
   left: 50%;
-  top: 46%;
+  /* Segue a foto, que agora é ancorada no topo. Centrada no meio do topo ela
+     ficaria atrás do texto em vez de atrás do atleta. */
+  top: 32%;
   transform: translate(-50%, -50%);
   width: 118%;
   height: auto;
@@ -63,20 +69,29 @@
   mask-image: radial-gradient(ellipse at 50% 45%, #000 34%, transparent 72%);
 }
 
+/* No fluxo do flex, e não em posicionamento absoluto.
+   Em absoluto a foto não tem como saber onde o texto começa: qualquer altura
+   fixa em % ou passava por cima do nome, ou desperdiçava espaço. Como item
+   flex com flex: 1 ela ocupa exatamente o que sobra acima do bloco de texto,
+   em qualquer tamanho de tela, e nunca se sobrepõe.
+   object-position: bottom encosta o atleta na base da própria área, logo
+   acima da tarja do apelido, como no mockup. */
 .fh-photo {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  height: 90%;
-  width: auto;
-  max-width: 86%;
-  object-fit: contain;
+  position: relative;
   z-index: 2;
+  flex: 1 1 auto;
+  min-height: 0;
+  align-self: center;
+  width: 100%;
+  max-width: 94%;
+  object-fit: contain;
+  object-position: bottom center;
   filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.5)) saturate(0.95) contrast(1.04);
 }
 
-/* Escurece a base para o nome ficar legível por cima da foto. */
+/* Escurece só a faixa de baixo, onde o texto fica. Antes começava a escurecer
+   em 32% e cobria o corpo do atleta de cinza; agora a foto fica limpa até
+   os 55% e o degradê entra depois dela. */
 .fh-scrim {
   position: absolute;
   inset: 0;
@@ -84,10 +99,11 @@
   pointer-events: none;
   background: linear-gradient(
     180deg,
-    rgba(11, 9, 8, 0.15) 0%,
-    rgba(11, 9, 8, 0) 32%,
-    rgba(11, 9, 8, 0.72) 74%,
-    rgba(11, 9, 8, 0.94) 100%
+    rgba(11, 9, 8, 0.12) 0%,
+    rgba(11, 9, 8, 0) 30%,
+    rgba(11, 9, 8, 0) 55%,
+    rgba(11, 9, 8, 0.82) 72%,
+    rgba(11, 9, 8, 0.97) 100%
   );
 }
 
@@ -120,11 +136,13 @@
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
 }
 
+/* Respiros maiores: com o topo mais alto, o bloco de texto tem espaço para
+   não ficar espremido contra a base. */
 .fighter-hero h2 {
   font-family: var(--q-display, Impact, sans-serif);
   font-size: 44px;
   line-height: 0.86;
-  margin: 8px 0 10px;
+  margin: 14px 0 18px;
   text-transform: uppercase;
   letter-spacing: 0.01em;
   font-weight: 400;
@@ -134,7 +152,7 @@
 .recordrow {
   display: flex;
   justify-content: center;
-  gap: 24px;
+  gap: 30px;
 }
 
 .recordrow div {

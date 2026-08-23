@@ -21,6 +21,16 @@ set venue       = 'Prudential Center',
 where athlete_id = (select id from athletes where slug = 'ozzy-diaz')
   and opponent_name = 'Ateba Gautier';
 
+-- Dione Barbosa vs. Anna Melisano — mesma data e mesmo card do JP. Constava
+-- UFC APEX em Las Vegas pela ESPN+, o que não batia com o evento.
+update fights
+set event_name  = 'UFC Fight Night: Du Plessis vs. Usman',
+    venue       = 'Paycom Center',
+    city        = 'Oklahoma City, OK',
+    broadcaster = 'Paramount+'
+where athlete_id = (select id from athletes where slug = 'dione-barbosa')
+  and opponent_name = 'Anna Melisano';
+
 -- Confere o resultado
 select a.name as atleta,
        f.opponent_name as adversario,
