@@ -6,8 +6,10 @@ import { ProductPage } from './pages/ProductPage';
 import { FighterPage } from './pages/FighterPage';
 import { CartPage } from './pages/CartPage';
 import { CoachesPage, SponsorsPage, YouPage } from './pages/AccountAndInfoPages';
+import { AuthPage } from './pages/AuthPage';
 import { CartProvider } from './context/CartContext';
 import { NavigationProvider, useNav } from './context/NavigationContext';
+import { AuthProvider } from './context/AuthContext';
 
 /**
  * The Q é a raiz do app. Todo o resto abre por cima dela, empilhado, e o
@@ -26,6 +28,8 @@ function Screens() {
       return <CartPage />;
     case 'you':
       return <YouPage />;
+    case 'auth':
+      return <AuthPage />;
     case 'coaches':
       return <CoachesPage />;
     case 'sponsors':
@@ -42,11 +46,13 @@ function Screens() {
 function App() {
   return (
     <NavigationProvider>
-      <CartProvider>
-        <AppShell>
-          <Screens />
-        </AppShell>
-      </CartProvider>
+      <AuthProvider>
+        <CartProvider>
+          <AppShell>
+            <Screens />
+          </AppShell>
+        </CartProvider>
+      </AuthProvider>
     </NavigationProvider>
   );
 }

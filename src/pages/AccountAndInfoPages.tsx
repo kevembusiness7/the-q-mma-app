@@ -1,14 +1,20 @@
 import { useCart } from '../context/CartContext';
 import { useNav } from '../context/NavigationContext';
+import { useAuth } from '../context/AuthContext';
 import { coaches, sponsors } from '../data/shop';
 import { BackBar } from '../components/shop/ShopParts';
 import '../styles/shop.css';
+import '../styles/auth.css';
 
 /* ---------------------------------------------------------------- You ---- */
 
 export function YouPage() {
   const { count } = useCart();
   const { closeOverlay, openOverlay } = useNav();
+  const { usuario, ehAdmin, carregando, sair } = useAuth();
+
+  const nome = (usuario?.user_metadata?.full_name as string | undefined) ?? usuario?.email ?? '';
+  const inicial = nome.trim().charAt(0) || '?';
 
   return (
     <div className="you-screen">
@@ -23,15 +29,41 @@ export function YouPage() {
         </div>
       </header>
 
-      <div className="memcard">
-        <div className="tier">Fan since 2024</div>
-        <h3>
-          Member
-          <br />
-          The Q MMA
-        </h3>
-        <p>Order updates, athlete news, and exclusive app releases.</p>
-      </div>
+      {usuario ? (
+        <div className="conta-logada">
+          <div className="conta-avatar" aria-hidden>
+            {inicial}
+          </div>
+          <div className="conta-info">
+            <b>{nome}</b>
+            <span>{usuario.email}</span>
+            {ehAdmin && <span className="selo-admin">Admin</span>}
+          </div>
+          <button type="button" className="conta-sair" onClick={sair}>
+            Sign out
+          </button>
+        </div>
+      ) : (
+        <div className="memcard">
+          <div className="tier">Fan since 2024</div>
+          <h3>
+            Member
+            <br />
+            The Q MMA
+          </h3>
+          <p>Order updates, athlete news, and exclusive app releases.</p>
+        </div>
+      )}
+
+      {!usuario && !carregando && (
+        <button
+          type="button"
+          className="listrow"
+          onClick={() => openOverlay({ name: 'auth' })}
+        >
+          Sign in or create account <span>›</span>
+        </button>
+      )}
 
       <button type="button" className="listrow" onClick={() => openOverlay({ name: 'cart' })}>
         Cart <span>{count}</span>
@@ -43,12 +75,12 @@ export function YouPage() {
         Shop <span>›</span>
       </button>
 
-      {/* Estas precisam de login para funcionar de verdade. */}
+      {/* Ainda sem backend proprio; agora o rotulo muda conforme o login. */}
       <button type="button" className="listrow" disabled>
-        My orders <span>Sign in</span>
+        My orders <span>{usuario ? 'Em breve' : 'Sign in'}</span>
       </button>
       <button type="button" className="listrow" disabled>
-        Addresses &amp; payment <span>Sign in</span>
+        Addresses &amp; payment <span>{usuario ? 'Em breve' : 'Sign in'}</span>
       </button>
       <button type="button" className="listrow" disabled>
         Help &amp; returns <span>Em breve</span>
