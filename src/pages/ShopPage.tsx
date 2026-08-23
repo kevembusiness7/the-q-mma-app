@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNav } from '../context/NavigationContext';
 import { useCart } from '../context/CartContext';
-import { products } from '../data/shop';
+import { useProducts } from '../hooks/useProducts';
 import { CategoryChips, ProductCard } from '../components/shop/ShopParts';
 import '../styles/shop.css';
 
@@ -11,9 +11,10 @@ export function ShopPage() {
   const [category, setCategory] = useState('All');
   const { openOverlay, closeOverlay } = useNav();
   const { count } = useCart();
+  const { produtos, carregando } = useProducts();
 
   const visible =
-    category === 'All' ? products : products.filter((p) => p.category === category);
+    category === 'All' ? produtos : produtos.filter((p) => p.category === category);
 
   const appOnly = visible.filter((p) => p.badges.includes('app'));
 
@@ -67,7 +68,9 @@ export function ShopPage() {
         <span>{visible.length}</span>
       </div>
 
-      {visible.length === 0 ? (
+      {carregando ? (
+        <p className="empty">Loading products…</p>
+      ) : visible.length === 0 ? (
         <p className="empty">Nada nesta categoria ainda.</p>
       ) : (
         <div className="shop-grid">

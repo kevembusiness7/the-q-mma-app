@@ -972,3 +972,32 @@
   text-transform: uppercase;
   text-decoration: none;
 }
+
+/* Selo de esgotado e atenuação do card sem estoque. */
+.badge.b-out {
+  background: #100d0c;
+  color: var(--q-dust);
+  border: 1px solid var(--q-line);
+}
+
+.card.esgotado .thumb {
+  opacity: 0.45;
+}
+
+/* Tamanho esgotado: riscado e sem clique. */
+.size.off {
+  opacity: 0.35;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+.stock-nota {
+  margin: 2px 0 0;
+  font-size: 11.5px;
+  color: var(--q-blood-hot);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

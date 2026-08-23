@@ -1,21 +1,55 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useNav } from '../context/NavigationContext';
-import { SIZES, products } from '../data/shop';
 import { BackBar } from '../components/shop/ShopParts';
-import { ProductArt, formatPrice, productImage } from '../lib/productImage';
+import { ProductArt, productImage } from '../lib/productImage';
+import {
+  acharVariacao,
+  formatarPreco,
+  useProducts,
+  variacoesDaCor,
+} from '../hooks/useProducts';
 import '../styles/shop.css';
 
 export function ProductPage({ productId }: { productId: string }) {
-  const product = products.find((p) => p.id === productId);
+  const { produtos, carregando } = useProducts();
+  const product = produtos.find((p) => p.id === productId);
   const { closeOverlay, openOverlay } = useNav();
-  const { add } = useCart();
+  const { add, lines } = useCart();
 
   const [colorIndex, setColorIndex] = useState(0);
-  const [size, setSize] = useState('M');
+  const [size, setSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [side, setSide] = useState<'front' | 'back'>('front');
   const [added, setAdded] = useState(false);
+
+  const color = product?.colors[colorIndex];
+
+  /* Tamanhos da cor escolhida, com o estoque de cada um. É daqui que a tela
+     sabe o que riscar como esgotado e quanto ainda dá para comprar. */
+  const tamanhos = useMemo(
+    () => (product && color ? variacoesDaCor(product, color.slug) : []),
+    [product, color],
+  );
+
+  const variacao =
+    product && color && size ? acharVariacao(product, color.slug, size) : undefined;
+
+  /* O que já está no carrinho conta contra o estoque: sem isto daria para
+     adicionar 3 + 3 de um item com estoque 4. */
+  const jaNoCarrinho = variacao
+    ? (lines.find((l) => l.variantId === variacao.id)?.quantity ?? 0)
+    : 0;
+  const disponivel = variacao ? Math.max(0, variacao.stock - jaNoCarrinho) : 0;
+
+  if (carregando) {
+    return (
+      <div>
+        <BackBar label="Loja" onBack={closeOverlay} />
+        <p className="empty">Loading product…</p>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -26,12 +60,19 @@ export function ProductPage({ productId }: { productId: string }) {
     );
   }
 
-  const color = product.colors[colorIndex];
-  const photo = productImage(product, color.slug, side);
+  const photo = productImage(product, color?.slug ?? 'black', side);
   const hasBack = product.mode === 'mockup';
 
+  const escolherCor = (index: number) => {
+    setColorIndex(index);
+    // O tamanho escolhido pode não existir (ou estar esgotado) na cor nova.
+    setSize(null);
+    setQuantity(1);
+  };
+
   const handleAdd = () => {
-    add(product, color.name, size, quantity, productImage(product, color.slug) ?? undefined);
+    if (!variacao || disponivel <= 0) return;
+    add(product, variacao, Math.min(quantity, disponivel), productImage(product, color!.slug) ?? undefined);
     setAdded(true);
     setTimeout(() => setAdded(false), 1600);
   };
@@ -42,7 +83,7 @@ export function ProductPage({ productId }: { productId: string }) {
 
       <div className="hero-img">
         {photo ? (
-          <img src={photo} alt={`${product.name} — ${color.name}`} />
+          <img src={photo} alt={`${product.name} — ${color?.name ?? ''}`} />
         ) : (
           <ProductArt art={product.art} />
         )}
@@ -72,17 +113,19 @@ export function ProductPage({ productId }: { productId: string }) {
           <div className="badges-row">
             {product.badges.map((badge) => (
               <span key={badge} className={`badge b-${badge}`}>
-                {badge === 'app' ? 'App exclusive' : badge === 'low' ? 'Low stock' : 'Limited'}
+                {badge === 'app' ? 'App exclusive' : 'Limited'}
               </span>
             ))}
           </div>
         )}
 
         <h2>{product.name}</h2>
-        <div className="price-lg">{formatPrice(product.price)}</div>
+        {/* O preço acompanha a variação: se um dia XXL custar mais, a tela já
+            reflete sem mudança nenhuma. */}
+        <div className="price-lg">{formatarPreco(variacao?.priceCents ?? product.priceCents)}</div>
         <p className="desc">{product.description}</p>
 
-        <div className="label">Color — {color.name}</div>
+        <div className="label">Color — {color?.name}</div>
         <div className="swatch-row">
           {product.colors.map((c, index) => (
             <button
@@ -90,7 +133,7 @@ export function ProductPage({ productId }: { productId: string }) {
               type="button"
               className={`swatch ${index === colorIndex ? 'on' : ''}`}
               style={{ background: c.hex }}
-              onClick={() => setColorIndex(index)}
+              onClick={() => escolherCor(index)}
               aria-label={c.name}
               aria-pressed={index === colorIndex}
             />
@@ -99,18 +142,32 @@ export function ProductPage({ productId }: { productId: string }) {
 
         <div className="label">Size</div>
         <div className="sizes">
-          {SIZES.map((s) => (
+          {tamanhos.map((v) => (
             <button
-              key={s}
+              key={v.id}
               type="button"
-              className={`size ${s === size ? 'on' : ''}`}
-              onClick={() => setSize(s)}
-              aria-pressed={s === size}
+              className={`size ${v.size === size ? 'on' : ''} ${v.stock === 0 ? 'off' : ''}`}
+              onClick={() => {
+                if (v.stock === 0) return;
+                setSize(v.size);
+                setQuantity(1);
+              }}
+              disabled={v.stock === 0}
+              aria-pressed={v.size === size}
             >
-              {s}
+              {v.size}
             </button>
           ))}
         </div>
+
+        {/* Aviso de pouca unidade só depois de escolher o tamanho: antes disso
+            o número não se refere a nada que o cliente tenha selecionado. */}
+        {variacao && variacao.stock > 0 && variacao.stock <= 5 && (
+          <p className="stock-nota">Only {variacao.stock} left in this size.</p>
+        )}
+        {variacao && disponivel === 0 && jaNoCarrinho > 0 && (
+          <p className="stock-nota">All remaining units are already in your cart.</p>
+        )}
 
         <div className="label">Quantity</div>
         <div className="qty-row">
@@ -126,15 +183,26 @@ export function ProductPage({ productId }: { productId: string }) {
           <button
             type="button"
             className="qty-step"
-            onClick={() => setQuantity((q) => q + 1)}
+            onClick={() => setQuantity((q) => Math.min(disponivel > 0 ? disponivel : 1, q + 1))}
             aria-label="Aumentar"
           >
             +
           </button>
         </div>
 
-        <button type="button" className="btn" onClick={handleAdd}>
-          {added ? 'Added to cart' : 'Add to cart'}
+        <button
+          type="button"
+          className="btn"
+          onClick={handleAdd}
+          disabled={!variacao || disponivel <= 0}
+        >
+          {added
+            ? 'Added to cart'
+            : !size
+              ? 'Select a size'
+              : disponivel <= 0
+                ? 'Out of stock'
+                : 'Add to cart'}
         </button>
 
         {added && (

@@ -1,10 +1,11 @@
 import { useCart } from '../context/CartContext';
 import { useNav } from '../context/NavigationContext';
-import { ProductArt, formatPrice } from '../lib/productImage';
+import { ProductArt } from '../lib/productImage';
+import { formatarPreco } from '../hooks/useProducts';
 import '../styles/shop.css';
 
 export function CartPage() {
-  const { lines, subtotal, setQuantity, remove } = useCart();
+  const { lines, subtotalCents, setQuantity, remove } = useCart();
   const { closeOverlay, openOverlay } = useNav();
 
   if (lines.length === 0) {
@@ -46,7 +47,7 @@ export function CartPage() {
 
       <div className="pad">
         {lines.map((line) => (
-          <div key={line.key} className="bagrow">
+          <div key={line.variantId} className="bagrow">
             <div className="bagthumb">
               {line.image ? <img src={line.image} alt="" /> : <ProductArt />}
             </div>
@@ -59,7 +60,7 @@ export function CartPage() {
               <div className="bagqty">
                 <button
                   type="button"
-                  onClick={() => setQuantity(line.key, line.quantity - 1)}
+                  onClick={() => setQuantity(line.variantId, line.quantity - 1)}
                   aria-label="Diminuir"
                 >
                   −
@@ -67,7 +68,7 @@ export function CartPage() {
                 <b>{line.quantity}</b>
                 <button
                   type="button"
-                  onClick={() => setQuantity(line.key, line.quantity + 1)}
+                  onClick={() => setQuantity(line.variantId, line.quantity + 1)}
                   aria-label="Aumentar"
                 >
                   +
@@ -76,8 +77,8 @@ export function CartPage() {
             </div>
 
             <div className="bagside">
-              <span className="bagprice">{formatPrice(line.price * line.quantity)}</span>
-              <button type="button" className="bagremove" onClick={() => remove(line.key)}>
+              <span className="bagprice">{formatarPreco(line.priceCents * line.quantity)}</span>
+              <button type="button" className="bagremove" onClick={() => remove(line.variantId)}>
                 Remove
               </button>
             </div>
@@ -87,7 +88,7 @@ export function CartPage() {
         <div className="totals">
           <div>
             <span>Subtotal</span>
-            <span>{formatPrice(subtotal)}</span>
+            <span>{formatarPreco(subtotalCents)}</span>
           </div>
           <div>
             <span>Shipping</span>
@@ -95,7 +96,7 @@ export function CartPage() {
           </div>
           <div className="totals-final">
             <span>Total</span>
-            <span>{formatPrice(subtotal)}</span>
+            <span>{formatarPreco(subtotalCents)}</span>
           </div>
         </div>
 

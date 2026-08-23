@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNav } from '../context/NavigationContext';
 import { fighters } from '../data/fighters';
-import { products } from '../data/shop';
+import { useProducts } from '../hooks/useProducts';
 import { ProductCard } from '../components/shop/ShopParts';
 import type { ScheduledBout } from '../data/fighters';
 import '../styles/shop.css';
@@ -46,6 +46,7 @@ function BoutCard({ bout, isNext }: { bout: ScheduledBout; isNext: boolean }) {
 export function FighterPage({ slug }: { slug: string }) {
   const fighter = fighters.find((f) => f.slug === slug);
   const { closeOverlay, openOverlay } = useNav();
+  const { produtos } = useProducts();
   const [panel, setPanel] = useState<Panel>('profile');
   const [showRecord, setShowRecord] = useState(false);
   const [following, setFollowing] = useState(false);
@@ -65,7 +66,7 @@ export function FighterPage({ slug }: { slug: string }) {
   const subs = wins.filter((b) => b.method.startsWith('Submission')).length;
   const kos = wins.filter((b) => b.method.startsWith('TKO') || b.method.startsWith('KO')).length;
 
-  const athleteProducts = products.filter((p) => p.owner === fighter.slug);
+  const athleteProducts = produtos.filter((p) => p.owner === fighter.slug);
   const [firstName, ...rest] = fighter.name.split(' ');
 
   return (

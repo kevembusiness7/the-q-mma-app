@@ -1,5 +1,7 @@
 import type { Coach, Product, ProductColor, Sponsor } from '../types/shop';
 
+type ProdutoBase = Omit<Product, 'variants'>;
+
 const SHIPPING =
   'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.';
 
@@ -16,12 +18,14 @@ const MOCKUP_COLORS: ProductColor[] = [
   { name: 'Gold', hex: '#C8A03C', slug: 'gold' },
 ];
 
-export const products: Product[] = [
+/** Sem as variações: quem monta é comVariacoes(), com a mesma regra do SQL. */
+export const products: ProdutoBase[] = [
   {
     id: 'witch-fight-kit',
+    slug: 'witch-fight-kit',
     name: 'The Witch Fight Kit Shirt',
     category: 'Shirts',
-    price: 190,
+    priceCents: 19000,
     badges: ['app'],
     owner: 'dione-barbosa',
     description:
@@ -39,9 +43,10 @@ export const products: Product[] = [
   },
   {
     id: 'ozzy-fight-kit',
+    slug: 'ozzy-fight-kit',
     name: 'Ozzy Fight Kit Shirt',
     category: 'Shirts',
-    price: 190,
+    priceCents: 19000,
     badges: ['app'],
     owner: 'ozzy-diaz',
     description:
@@ -61,9 +66,10 @@ export const products: Product[] = [
   },
   {
     id: 'theq-classic-cap',
+    slug: 'theq-classic-cap',
     name: 'The Q Classic Cap',
     category: 'Caps',
-    price: 99,
+    priceCents: 9900,
     badges: [],
     owner: 'team',
     description:
@@ -83,10 +89,11 @@ export const products: Product[] = [
   },
   {
     id: 'theq-kids-shirt',
+    slug: 'theq-kids-shirt',
     name: 'The Q Kids Shirt',
     category: 'Kids',
-    price: 129,
-    badges: ['low'],
+    priceCents: 12900,
+    badges: [],
     owner: 'team',
     description: 'Kids shirt with the team crest, soft 100% cotton fabric.',
     tags: ['TheQMMA', 'Kids'],
@@ -103,9 +110,10 @@ export const products: Product[] = [
   },
   {
     id: 'dione-witch-art',
+    slug: 'dione-witch-art',
     name: 'Dione Witch Art Shirt',
     category: 'Shirts',
-    price: 169,
+    priceCents: 16900,
     badges: ['app'],
     owner: 'dione-barbosa',
     description:
@@ -121,9 +129,10 @@ export const products: Product[] = [
   },
   {
     id: 'dione-fight-poster',
+    slug: 'dione-fight-poster',
     name: 'Dione Barbosa Fight Poster Shirt',
     category: 'Shirts',
-    price: 169,
+    priceCents: 16900,
     badges: ['app'],
     owner: 'dione-barbosa',
     description:
@@ -140,6 +149,45 @@ export const products: Product[] = [
 ];
 
 export const SIZES = ['S', 'M', 'L', 'XL', 'XXL'];
+
+/**
+ * Expande cores × tamanhos em variações, para o mock ter a mesma forma que o
+ * banco devolve.
+ *
+ * A regra é a mesma do loja-schema.sql, inclusive o estoque de exemplo — se
+ * divergirem, a loja muda de comportamento ao ligar o Supabase, e esse tipo
+ * de diferença é difícil de perceber.
+ *
+ * Boné usa 'One size': a lista SIZES era única para a loja inteira, então o
+ * app chegava a oferecer boné tamanho XXL.
+ */
+export function comVariacoes(lista: ProdutoBase[]): Product[] {
+  return lista.map((p) => {
+    const tamanhos = p.category === 'Caps' ? ['One size'] : SIZES;
+    return {
+      ...p,
+      variants: p.colors.flatMap((cor) =>
+        tamanhos.map((size) => ({
+          id: `${p.slug}-${cor.slug}-${size.replace(/\s/g, '').toLowerCase()}`,
+          sku: `${p.slug}-${cor.slug}-${size.replace(/\s/g, '')}`.toUpperCase(),
+          colorName: cor.name,
+          colorHex: cor.hex,
+          colorSlug: cor.slug,
+          size,
+          priceCents: p.priceCents,
+          stock:
+            size === 'XXL' && cor.slug === 'gold'
+              ? 0
+              : size === 'S'
+                ? 3
+                : size === 'XXL'
+                  ? 4
+                  : 12 + cor.slug.length * 2,
+        })),
+      ),
+    };
+  });
+}
 
 export const coaches: Coach[] = [
   {

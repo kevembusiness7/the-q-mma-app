@@ -1,16 +1,26 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
-import type { Product } from '../types/shop';
+import type { Product, ProductVariant } from '../types/shop';
 
 export interface CartLine {
-  /** Combina produto + cor + tamanho: dois tamanhos do mesmo item são linhas separadas. */
-  key: string;
+  /** A variação é a chave: cada cor+tamanho é uma linha própria. */
+  variantId: string;
+  sku: string;
   productId: string;
   name: string;
-  price: number;
+  /**
+   * Preço em centavos, copiado no momento em que o item entrou no carrinho.
+   *
+   * Serve para a tela; o servidor vai recalcular o total consultando o preço
+   * real da variação antes de cobrar. Nunca confiar no valor vindo do
+   * dispositivo — é o caminho clássico de fraude no checkout.
+   */
+  priceCents: number;
   color: string;
   size: string;
   quantity: number;
-  /** Imagem já resolvida, para o carrinho não precisar recalcular o mockup. */
+  /** Quanto havia em estoque quando o item foi adicionado. */
+  stock: number;
+  /** Imagem já resolvida, para o carrinho não recalcular o mockup. */
   image?: string;
 }
 
@@ -18,10 +28,10 @@ interface CartValue {
   lines: CartLine[];
   /** Soma das quantidades — é o número no badge da sacola. */
   count: number;
-  subtotal: number;
-  add: (product: Product, color: string, size: string, quantity: number, image?: string) => void;
-  setQuantity: (key: string, quantity: number) => void;
-  remove: (key: string) => void;
+  subtotalCents: number;
+  add: (product: Product, variant: ProductVariant, quantity: number, image?: string) => void;
+  setQuantity: (variantId: string, quantity: number) => void;
+  remove: (variantId: string) => void;
   clear: () => void;
 }
 
@@ -34,43 +44,51 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return {
       lines,
       count: lines.reduce((sum, l) => sum + l.quantity, 0),
-      subtotal: lines.reduce((sum, l) => sum + l.price * l.quantity, 0),
+      subtotalCents: lines.reduce((sum, l) => sum + l.priceCents * l.quantity, 0),
 
-      add(product, color, size, quantity, image) {
-        const key = `${product.id}|${color}|${size}`;
+      add(product, variant, quantity, image) {
         setLines((current) => {
-          const existing = current.find((l) => l.key === key);
+          const existing = current.find((l) => l.variantId === variant.id);
           if (existing) {
+            // Nunca deixa passar do estoque, mesmo somando com o que já
+            // estava no carrinho.
+            const total = Math.min(existing.quantity + quantity, variant.stock);
             return current.map((l) =>
-              l.key === key ? { ...l, quantity: l.quantity + quantity } : l,
+              l.variantId === variant.id ? { ...l, quantity: total, stock: variant.stock } : l,
             );
           }
           return [
             ...current,
             {
-              key,
+              variantId: variant.id,
+              sku: variant.sku,
               productId: product.id,
               name: product.name,
-              price: product.price,
-              color,
-              size,
-              quantity,
+              priceCents: variant.priceCents,
+              color: variant.colorName,
+              size: variant.size,
+              quantity: Math.min(quantity, variant.stock),
+              stock: variant.stock,
               image,
             },
           ];
         });
       },
 
-      setQuantity(key, quantity) {
+      setQuantity(variantId, quantity) {
         setLines((current) =>
           quantity <= 0
-            ? current.filter((l) => l.key !== key)
-            : current.map((l) => (l.key === key ? { ...l, quantity } : l)),
+            ? current.filter((l) => l.variantId !== variantId)
+            : current.map((l) =>
+                l.variantId === variantId
+                  ? { ...l, quantity: Math.min(quantity, l.stock) }
+                  : l,
+              ),
         );
       },
 
-      remove(key) {
-        setLines((current) => current.filter((l) => l.key !== key));
+      remove(variantId) {
+        setLines((current) => current.filter((l) => l.variantId !== variantId));
       },
 
       clear() {

@@ -1,9 +1,9 @@
 import type { Product } from '../../types/shop';
-import { ProductArt, formatPrice, productImage } from '../../lib/productImage';
+import { ProductArt, productImage } from '../../lib/productImage';
+import { estaEsgotado, estoqueBaixo, formatarPreco } from '../../hooks/useProducts';
 
 const BADGE_LABEL: Record<string, string> = {
   app: 'App exclusive',
-  low: 'Low stock',
   lim: 'Limited',
 };
 
@@ -51,16 +51,27 @@ export function ProductCard({ product, onOpen }: { product: Product; onOpen: () 
   const firstColor = product.colors[0];
   const photo = productImage(product, firstColor?.slug ?? 'black');
 
+  /* O selo agora sai do estoque das variações, e não de um campo escrito à
+     mão. "Esgotado" tem prioridade sobre qualquer outro: é a informação que
+     muda a decisão de quem está olhando. */
+  const esgotado = estaEsgotado(product);
+  const pouco = estoqueBaixo(product);
+  const selo = esgotado
+    ? { classe: 'b-out', texto: 'Sold out' }
+    : pouco
+      ? { classe: 'b-low', texto: 'Low stock' }
+      : product.badges[0]
+        ? { classe: `b-${product.badges[0]}`, texto: BADGE_LABEL[product.badges[0]] }
+        : null;
+
   return (
-    <button type="button" className="card" onClick={onOpen}>
+    <button type="button" className={`card ${esgotado ? 'esgotado' : ''}`} onClick={onOpen}>
       <div className="thumb">
         {photo ? <img src={photo} alt="" loading="lazy" /> : <ProductArt art={product.art} />}
-        {product.badges[0] && (
-          <span className={`badge b-${product.badges[0]}`}>{BADGE_LABEL[product.badges[0]]}</span>
-        )}
+        {selo && <span className={`badge ${selo.classe}`}>{selo.texto}</span>}
       </div>
       <h4>{product.name}</h4>
-      <span className="price">{formatPrice(product.price)}</span>
+      <span className="price">{formatarPreco(product.priceCents)}</span>
     </button>
   );
 }
