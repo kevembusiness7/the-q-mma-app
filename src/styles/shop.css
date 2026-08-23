@@ -298,9 +298,12 @@
 
 /* --------------------------------------------------------- produto ------ */
 
+/* Os mockups de camisa são retratos (668x700), então a moldura cresceu: em
+   270px a camisa ficava minúscula. O clamp evita que ela coma a tela inteira
+   num iPhone baixo e ainda aproveite espaço num aparelho grande. */
 .hero-img {
   position: relative;
-  height: 270px;
+  height: clamp(260px, 42dvh, 380px);
   background: linear-gradient(160deg, var(--q-canvas-2), #151211);
   display: grid;
   place-items: center;
@@ -308,15 +311,26 @@
   overflow: hidden;
 }
 
+/* A imagem era "width/height: 100%" com object-fit: contain, mas como item de
+   grid centralizado o "height: 100%" não resolvia — a <img> caía para height
+   auto (430px de altura vindos da proporção do arquivo) dentro de uma moldura
+   de 270px, e o overflow: hidden cortava a camisa pela metade. Posicionada em
+   absoluto contra a moldura (que já é position: relative) a altura passa a ser
+   definida, então o contain finalmente tem o que respeitar. O recuo de 14px dá
+   respiro para a camisa não encostar nas bordas. */
 .hero-img img {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  inset: 14px;
+  width: calc(100% - 28px);
+  height: calc(100% - 28px);
   object-fit: contain;
 }
 
+/* Cresce junto com a moldura: os 150px de antes ocupavam pouco mais da metade
+   da altura de 270px e, na moldura maior, ficavam perdidos no meio do vazio. */
 .hero-img svg {
-  width: 150px;
-  height: 150px;
+  width: 190px;
+  height: 190px;
   opacity: 0.5;
 }
 
