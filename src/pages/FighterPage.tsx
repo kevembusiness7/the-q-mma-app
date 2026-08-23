@@ -75,9 +75,14 @@ export function FighterPage({ slug }: { slug: string }) {
           </svg>
         </button>
 
+        {/* Bandeira do país como marca d'água, atrás da foto. */}
+        <img className="fh-flag" src={`/images/flags/${fighter.country}.svg`} alt="" aria-hidden />
+
         <img className="fh-photo" src={fighter.photo} alt="" />
         <div className="fh-scrim" />
 
+        {/* O apelido sumia por cima da foto quando era só texto dourado, então
+            ganhou uma tarja com borda, como a do hero da aba Athletes. */}
         <div className="nick">{fighter.nickname}</div>
         <h2>
           {firstName}

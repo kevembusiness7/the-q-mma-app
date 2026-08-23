@@ -36,6 +36,8 @@ export interface FighterProfile {
   age: number;
   /** Abreviação usada no cabeçalho: FLY, MW. */
   divisionShort: string;
+  /** Código ISO do país de origem — vira a bandeira de fundo do topo. */
+  country: 'br' | 'us';
   /** Foto recortada, fundo transparente, para o topo da tela. */
   photo: string;
   /** Pares rótulo/valor da aba Profile. */
@@ -53,6 +55,7 @@ export const fighters: FighterProfile[] = [
     record: '10-4-0',
     age: 34,
     divisionShort: 'FLY',
+    country: 'br',
     photo: '/images/athletes/dione-barbosa-profile.png',
     bio: [
       ['Nickname', 'The Witch'],
@@ -99,6 +102,7 @@ export const fighters: FighterProfile[] = [
     record: '10-4-0',
     age: 35,
     divisionShort: 'MW',
+    country: 'us',
     photo: '/images/athletes/osman-diaz-profile.png',
     bio: [
       ['Nickname', 'Ozzy'],

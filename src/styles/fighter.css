@@ -41,6 +41,28 @@
 }
 
 /* A foto é PNG recortado, então fica contida e centralizada — não cortada. */
+/* Bandeira do país, atrás da foto. Fica em z-index 1 (abaixo da foto, que é
+   2) e bem apagada: é ambientação, não informação — o país aparece escrito na
+   aba Profile. A máscara radial dissolve as bordas para não virar um retângulo
+   colado no meio do topo. */
+.fh-flag {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  width: 118%;
+  height: auto;
+  z-index: 1;
+  /* Calibrado na tela: a 0.22 o losango amarelo do Brasil ficava mais claro
+     que a foto e roubava a atenção; o brightness segura os tons vivos sem
+     apagar a bandeira a ponto de ela não ser reconhecida. */
+  opacity: 0.18;
+  filter: saturate(0.85) brightness(0.8) contrast(0.95);
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 45%, #000 34%, transparent 72%);
+  mask-image: radial-gradient(ellipse at 50% 45%, #000 34%, transparent 72%);
+}
+
 .fh-photo {
   position: absolute;
   left: 50%;
@@ -77,12 +99,25 @@
   text-align: center;
 }
 
+/* Era só texto dourado solto: por cima da foto, em cima de pele e tecido
+   claros, praticamente sumia. Vira uma tarja com fundo escuro e borda, que
+   garante o contraste independente do que estiver atrás. align-self: center
+   (e não margin auto) porque o .fighter-hero é um flex column: sem isso o
+   item estica na horizontal e a tarja ocuparia a linha inteira. */
 .fighter-hero .nick {
+  align-self: center;
+  padding: 5px 14px;
+  border: 1px solid var(--q-gold, #c8a03c);
+  border-radius: 4px;
+  background: rgba(8, 7, 6, 0.72);
+  backdrop-filter: blur(4px);
   font-family: var(--q-mono, monospace);
   font-size: 12px;
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--q-gold, #c8a03c);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
 }
 
 .fighter-hero h2 {

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 741 390" width="741" height="390">
+  <!-- Bandeira dos EUA. As 50 estrelas viram um reticulado de pontos: como
+       marca d'água atrás da foto, a forma exata da estrela não se distingue. -->
+  <defs>
+    <g id="linha-6">
+      <circle cx="25" cy="0" r="7"/><circle cx="74" cy="0" r="7"/><circle cx="123" cy="0" r="7"/>
+      <circle cx="172" cy="0" r="7"/><circle cx="221" cy="0" r="7"/><circle cx="270" cy="0" r="7"/>
+    </g>
+    <g id="linha-5">
+      <circle cx="49" cy="0" r="7"/><circle cx="98" cy="0" r="7"/><circle cx="147" cy="0" r="7"/>
+      <circle cx="196" cy="0" r="7"/><circle cx="245" cy="0" r="7"/>
+    </g>
+  </defs>
+
+  <rect width="741" height="390" fill="#ffffff"/>
+  <g fill="#b22234">
+    <rect y="0" width="741" height="30"/>
+    <rect y="60" width="741" height="30"/>
+    <rect y="120" width="741" height="30"/>
+    <rect y="180" width="741" height="30"/>
+    <rect y="240" width="741" height="30"/>
+    <rect y="300" width="741" height="30"/>
+    <rect y="360" width="741" height="30"/>
+  </g>
+  <rect width="296" height="210" fill="#3c3b6e"/>
+  <g fill="#ffffff">
+    <use href="#linha-6" y="21"/>
+    <use href="#linha-5" y="42"/>
+    <use href="#linha-6" y="63"/>
+    <use href="#linha-5" y="84"/>
+    <use href="#linha-6" y="105"/>
+    <use href="#linha-5" y="126"/>
+    <use href="#linha-6" y="147"/>
+    <use href="#linha-5" y="168"/>
+    <use href="#linha-6" y="189"/>
+  </g>
+</svg>

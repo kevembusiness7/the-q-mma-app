@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 504" width="720" height="504">
+  <!-- Bandeira do Brasil, sem as estrelas e sem o lema: ela é usada como
+       marca d'água atrás da foto, onde esse detalhe não apareceria. -->
+  <rect width="720" height="504" fill="#009c3b"/>
+  <path d="M360 62 662 252 360 442 58 252Z" fill="#ffdf00"/>
+  <clipPath id="disco"><circle cx="360" cy="252" r="107"/></clipPath>
+  <circle cx="360" cy="252" r="107" fill="#002776"/>
+  <circle cx="360" cy="445" r="181" fill="none" stroke="#ffffff" stroke-width="18" clip-path="url(#disco)"/>
+</svg>
