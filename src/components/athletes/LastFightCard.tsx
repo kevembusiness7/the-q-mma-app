@@ -96,14 +96,15 @@ export function LastFightCard({ athlete, fight }: LastFightCardProps) {
           <Calendar size={12} className="shrink-0 text-(--color-gold)" />
           {formattedDate}
         </span>
-        {fight.venue && (
+        {/* Basta um dos dois: antes exigia o nome da arena, então uma luta
+            registrada só com a cidade ficava sem local nenhum na tela. */}
+        {(fight.venue || fight.city) && (
           <>
             <span className="h-3 w-px shrink-0 bg-(--color-border-gold)" />
             <span className="flex items-center gap-1.5 min-w-0">
               <MapPin size={12} className="shrink-0 text-(--color-gold)" />
               <span className="truncate">
-                {fight.venue}
-                {fight.city ? `, ${fight.city}` : ''}
+                {[fight.venue, fight.city].filter(Boolean).join(', ')}
               </span>
             </span>
           </>

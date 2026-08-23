@@ -32,7 +32,9 @@ function BoutCard({ bout, isNext }: { bout: ScheduledBout; isNext: boolean }) {
         </div>
       )}
 
-      {isNext && (bout.venue || bout.broadcaster) && (
+      {/* Antes só a luta futura mostrava o local. Uma luta passada com cidade
+          registrada tem a mesma informação e não havia motivo para escondê-la. */}
+      {(bout.venue || bout.city || bout.broadcaster) && (
         <div className="where">
           {[bout.venue, bout.city, bout.broadcaster].filter(Boolean).join(' · ')}
         </div>

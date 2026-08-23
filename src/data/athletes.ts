@@ -38,11 +38,11 @@ const jpLastFight: FightRecord = {
   method: 'Decision · unanimous',
   round: null,
   time: null,
-  eventName: 'UFC Fight Night',
+  eventName: 'UFC Fight Night: Du Plessis vs. Usman',
   eventDate: '2026-07-18',
-  // Local e emissora não vieram na ficha; a UI já omite o que for nulo.
+  // Só a cidade foi informada, sem o nome da arena. A emissora segue nula.
   venue: null,
-  city: null,
+  city: 'Oklahoma City, OK',
   broadcaster: null,
   isNextFight: false,
 }

@@ -177,7 +177,8 @@ export const fighters: FighterProfile[] = [
       opponent: 'Seok Hyeon Ko',
       opponentRecord: '13-2',
       myRecord: '11-2',
-      division: 'UFC Fight Night · Welterweight',
+      division: 'UFC Fight Night: Du Plessis vs. Usman · Welterweight',
+      city: 'Oklahoma City, OK',
       when: 'Jul 18, 2026',
       result: 'win',
       method: 'Decision · unanimous',
@@ -187,7 +188,7 @@ export const fighters: FighterProfile[] = [
        Jiu-Jitsu Worlds e os três combates cancelados ficaram de fora — não
        entram no cartel, e a soma aqui bate com o 11-2-0. */
     record_list: [
-      { result: 'W', opponent: 'Seok Hyeon Ko', opponentRecord: '13-2', method: 'Decision · unanimous', time: '3 rounds', card: 'UFC Fight Night · Jul 18, 2026' },
+      { result: 'W', opponent: 'Seok Hyeon Ko', opponentRecord: '13-2', method: 'Decision · unanimous', time: '3 rounds', card: 'UFC Fight Night: Du Plessis vs. Usman · Jul 18, 2026' },
       { result: 'W', opponent: 'Phil Rowe', opponentRecord: '11-6', method: 'Decision · split', time: '3 rounds', card: 'UFC Fight Night · Feb 21, 2026' },
       { result: 'W', opponent: 'Jack Congdon', opponentRecord: '7-1', method: 'TKO · head kick and right hook', time: 'R1 1:08', card: 'Contender Series 2025 · Sep 2, 2025' },
       { result: 'W', opponent: 'Kegan Gennrich', opponentRecord: '9-3', method: 'Submission · triangle choke', time: 'R1 4:00', card: 'LFA 206: Gennrich vs. Lebosnoyani · Apr 11, 2025' },

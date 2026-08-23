@@ -74,11 +74,11 @@ insert into fights (
   'Decision · unanimous',
   null,               -- decisão foi aos pontos, não há round/tempo de parada
   null,
-  'UFC Fight Night',
+  'UFC Fight Night: Du Plessis vs. Usman',
   '2026-07-18',
-  null,               -- local e emissora não vieram na ficha
-  null,
-  null,
+  null,               -- só a cidade foi informada, sem o nome da arena
+  'Oklahoma City, OK',
+  null,               -- emissora não informada
   false
 );
 
