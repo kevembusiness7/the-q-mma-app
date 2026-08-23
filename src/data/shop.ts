@@ -163,6 +163,7 @@ export const sponsors: Sponsor[] = [
     description:
       'Official trading card partner of The Q MMA, producing collectible cards for the team roster.',
     logo: '/images/sponsors/blez-sports-cards.jpg',
+    website: 'https://www.blezonline.com/',
     featured: true,
   },
 ];

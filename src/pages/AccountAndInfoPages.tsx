@@ -129,7 +129,7 @@ export function SponsorsPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Learn more
+                  Check It Out
                 </a>
               )}
             </div>
