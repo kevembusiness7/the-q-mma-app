@@ -7,6 +7,25 @@ interface AthleteHeroProps {
   athlete: Athlete
 }
 
+/**
+ * Tamanho do nome conforme a palavra mais longa.
+ *
+ * A coluna do nome tem ~210px, e sem isto um sobrenome longo quebra no meio da
+ * palavra: "LEBOSNOYANI" a 38px pede 304px e virava "LEBOSNO / YANI".
+ *
+ * As faixas saíram de medição na própria página, não de estimativa: com 11
+ * caracteres, 27px pede 216px (não cabe) e 24px cabe. Isso dá ~0,73px de
+ * largura por caractere para cada 1px de fonte, que é de onde vêm os demais
+ * degraus. Nomes curtos como "Barbosa" e "Diaz" ficam nos 38px de sempre.
+ */
+function tamanhoDoNome(primeiro: string, ultimo: string): string {
+  const maior = Math.max(primeiro.length, ultimo.length)
+  if (maior <= 8) return 'text-[38px]'
+  if (maior <= 9) return 'text-[30px]'
+  if (maior <= 11) return 'text-[24px]'
+  return 'text-[20px]'
+}
+
 export function AthleteHero({ athlete }: AthleteHeroProps) {
   return (
     <section className="px-4">
@@ -42,7 +61,12 @@ export function AthleteHero({ athlete }: AthleteHeroProps) {
               &ldquo;{athlete.nickname}&rdquo;
             </span>
 
-            <h1 className="font-(family-name:--font-display) font-black italic uppercase leading-[0.84] text-[38px] text-silver-metallic break-words drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]">
+            <h1
+              className={`font-(family-name:--font-display) font-black italic uppercase leading-[0.84] ${tamanhoDoNome(
+                athlete.firstName,
+                athlete.lastName,
+              )} text-silver-metallic break-words drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]`}
+            >
               <span className="block">{athlete.firstName}</span>
               <span className="block">{athlete.lastName}</span>
             </h1>

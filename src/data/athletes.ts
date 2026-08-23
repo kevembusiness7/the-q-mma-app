@@ -28,6 +28,25 @@ const dioneLastFight: FightRecord = {
   isNextFight: false,
 }
 
+const jpLastFight: FightRecord = {
+  id: 'fight-jp-last',
+  athleteId: 'jp-lebosnoyani',
+  opponentName: 'Seok Hyeon Ko',
+  opponentRecord: '13-2',
+  opponentImageUrl: null,
+  result: 'win',
+  method: 'Decision · unanimous',
+  round: null,
+  time: null,
+  eventName: 'UFC Fight Night',
+  eventDate: '2026-07-18',
+  // Local e emissora não vieram na ficha; a UI já omite o que for nulo.
+  venue: null,
+  city: null,
+  broadcaster: null,
+  isNextFight: false,
+}
+
 const ozzyNextFight: FightRecord = {
   id: 'fight-ozzy-next',
   athleteId: 'ozzy-diaz',
@@ -120,6 +139,34 @@ export const ATHLETES: AthleteWithFights[] = [
     fightingOutOf: 'Los Angeles, CA, USA',
     lastFight: ozzyLastFight,
     nextFight: ozzyNextFight,
+  },
+  {
+    id: 'jp-lebosnoyani',
+    slug: 'jp-lebosnoyani',
+    name: 'Jean-Paul Lebosnoyani',
+    firstName: 'Jean-Paul',
+    lastName: 'Lebosnoyani',
+    nickname: 'Mufasa',
+    division: 'Welterweight',
+    organization: 'UFC',
+    imageUrl: '/images/athletes/jp-lebosnoyani.png',
+    heroImageUrl: '/images/athletes/jp-lebosnoyani-hero.png',
+    imageAlt: 'Jean-Paul "Mufasa" Lebosnoyani',
+    age: 27,
+    heightLabel: `5'11"`,
+    weightLbs: 171,
+    reachLabel: '72.0"',
+    record: '11-2-0',
+    wins: 11,
+    losses: 2,
+    draws: 0,
+    bio: 'Jean-Paul "Mufasa" Lebosnoyani is a welterweight competing in the UFC, born and fighting out of Hermosa Beach, CA. A freestyle grappler on a six-fight winning streak, he has finished 8 of his 11 career wins by knockout or submission.',
+    team: 'THE Q MMA',
+    headCoach: 'Matheus Naccache',
+    bornIn: 'Hermosa Beach, CA, USA',
+    fightingOutOf: 'Hermosa Beach, CA, USA',
+    lastFight: jpLastFight,
+    nextFight: null,
   },
 ]
 
