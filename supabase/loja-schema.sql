@@ -43,10 +43,17 @@ create table if not exists products (
   mode         product_mode not null default 'art',
   mockup_key   text,
   art          text,
+  -- Foto real do design quando mode = 'art' (ex.: a arte do atleta impressa
+  -- na camisa/boné). Sem isto, a tela cai no desenho SVG genérico de
+  -- `art` (silhueta de camisa/boné/infantil).
+  art_image    text,
   is_active    boolean not null default true,
   sort_order   int not null default 0,
   created_at   timestamptz not null default now()
 );
+
+-- Cobre quem já tinha a tabela criada antes de existir a coluna acima.
+alter table products add column if not exists art_image text;
 
 -- 3. Variações --------------------------------------------------------------
 -- Cada combinação de cor e tamanho é uma linha própria, com SKU e estoque.
@@ -101,55 +108,76 @@ create policy "admin gerencia variacoes" on product_variants
 
 insert into products
   (slug, name, category, price_cents, badges, owner, description, tags, genders,
-   details, shipping, mode, mockup_key, art, sort_order)
+   details, shipping, mode, mockup_key, art, art_image, sort_order)
 values
-  ('witch-fight-kit', 'The Witch Fight Kit Shirt', 'Shirts', 19000, '{app}', 'dione-barbosa',
-   'Official black fight-night shirt with green-and-gold artwork and Dione "The Witch" Barbosa''s signature.',
-   '{UFC,Flyweight,DioneBarbosa,TheQMMA,FightKit}', '{Men,Women,Kids}',
-   '100% combed cotton, 180g/m², high-durability screen print. Unisex regular fit. Officially licensed piece with The Q MMA authenticity seal.',
-   'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.',
-   'art', null, 'tee', 1),
-
-  ('ozzy-fight-kit', 'Ozzy Fight Kit Shirt', 'Shirts', 19000, '{app}', 'ozzy-diaz',
-   'Official black fight-night shirt with red-and-black artwork and Osman "Ozzy" Diaz''s signature.',
-   '{UFC,Middleweight,OzzyDiaz,TheQMMA,FightKit}', '{Men,Women,Kids}',
-   '100% combed cotton, 180g/m², high-durability screen print. Unisex regular fit. Officially licensed piece with The Q MMA authenticity seal.',
-   'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.',
-   'art', null, 'tee', 2),
-
   ('theq-classic-cap', 'The Q Classic Cap', 'Caps', 9900, '{}', 'team',
    'Curved-brim cap with the team logo embroidered on front, snapback adjustable strap.',
    '{TheQMMA,Cap,Classic}', '{Men,Women}',
    'Structured six-panel cap, embroidered front logo, adjustable snapback closure.',
    'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.',
-   'art', null, 'cap', 3),
+   'art', null, 'cap', null, 3),
 
   ('theq-kids-shirt', 'The Q Kids Shirt', 'Kids', 12900, '{}', 'team',
    'Kids tee with The Q MMA logo, soft cotton and reinforced neckline.',
    '{TheQMMA,Kids}', '{Kids}',
    '100% combed cotton, soft hand feel, reinforced neckline for everyday use.',
    'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.',
-   'art', null, 'kid', 4),
+   'art', null, 'kid', null, 4),
 
   ('dione-witch-art', 'Dione Witch Art Shirt', 'Shirts', 16900, '{app}', 'dione-barbosa',
    'Shirt with Dione "The Witch" Barbosa''s exclusive illustrated artwork. Choose the shirt color and see front and back.',
    '{UFC,DioneBarbosa,Art}', '{Men,Women}',
    '100% combed cotton, 180g/m², high-durability screen print. Unisex regular fit. Officially licensed piece with The Q MMA authenticity seal.',
    'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.',
-   'mockup', 'witch', null, 5),
+   'mockup', 'witch', null, null, 5),
 
-  ('dione-fight-poster', 'Dione Barbosa Fight Poster Shirt', 'Shirts', 16900, '{app}', 'dione-barbosa',
-   'Fight poster artwork printed on premium cotton. Choose the shirt color and see front and back.',
-   '{UFC,DioneBarbosa,Poster}', '{Men,Women}',
+  ('ozzy-diaz-art', 'Ozzy Diaz Art Shirt', 'Shirts', 16900, '{app}', 'ozzy-diaz',
+   'Shirt with Osman "Ozzy" Diaz''s exclusive illustrated artwork.',
+   '{UFC,OzzyDiaz,TheQMMA,Art}', '{Men,Women}',
    '100% combed cotton, 180g/m², high-durability screen print. Unisex regular fit. Officially licensed piece with The Q MMA authenticity seal.',
    'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.',
-   'mockup', 'poster', null, 6)
+   'art', null, 'tee', '/images/shirts/ozzyshirt.png', 6),
+
+  ('shane-collins-art', 'Shane Collins Art Shirt', 'Shirts', 16900, '{app}', 'shane-collins',
+   'Shirt with Shane "Hollywood" Collins''s exclusive illustrated artwork.',
+   '{UFC,ShaneCollins,TheQMMA,Art}', '{Men,Women}',
+   '100% combed cotton, 180g/m², high-durability screen print. Unisex regular fit. Officially licensed piece with The Q MMA authenticity seal.',
+   'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.',
+   'art', null, 'tee', '/images/shirts/hollywoodshirt.png', 7),
+
+  ('jp-lebosnoyani-art', 'Jean Paul Art Shirt', 'Shirts', 16900, '{app}', 'jp-lebosnoyani',
+   'Shirt with Jean-Paul "Mufasa" Lebosnoyani''s exclusive illustrated artwork.',
+   '{UFC,JeanPaulLebosnoyani,TheQMMA,Art}', '{Men,Women}',
+   '100% combed cotton, 180g/m², high-durability screen print. Unisex regular fit. Officially licensed piece with The Q MMA authenticity seal.',
+   'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.',
+   'art', null, 'tee', '/images/shirts/jplshirt.png', 8),
+
+  ('ozzy-diaz-cap', 'Ozzy Diaz Art Cap', 'Caps', 9900, '{app}', 'ozzy-diaz',
+   'Curved-brim cap with Osman "Ozzy" Diaz''s exclusive illustrated artwork embroidered on front.',
+   '{UFC,OzzyDiaz,TheQMMA,Art,Cap}', '{Men,Women}',
+   'Structured six-panel cap, front artwork print, adjustable snapback closure.',
+   'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.',
+   'art', null, 'cap', '/images/caps/ozzycap.png', 9),
+
+  ('shane-collins-cap', 'Shane Collins Art Cap', 'Caps', 9900, '{app}', 'shane-collins',
+   'Curved-brim cap with Shane "Hollywood" Collins''s exclusive illustrated artwork embroidered on front.',
+   '{UFC,ShaneCollins,TheQMMA,Art,Cap}', '{Men,Women}',
+   'Structured six-panel cap, front artwork print, adjustable snapback closure.',
+   'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.',
+   'art', null, 'cap', '/images/caps/hollywoodcap.png', 10),
+
+  ('jp-lebosnoyani-cap', 'Jean Paul Art Cap', 'Caps', 9900, '{app}', 'jp-lebosnoyani',
+   'Curved-brim cap with Jean-Paul "Mufasa" Lebosnoyani''s exclusive illustrated artwork embroidered on front.',
+   '{UFC,JeanPaulLebosnoyani,TheQMMA,Art,Cap}', '{Men,Women}',
+   'Structured six-panel cap, front artwork print, adjustable snapback closure.',
+   'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.',
+   'art', null, 'cap', '/images/caps/jplcap.png', 11)
 on conflict (slug) do update set
   name = excluded.name, category = excluded.category, price_cents = excluded.price_cents,
   badges = excluded.badges, owner = excluded.owner, description = excluded.description,
   tags = excluded.tags, genders = excluded.genders, details = excluded.details,
   shipping = excluded.shipping, mode = excluded.mode, mockup_key = excluded.mockup_key,
-  art = excluded.art, sort_order = excluded.sort_order;
+  art = excluded.art, art_image = excluded.art_image, sort_order = excluded.sort_order;
 
 -- 6. Cores de cada produto --------------------------------------------------
 -- Tabela temporária só para gerar as variações no passo seguinte.
@@ -158,14 +186,6 @@ create temp table cores_do_produto (slug text, color_name text, color_hex text, 
 on commit drop;
 
 insert into cores_do_produto values
-  ('witch-fight-kit', 'White', '#EDE7DE', 'white'),
-  ('witch-fight-kit', 'Gold', '#C8A03C', 'gold'),
-
-  ('ozzy-fight-kit', 'Black', '#14110F', 'black'),
-  ('ozzy-fight-kit', 'Red', '#c1392b', 'red'),
-  ('ozzy-fight-kit', 'Gray', '#948A81', 'gray'),
-  ('ozzy-fight-kit', 'White', '#EDE7DE', 'white'),
-
   ('theq-classic-cap', 'Black', '#14110F', 'black'),
   ('theq-classic-cap', 'Burgundy', '#B0301F', 'burgundy'),
   ('theq-classic-cap', 'Beige', '#948A81', 'beige'),
@@ -173,11 +193,11 @@ insert into cores_do_produto values
   ('theq-kids-shirt', 'Black', '#14110F', 'black'),
   ('theq-kids-shirt', 'Gold', '#C8A03C', 'gold');
 
--- Os dois produtos com foto real usam as 6 cores que têm mockup em
+-- O produto com foto real usa as 6 cores que têm mockup em
 -- /images/shirts/ — o nome do arquivo depende do color_slug.
 insert into cores_do_produto
 select p.slug, c.color_name, c.color_hex, c.color_slug
-from (values ('dione-witch-art'), ('dione-fight-poster')) p(slug)
+from (values ('dione-witch-art')) p(slug)
 cross join (values
   ('Black', '#14110F', 'black'),
   ('White', '#EDE7DE', 'white'),
@@ -185,6 +205,31 @@ cross join (values
   ('Green', '#4fb477', 'green'),
   ('Gray', '#948A81', 'gray'),
   ('Gold', '#C8A03C', 'gold')
+) c(color_name, color_hex, color_slug);
+
+-- As 3 camisas de arte dos atletas: mesma paleta de 6 cores da Dione. A arte
+-- em si não muda com a cor (é 'art', uma foto só) -- a cor aqui é só a base
+-- da camisa que a pessoa está comprando.
+insert into cores_do_produto
+select p.slug, c.color_name, c.color_hex, c.color_slug
+from (values ('ozzy-diaz-art'), ('shane-collins-art'), ('jp-lebosnoyani-art')) p(slug)
+cross join (values
+  ('Black', '#14110F', 'black'),
+  ('White', '#EDE7DE', 'white'),
+  ('Burgundy', '#B0301F', 'burgundy'),
+  ('Green', '#4fb477', 'green'),
+  ('Gray', '#948A81', 'gray'),
+  ('Gold', '#C8A03C', 'gold')
+) c(color_name, color_hex, color_slug);
+
+-- Os 3 bonés de arte dos atletas: mesma paleta do boné clássico do time.
+insert into cores_do_produto
+select p.slug, c.color_name, c.color_hex, c.color_slug
+from (values ('ozzy-diaz-cap'), ('shane-collins-cap'), ('jp-lebosnoyani-cap')) p(slug)
+cross join (values
+  ('Black', '#14110F', 'black'),
+  ('Burgundy', '#B0301F', 'burgundy'),
+  ('Beige', '#948A81', 'beige')
 ) c(color_name, color_hex, color_slug);
 
 -- 7. Variações --------------------------------------------------------------

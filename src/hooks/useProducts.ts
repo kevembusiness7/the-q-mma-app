@@ -87,6 +87,7 @@ function paraProduto(row: any): Product {
     mode: row.mode,
     mockupKey: row.mockup_key ?? undefined,
     art: row.art ?? undefined,
+    artImage: row.art_image ?? undefined,
   }
 }
 

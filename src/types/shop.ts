@@ -67,6 +67,8 @@ export interface Product {
   mockupKey?: string;
   /** Desenho usado quando mode = 'art'. */
   art?: 'tee' | 'cap' | 'kid';
+  /** Foto real do design (mode = 'art'). Sem isto, cai no desenho de `art`. */
+  artImage?: string;
 }
 
 export interface Coach {

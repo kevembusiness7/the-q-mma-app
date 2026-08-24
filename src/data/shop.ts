@@ -5,9 +5,6 @@ type ProdutoBase = Omit<Product, 'variants'>;
 const SHIPPING =
   'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.';
 
-const COTTON =
-  '100% combed cotton, 180g/m², high-durability screen print. Unisex regular fit. Officially licensed piece with The Q MMA authenticity seal.';
-
 /** As 6 cores que têm arquivo de mockup em /images/shirts/. */
 const MOCKUP_COLORS: ProductColor[] = [
   { name: 'Black', hex: '#14110F', slug: 'black' },
@@ -18,52 +15,21 @@ const MOCKUP_COLORS: ProductColor[] = [
   { name: 'Gold', hex: '#C8A03C', slug: 'gold' },
 ];
 
+/** Paleta do boné clássico, reaproveitada nos bonés de arte dos atletas. */
+const CAP_COLORS: ProductColor[] = [
+  { name: 'Black', hex: '#14110F', slug: 'black' },
+  { name: 'Burgundy', hex: '#B0301F', slug: 'burgundy' },
+  { name: 'Beige', hex: '#948A81', slug: 'beige' },
+];
+
+const ART_SHIRT_DETAILS =
+  '100% combed cotton, 180g/m², high-durability screen print. Unisex regular fit. Officially licensed piece with The Q MMA authenticity seal.';
+
+const ART_CAP_DETAILS =
+  'Structured six-panel cap, front artwork print, adjustable snapback closure.';
+
 /** Sem as variações: quem monta é comVariacoes(), com a mesma regra do SQL. */
 export const products: ProdutoBase[] = [
-  {
-    id: 'witch-fight-kit',
-    slug: 'witch-fight-kit',
-    name: 'The Witch Fight Kit Shirt',
-    category: 'Shirts',
-    priceCents: 19000,
-    badges: ['app'],
-    owner: 'dione-barbosa',
-    description:
-      'Official black fight-night shirt with green-and-gold artwork and Dione "The Witch" Barbosa\'s signature.',
-    tags: ['UFC', 'Flyweight', 'DioneBarbosa', 'TheQMMA', 'FightKit'],
-    genders: ['Men', 'Women', 'Kids'],
-    colors: [
-      { name: 'White', hex: '#EDE7DE', slug: 'white' },
-      { name: 'Gold', hex: '#C8A03C', slug: 'gold' },
-    ],
-    details: COTTON,
-    shipping: SHIPPING,
-    mode: 'art',
-    art: 'tee',
-  },
-  {
-    id: 'ozzy-fight-kit',
-    slug: 'ozzy-fight-kit',
-    name: 'Ozzy Fight Kit Shirt',
-    category: 'Shirts',
-    priceCents: 19000,
-    badges: ['app'],
-    owner: 'ozzy-diaz',
-    description:
-      'Official black fight-night shirt with red-and-black artwork and Osman "Ozzy" Diaz\'s signature.',
-    tags: ['UFC', 'Middleweight', 'OzzyDiaz', 'TheQMMA', 'FightKit'],
-    genders: ['Men', 'Women', 'Kids'],
-    colors: [
-      { name: 'Black', hex: '#14110F', slug: 'black' },
-      { name: 'Red', hex: '#c1392b', slug: 'red' },
-      { name: 'Gray', hex: '#948A81', slug: 'gray' },
-      { name: 'White', hex: '#EDE7DE', slug: 'white' },
-    ],
-    details: COTTON,
-    shipping: SHIPPING,
-    mode: 'art',
-    art: 'tee',
-  },
   {
     id: 'theq-classic-cap',
     slug: 'theq-classic-cap',
@@ -128,23 +94,115 @@ export const products: ProdutoBase[] = [
     mockupKey: 'witch',
   },
   {
-    id: 'dione-fight-poster',
-    slug: 'dione-fight-poster',
-    name: 'Dione Barbosa Fight Poster Shirt',
+    id: 'ozzy-diaz-art',
+    slug: 'ozzy-diaz-art',
+    name: 'Ozzy Diaz Art Shirt',
     category: 'Shirts',
     priceCents: 16900,
     badges: ['app'],
-    owner: 'dione-barbosa',
-    description:
-      'Shirt with poster-style fight artwork of Dione "The Witch" Barbosa. Choose the shirt color and see front and back.',
-    tags: ['UFC', 'Flyweight', 'DioneBarbosa', 'TheQMMA', 'FightPoster'],
-    genders: ['Men', 'Women', 'Kids'],
+    owner: 'ozzy-diaz',
+    description: 'Shirt with Osman "Ozzy" Diaz\'s exclusive illustrated artwork.',
+    tags: ['UFC', 'OzzyDiaz', 'TheQMMA', 'Art'],
+    genders: ['Men', 'Women'],
     colors: MOCKUP_COLORS,
-    details:
-      '100% combed cotton, 180g/m², high-definition poster-format digital print. Unisex regular fit. Choose any shirt color freely — the artwork is applied on top of any color.',
+    details: ART_SHIRT_DETAILS,
     shipping: SHIPPING,
-    mode: 'mockup',
-    mockupKey: 'poster',
+    mode: 'art',
+    art: 'tee',
+    artImage: '/images/shirts/ozzyshirt.png',
+  },
+  {
+    id: 'shane-collins-art',
+    slug: 'shane-collins-art',
+    name: 'Shane Collins Art Shirt',
+    category: 'Shirts',
+    priceCents: 16900,
+    badges: ['app'],
+    owner: 'shane-collins',
+    description: 'Shirt with Shane "Hollywood" Collins\'s exclusive illustrated artwork.',
+    tags: ['UFC', 'ShaneCollins', 'TheQMMA', 'Art'],
+    genders: ['Men', 'Women'],
+    colors: MOCKUP_COLORS,
+    details: ART_SHIRT_DETAILS,
+    shipping: SHIPPING,
+    mode: 'art',
+    art: 'tee',
+    artImage: '/images/shirts/hollywoodshirt.png',
+  },
+  {
+    id: 'jp-lebosnoyani-art',
+    slug: 'jp-lebosnoyani-art',
+    name: 'Jean Paul Art Shirt',
+    category: 'Shirts',
+    priceCents: 16900,
+    badges: ['app'],
+    owner: 'jp-lebosnoyani',
+    description: 'Shirt with Jean-Paul "Mufasa" Lebosnoyani\'s exclusive illustrated artwork.',
+    tags: ['UFC', 'JeanPaulLebosnoyani', 'TheQMMA', 'Art'],
+    genders: ['Men', 'Women'],
+    colors: MOCKUP_COLORS,
+    details: ART_SHIRT_DETAILS,
+    shipping: SHIPPING,
+    mode: 'art',
+    art: 'tee',
+    artImage: '/images/shirts/jplshirt.png',
+  },
+  {
+    id: 'ozzy-diaz-cap',
+    slug: 'ozzy-diaz-cap',
+    name: 'Ozzy Diaz Art Cap',
+    category: 'Caps',
+    priceCents: 9900,
+    badges: ['app'],
+    owner: 'ozzy-diaz',
+    description:
+      'Curved-brim cap with Osman "Ozzy" Diaz\'s exclusive illustrated artwork embroidered on front.',
+    tags: ['UFC', 'OzzyDiaz', 'TheQMMA', 'Art', 'Cap'],
+    genders: ['Men', 'Women'],
+    colors: CAP_COLORS,
+    details: ART_CAP_DETAILS,
+    shipping: SHIPPING,
+    mode: 'art',
+    art: 'cap',
+    artImage: '/images/caps/ozzycap.png',
+  },
+  {
+    id: 'shane-collins-cap',
+    slug: 'shane-collins-cap',
+    name: 'Shane Collins Art Cap',
+    category: 'Caps',
+    priceCents: 9900,
+    badges: ['app'],
+    owner: 'shane-collins',
+    description:
+      'Curved-brim cap with Shane "Hollywood" Collins\'s exclusive illustrated artwork embroidered on front.',
+    tags: ['UFC', 'ShaneCollins', 'TheQMMA', 'Art', 'Cap'],
+    genders: ['Men', 'Women'],
+    colors: CAP_COLORS,
+    details: ART_CAP_DETAILS,
+    shipping: SHIPPING,
+    mode: 'art',
+    art: 'cap',
+    artImage: '/images/caps/hollywoodcap.png',
+  },
+  {
+    id: 'jp-lebosnoyani-cap',
+    slug: 'jp-lebosnoyani-cap',
+    name: 'Jean Paul Art Cap',
+    category: 'Caps',
+    priceCents: 9900,
+    badges: ['app'],
+    owner: 'jp-lebosnoyani',
+    description:
+      'Curved-brim cap with Jean-Paul "Mufasa" Lebosnoyani\'s exclusive illustrated artwork embroidered on front.',
+    tags: ['UFC', 'JeanPaulLebosnoyani', 'TheQMMA', 'Art', 'Cap'],
+    genders: ['Men', 'Women'],
+    colors: CAP_COLORS,
+    details: ART_CAP_DETAILS,
+    shipping: SHIPPING,
+    mode: 'art',
+    art: 'cap',
+    artImage: '/images/caps/jplcap.png',
   },
 ];
 

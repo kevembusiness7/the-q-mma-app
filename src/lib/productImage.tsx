@@ -5,17 +5,21 @@ import type { Product } from '../types/shop';
  *
  * Produtos 'mockup' têm foto real por cor, frente e verso:
  *   /images/shirts/witch-black.png, /images/shirts/back-black.png
- * Produtos 'art' usam um desenho SVG genérico — retorna null e o componente
- * desenha o SVG.
+ * Produtos 'art' com `artImage` mostram essa foto (a arte não muda com a
+ * cor escolhida — a cor é só a base da peça). Sem `artImage`, cai no
+ * desenho SVG genérico e o componente desenha o SVG.
  */
 export function productImage(
   product: Product,
   colorSlug: string,
   side: 'front' | 'back' = 'front',
 ): string | null {
-  if (product.mode !== 'mockup' || !product.mockupKey) return null;
-  const prefix = side === 'back' ? 'back' : product.mockupKey;
-  return `/images/shirts/${prefix}-${colorSlug}.png`;
+  if (product.mode === 'mockup' && product.mockupKey) {
+    const prefix = side === 'back' ? 'back' : product.mockupKey;
+    return `/images/shirts/${prefix}-${colorSlug}.png`;
+  }
+  if (product.mode === 'art' && product.artImage) return product.artImage;
+  return null;
 }
 
 /** Traços dos desenhos usados quando o produto não tem foto. */
