@@ -15,6 +15,7 @@ import { PromotionsPage } from './pages/PromotionsPage';
 import { PromotionAthleteProfilePage } from './pages/PromotionAthleteProfilePage';
 import { PromotionBookingPage } from './pages/PromotionBookingPage';
 import { MyPromotionsPage } from './pages/MyPromotionsPage';
+import { AdminPromotionQueuePage } from './pages/AdminPromotionQueuePage';
 import { OrdersPage } from './pages/OrdersPage';
 import { CartProvider } from './context/CartContext';
 import { NavigationProvider, useNav } from './context/NavigationContext';
@@ -58,6 +59,8 @@ function Screens() {
       return <PromotionBookingPage athleteSlug={overlay.athleteSlug} packageId={overlay.packageId} />;
     case 'my-promotions':
       return <MyPromotionsPage />;
+    case 'admin-promotions':
+      return <AdminPromotionQueuePage />;
     case 'orders':
       return <OrdersPage />;
     case 'coaches':
