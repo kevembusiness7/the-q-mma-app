@@ -86,17 +86,32 @@ async function construirLUT(corAlvo) {
   return lut;
 }
 
+/**
+ * Recorta o fundo branco com alpha GRADUAL na borda, em vez de um corte
+ * binário. Um corte 0/255 direto deixava a borda serrilhada (visível demais
+ * em qualquer cor clara) -- e simplesmente alargar o corte binário (a
+ * tentativa anterior) só trocava a franja clara por uma borda mais
+ * "mastigada", ainda dura. A transição real na foto (preto do tecido ->
+ * branco do fundo) tem só uns 2-3px de mistura, então: acha a região
+ * "clara" ligada à borda da imagem (fundo + essa faixa de mistura), calcula
+ * um alpha proporcional à luminância dentro dela (255 = fundo puro, 0 = já
+ * é tecido) e descontamina a cor (tira o branco que vazou pro pixel meio
+ * transparente), pra sobrar uma borda lisa em qualquer fundo.
+ */
 async function floodFillRemoveWhiteBg(inputPath) {
   const img = sharp(inputPath).ensureAlpha();
   const { data, info } = await img.raw().toBuffer({ resolveWithObject: true });
   const { width, height, channels } = info;
-  const isBg = new Uint8Array(width * height);
+  const naRegiao = new Uint8Array(width * height);
   const visited = new Uint8Array(width * height);
-  const THRESH = 225;
 
-  function nearWhite(i) {
+  // Limiar de alcance do flood-fill: alto o bastante pra atravessar fundo +
+  // franja de mistura, baixo o bastante pra não vazar pro highlight do
+  // tecido (o preto real nunca chega perto disso, mesmo em dobra clara).
+  const ALCANCE = 150;
+  function luma(i) {
     const o = i * channels;
-    return data[o] >= THRESH && data[o + 1] >= THRESH && data[o + 2] >= THRESH;
+    return 0.299 * data[o] + 0.587 * data[o + 1] + 0.114 * data[o + 2];
   }
 
   const stack = [];
@@ -107,8 +122,8 @@ async function floodFillRemoveWhiteBg(inputPath) {
     const i = stack.pop();
     if (visited[i]) continue;
     visited[i] = 1;
-    if (!nearWhite(i)) continue;
-    isBg[i] = 1;
+    if (luma(i) < ALCANCE) continue;
+    naRegiao[i] = 1;
     const x = i % width;
     const y = (i - x) / width;
     if (x > 0 && !visited[i - 1]) stack.push(i - 1);
@@ -117,38 +132,30 @@ async function floodFillRemoveWhiteBg(inputPath) {
     if (y < height - 1 && !visited[i + width]) stack.push(i + width);
   }
 
-  // A borda entre o preto da camisa e o fundo branco tem 1-2px de mistura
-  // (JPEG + antialiasing) que o corte acima não pega -- sobra um contorno
-  // cinza-claro meio "brilhando" em volta da silhueta. Descasca mais
-  // algumas camadas: qualquer pixel opaco vizinho de fundo que ainda for
-  // claro demais pra ser tecido também vira fundo, em algumas rodadas.
-  const LUMA_TECIDO = 70;
-  function luma(i) {
-    const o = i * channels;
-    return 0.299 * data[o] + 0.587 * data[o + 1] + 0.114 * data[o + 2];
-  }
-  for (let rodada = 0; rodada < 3; rodada++) {
-    const novos = [];
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        const i = y * width + x;
-        if (isBg[i]) continue;
-        if (luma(i) < LUMA_TECIDO) continue;
-        const vizinhoDeFundo =
-          (x > 0 && isBg[i - 1]) ||
-          (x < width - 1 && isBg[i + 1]) ||
-          (y > 0 && isBg[i - width]) ||
-          (y < height - 1 && isBg[i + width]);
-        if (vizinhoDeFundo) novos.push(i);
-      }
-    }
-    if (novos.length === 0) break;
-    for (const i of novos) isBg[i] = 1;
-  }
+  const FUNDO_LUMA = 245; // alpha 0 a partir daqui
+  const TECIDO_LUMA = 25; // alpha 255 a partir daqui pra baixo
+  const bg = [255, 255, 255]; // fundo era branco
 
   for (let i = 0; i < width * height; i++) {
-    if (isBg[i]) data[i * channels + 3] = 0;
+    if (!naRegiao[i]) continue; // fora da região = tecido puro, mantém como está
+    const o = i * channels;
+    const l = luma(i);
+    const alpha = 1 - Math.min(1, Math.max(0, (l - TECIDO_LUMA) / (FUNDO_LUMA - TECIDO_LUMA)));
+    if (alpha <= 0.02) {
+      data[o + 3] = 0;
+      continue;
+    }
+    // Descontamina: o pixel observado é uma mistura de tecido com o fundo
+    // branco na proporção (alpha, 1-alpha) -- reverte pra achar a cor real
+    // do tecido ali, senão a borda continua puxando pro branco.
+    const divisor = Math.max(alpha, 0.12);
+    for (let c = 0; c < 3; c++) {
+      const real = (data[o + c] - (1 - alpha) * bg[c]) / divisor;
+      data[o + c] = Math.min(255, Math.max(0, Math.round(real)));
+    }
+    data[o + 3] = Math.round(alpha * 255);
   }
+
   return { data, info };
 }
 
