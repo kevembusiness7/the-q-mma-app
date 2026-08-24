@@ -11,6 +11,8 @@ import { SupportPage } from './pages/SupportPage';
 import { AdminSupportPage } from './pages/AdminSupportPage';
 import { AdminOrdersPage } from './pages/AdminOrdersPage';
 import { AdminPromotionAthletesPage } from './pages/AdminPromotionAthletesPage';
+import { PromotionsPage } from './pages/PromotionsPage';
+import { PromotionAthleteProfilePage } from './pages/PromotionAthleteProfilePage';
 import { OrdersPage } from './pages/OrdersPage';
 import { CartProvider } from './context/CartContext';
 import { NavigationProvider, useNav } from './context/NavigationContext';
@@ -46,6 +48,10 @@ function Screens() {
       return <AdminOrdersPage />;
     case 'admin-promotion-athletes':
       return <AdminPromotionAthletesPage />;
+    case 'promotions':
+      return <PromotionsPage />;
+    case 'promotion-athlete':
+      return <PromotionAthleteProfilePage slug={overlay.slug} />;
     case 'orders':
       return <OrdersPage />;
     case 'coaches':

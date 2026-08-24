@@ -18,6 +18,9 @@ export type Screen =
   | { name: 'admin-support' }
   | { name: 'admin-orders' }
   | { name: 'admin-promotion-athletes' }
+  | { name: 'promotions' }
+  | { name: 'promotion-athlete'; slug: string }
+  | { name: 'promotion-booking'; athleteSlug: string; packageId: string }
   | { name: 'orders' }
   | { name: 'coaches' }
   | { name: 'sponsors' }
