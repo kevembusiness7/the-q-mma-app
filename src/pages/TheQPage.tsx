@@ -32,6 +32,20 @@ export function TheQPage({ onNavigate }: TheQPageProps) {
         </button>
       </div>
 
+      <div className="theq-section-banner">
+        <img src="/images/brand/banner-news.jpg" alt="Notícias e eventos" />
+      </div>
+
+      <div className="news-feed">
+        {loading && news.length === 0 ? (
+          <p className="news-empty">Carregando novidades…</p>
+        ) : news.length === 0 ? (
+          <p className="news-empty">Nenhuma novidade por enquanto. Volte em breve.</p>
+        ) : (
+          news.map((item) => <NewsCard key={item.id} item={item} />)
+        )}
+      </div>
+
       <BannerLink
         src="/images/brand/banner-athletes.jpg"
         alt="Ver os atletas do time"
@@ -52,20 +66,6 @@ export function TheQPage({ onNavigate }: TheQPageProps) {
         alt="Ver os patrocinadores oficiais"
         onClick={go('sponsors')}
       />
-
-      <div className="theq-section-banner">
-        <img src="/images/brand/banner-news.jpg" alt="Notícias e eventos" />
-      </div>
-
-      <div className="news-feed">
-        {loading && news.length === 0 ? (
-          <p className="news-empty">Carregando novidades…</p>
-        ) : news.length === 0 ? (
-          <p className="news-empty">Nenhuma novidade por enquanto. Volte em breve.</p>
-        ) : (
-          news.map((item) => <NewsCard key={item.id} item={item} />)
-        )}
-      </div>
 
       <BannerLink
         src="/images/brand/banner-instagram.jpg"
