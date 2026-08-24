@@ -6,6 +6,8 @@ interface BannerLinkProps {
   onClick?: () => void;
   /** Link externo. Abre em nova aba. */
   href?: string;
+  /** Classe extra no botão/link, pra banners que precisam de um recorte próprio. */
+  className?: string;
 }
 
 /**
@@ -13,17 +15,19 @@ interface BannerLinkProps {
  * da arte. Por isso o `alt` precisa descrever para onde o botão leva, senão
  * quem usa leitor de tela não tem como saber.
  */
-export function BannerLink({ src, alt, onClick, href }: BannerLinkProps) {
+export function BannerLink({ src, alt, onClick, href, className }: BannerLinkProps) {
+  const classes = className ? `banner-btn ${className}` : 'banner-btn';
+
   if (href) {
     return (
-      <a className="banner-btn" href={href} target="_blank" rel="noopener noreferrer">
+      <a className={classes} href={href} target="_blank" rel="noopener noreferrer">
         <img src={src} alt={alt} />
       </a>
     );
   }
 
   return (
-    <button type="button" className="banner-btn" onClick={onClick}>
+    <button type="button" className={classes} onClick={onClick}>
       <img src={src} alt={alt} />
     </button>
   );
