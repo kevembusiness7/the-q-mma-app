@@ -17,10 +17,12 @@ export interface ItemDoPedido {
 export interface Pedido {
   id: string
   orderNumber: string
+  email: string | null
   paymentStatus: StatusPagamento
   fulfillmentStatus: StatusEntrega
   subtotalCents: number
   shippingCents: number
+  taxCents: number
   totalCents: number
   shipName: string | null
   shipLine1: string | null
@@ -31,9 +33,15 @@ export interface Pedido {
   shipCountry: string | null
   trackingNumber: string | null
   trackingCarrier: string | null
+  stripePaymentIntentId: string | null
   createdAt: string
   paidAt: string | null
+  shippedAt: string | null
+  deliveredAt: string | null
   itens: ItemDoPedido[]
+  /** Quantas anotações internas o pedido tem. Só o admin recebe isto — para
+   *  o cliente o RLS não devolve nenhuma linha, então vem sempre 0. */
+  anotacoes: number
 }
 
 export const ROTULO_PAGAMENTO: Record<StatusPagamento, string> = {
@@ -50,14 +58,16 @@ export const ROTULO_ENTREGA: Record<StatusEntrega, string> = {
   delivered: 'Delivered',
 }
 
-function paraPedido(row: any): Pedido {
+export function paraPedido(row: any): Pedido {
   return {
     id: row.id,
     orderNumber: row.order_number,
+    email: row.email ?? null,
     paymentStatus: row.payment_status,
     fulfillmentStatus: row.fulfillment_status,
     subtotalCents: row.subtotal_cents,
     shippingCents: row.shipping_cents,
+    taxCents: row.tax_cents ?? 0,
     totalCents: row.total_cents,
     shipName: row.ship_name,
     shipLine1: row.ship_line1,
@@ -68,8 +78,12 @@ function paraPedido(row: any): Pedido {
     shipCountry: row.ship_country,
     trackingNumber: row.tracking_number,
     trackingCarrier: row.tracking_carrier,
+    stripePaymentIntentId: row.stripe_payment_intent_id ?? null,
     createdAt: row.created_at,
     paidAt: row.paid_at,
+    shippedAt: row.shipped_at ?? null,
+    deliveredAt: row.delivered_at ?? null,
+    anotacoes: (row.order_admin_notes ?? []).length,
     itens: (row.order_items ?? []).map((i: any) => ({
       id: i.id,
       productName: i.product_name,

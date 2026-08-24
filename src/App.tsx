@@ -9,6 +9,7 @@ import { CoachesPage, SponsorsPage, YouPage } from './pages/AccountAndInfoPages'
 import { AuthPage } from './pages/AuthPage';
 import { SupportPage } from './pages/SupportPage';
 import { AdminSupportPage } from './pages/AdminSupportPage';
+import { AdminOrdersPage } from './pages/AdminOrdersPage';
 import { OrdersPage } from './pages/OrdersPage';
 import { CartProvider } from './context/CartContext';
 import { NavigationProvider, useNav } from './context/NavigationContext';
@@ -40,6 +41,8 @@ function Screens() {
       return <SupportPage />;
     case 'admin-support':
       return <AdminSupportPage />;
+    case 'admin-orders':
+      return <AdminOrdersPage />;
     case 'orders':
       return <OrdersPage />;
     case 'coaches':

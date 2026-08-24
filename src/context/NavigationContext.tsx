@@ -14,6 +14,7 @@ export type Screen =
   | { name: 'auth' }
   | { name: 'support' }
   | { name: 'admin-support' }
+  | { name: 'admin-orders' }
   | { name: 'orders' }
   | { name: 'coaches' }
   | { name: 'sponsors' }

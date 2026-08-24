@@ -109,6 +109,24 @@ export function YouPage() {
         <button
           type="button"
           className="listrow"
+          onClick={() => openOverlay({ name: 'admin-orders' })}
+        >
+          <span className="listrow-titulo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+              <path d="M3 7l9-4 9 4-9 4-9-4z" />
+              <path d="M3 7v10l9 4 9-4V7" />
+              <path d="M12 11v10" />
+            </svg>
+            Orders to ship
+          </span>
+          <span>›</span>
+        </button>
+      )}
+
+      {ehAdmin && (
+        <button
+          type="button"
+          className="listrow"
           onClick={() => openOverlay({ name: 'admin-support' })}
         >
           <span className="listrow-titulo">

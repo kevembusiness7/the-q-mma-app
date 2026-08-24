@@ -95,3 +95,95 @@
   background: #3e6b8c;
   color: #fff;
 }
+
+/* ------------------------------------------------- painel de pedidos ----- */
+/* A tela da equipe. Reaproveita .ticket, .totals, .admin-ficha e .campo;
+   aqui só o que é próprio da fila de despacho. */
+
+.admin-acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--q-line);
+  border-radius: 12px;
+  background: var(--q-canvas-2);
+}
+
+.admin-acoes h4 {
+  margin: 0;
+  font-family: var(--q-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--q-gold);
+}
+
+.admin-botoes {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-botoes .btn {
+  flex: 1;
+}
+
+.admin-rastreio {
+  margin: 0;
+  font-family: var(--q-mono);
+  font-size: 12px;
+  color: var(--q-bone);
+  word-break: break-all;
+}
+
+/* O endereço é gravado com quebras de linha para colar direto na etiqueta —
+   por isso pre-line, e não o join com ponto do resto do app. */
+.admin-endereco {
+  white-space: pre-line;
+  line-height: 1.45;
+}
+
+.admin-id {
+  font-family: var(--q-mono);
+  font-size: 11px;
+  word-break: break-all;
+}
+
+.admin-notas {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-nota {
+  padding: 9px 11px;
+  border-left: 2px solid var(--q-gold);
+  border-radius: 0 8px 8px 0;
+  background: #17110f;
+}
+
+.admin-nota p {
+  margin: 0 0 4px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--q-bone);
+  white-space: pre-wrap;
+}
+
+.admin-nota time {
+  font-family: var(--q-mono);
+  font-size: 10px;
+  color: var(--q-dust);
+}
+
+.admin-rodape {
+  padding: 4px 18px 18px;
+  text-align: center;
+}
+
+/* Bandeirinha no card: pedido que precisa de decisão humana não pode se
+   parecer com os outros na lista. */
+.pedido-alerta {
+  color: var(--q-gold);
+  font-weight: 600;
+}
