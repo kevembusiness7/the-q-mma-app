@@ -20,9 +20,14 @@ export function AppShell({ children }: AppShellProps) {
       <div className="relative w-full max-w-[430px] h-[100dvh] sm:h-[880px] sm:rounded-[40px] sm:border-[10px] sm:border-[#0a0908] overflow-hidden bg-(--color-bg-main) flex flex-col shadow-[0_40px_80px_rgba(0,0,0,0.6)]">
         <main
           className="flex-1 overflow-y-auto no-scrollbar"
-          /* Clears the iPhone home indicator, so the last card of every
-             screen stays reachable. */
-          style={{ paddingBottom: 'calc(24px + env(safe-area-inset-bottom, 0px))' }}
+          /* Clears the iPhone status bar/notch at the top and the home
+             indicator at the bottom, so every screen's buttons -- back
+             arrows, header icons, whatever a page puts first -- land below
+             where iOS actually accepts taps instead of under the system UI. */
+          style={{
+            paddingTop: 'env(safe-area-inset-top, 0px)',
+            paddingBottom: 'calc(24px + env(safe-area-inset-bottom, 0px))',
+          }}
         >
           {children}
         </main>

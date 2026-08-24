@@ -18,11 +18,12 @@
   position: relative;
 }
 
-/* Canto superior direito do hero. O respiro de cima cresce com a notch do
-   iPhone, senão o botão fica embaixo do relógio no modo tela cheia. */
+/* Canto superior direito do hero. O respiro da notch agora vem do padding-top
+   do <main> (AppShell.tsx), que empurra a tela toda -- inclusive este hero --
+   para baixo da área segura. Esse offset é só a folga visual dentro do hero. */
 .theq-you {
   position: absolute;
-  top: calc(12px + env(safe-area-inset-top, 0px));
+  top: 12px;
   right: 14px;
   z-index: 5;
   display: flex;
