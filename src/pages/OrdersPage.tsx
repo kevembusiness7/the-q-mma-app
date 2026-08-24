@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useNav } from '../context/NavigationContext'
 import { formatarPreco } from '../hooks/useProducts'
+import { linkDeRastreio } from '../lib/tracking'
 import {
   ROTULO_ENTREGA,
   ROTULO_PAGAMENTO,
@@ -155,10 +156,23 @@ function DetalhePedido({ pedido }: { pedido: Pedido }) {
           {pedido.trackingNumber && (
             <div className="admin-linha">
               <span>Tracking</span>
-              <b>
-                {pedido.trackingCarrier ? `${pedido.trackingCarrier} · ` : ''}
-                {pedido.trackingNumber}
-              </b>
+              {/* Vira link só nas transportadoras conhecidas. O campo é texto
+                  livre, e mandar o cliente para a página errada de uma empresa
+                  que não é a dele é pior do que só mostrar o código. */}
+              {linkDeRastreio(pedido.trackingCarrier, pedido.trackingNumber) ? (
+                <a
+                  href={linkDeRastreio(pedido.trackingCarrier, pedido.trackingNumber)!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {pedido.trackingCarrier} · {pedido.trackingNumber}
+                </a>
+              ) : (
+                <b>
+                  {pedido.trackingCarrier ? `${pedido.trackingCarrier} · ` : ''}
+                  {pedido.trackingNumber}
+                </b>
+              )}
             </div>
           )}
         </div>

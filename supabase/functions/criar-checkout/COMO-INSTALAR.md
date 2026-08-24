@@ -1,11 +1,12 @@
 # Pagamentos com Stripe — instalação
 
-Duas Edge Functions fazem o checkout funcionar:
+Três Edge Functions sustentam a loja:
 
 | Função | Papel |
 |---|---|
 | `criar-checkout` | cria o pedido e a página de pagamento do Stripe |
 | `stripe-webhook` | recebe a confirmação do Stripe e marca o pedido como pago |
+| `notificar-envio` | manda o "seu pedido saiu" com o rastreio, a pedido da equipe |
 
 O app **nunca** marca um pedido como pago. Quem faz isso é o webhook, depois
 de validar a assinatura do evento. Chegar na tela de sucesso não prova nada.
@@ -18,6 +19,9 @@ Copie o conteúdo de `supabase/pedidos-schema.sql` (não o caminho) e cole no
 SQL Editor do painel. Cria `orders`, `order_items`, `order_admin_notes`, o
 número sequencial de pedido e a função `confirmar_pagamento`, que marca o
 pedido como pago e baixa o estoque na mesma transação.
+
+O script é idempotente — rodar de novo depois de uma mudança é seguro e é
+assim que colunas novas (como `shipping_email_sent_at`) entram.
 
 ## 2. Pegar as chaves do Stripe (modo teste)
 
@@ -34,11 +38,13 @@ cobrar ninguém.
 ```bash
 npx supabase functions deploy criar-checkout --project-ref nruokuqrmnfvidskxrus
 npx supabase functions deploy stripe-webhook --project-ref nruokuqrmnfvidskxrus --no-verify-jwt
+npx supabase functions deploy notificar-envio --project-ref nruokuqrmnfvidskxrus
 ```
 
 O `--no-verify-jwt` é só no webhook: quem o chama é o Stripe, sem JWT do
 Supabase — a autenticação dele é a assinatura do evento. A `criar-checkout`
-mantém a verificação normal, porque quem a chama é o app.
+mantém a verificação normal, porque quem a chama é o app. A `notificar-envio`
+também: além do JWT, ela confere no banco que quem pediu é admin.
 
 ## 4. Registrar o webhook no Stripe
 
@@ -120,5 +126,10 @@ Cartões de teste úteis:
 - **"Concluído" não é "pago":** o webhook só marca `paid` quando
   `session.payment_status` diz `paid`. Com pagamento assíncrono, a sessão
   fecha antes de o dinheiro cair.
+- **E-mail de envio:** não sai sozinho. A equipe clica "Mark as shipped" e o
+  painel chama `notificar-envio`, que só manda se o pedido estiver mesmo
+  `shipped` no banco e usa o e-mail gravado no pedido — nunca um endereço
+  vindo do app. O horário fica em `shipping_email_sent_at`, então o painel
+  mostra "Customer notified" em vez de deixar alguém avisar duas vezes.
 - **Sessão expira em 30 minutos** (mínimo do Stripe). Pedido abandonado vira
   `cancelled` via webhook e não aparece em My Orders.

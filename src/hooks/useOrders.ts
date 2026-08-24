@@ -38,6 +38,7 @@ export interface Pedido {
   paidAt: string | null
   shippedAt: string | null
   deliveredAt: string | null
+  shippingEmailSentAt: string | null
   itens: ItemDoPedido[]
   /** Quantas anotações internas o pedido tem. Só o admin recebe isto — para
    *  o cliente o RLS não devolve nenhuma linha, então vem sempre 0. */
@@ -83,6 +84,7 @@ export function paraPedido(row: any): Pedido {
     paidAt: row.paid_at,
     shippedAt: row.shipped_at ?? null,
     deliveredAt: row.delivered_at ?? null,
+    shippingEmailSentAt: row.shipping_email_sent_at ?? null,
     anotacoes: (row.order_admin_notes ?? []).length,
     itens: (row.order_items ?? []).map((i: any) => ({
       id: i.id,

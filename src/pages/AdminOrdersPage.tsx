@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useNav } from '../context/NavigationContext'
 import { formatarPreco } from '../hooks/useProducts'
+import { linkDeRastreio } from '../lib/tracking'
 import { ROTULO_ENTREGA, ROTULO_PAGAMENTO, type Pedido } from '../hooks/useOrders'
 import {
   FILTROS_PEDIDO,
@@ -26,8 +27,16 @@ import '../styles/orders.css'
 export function AdminOrdersPage() {
   const { closeOverlay } = useNav()
   const { usuario, ehAdmin, carregando: carregandoAuth } = useAuth()
-  const { pedidos, carregando, erro, recarregar, despachar, marcarEntregue, voltarParaPreparo } =
-    usePedidosAdmin(ehAdmin)
+  const {
+    pedidos,
+    carregando,
+    erro,
+    recarregar,
+    despachar,
+    avisarEnvio,
+    marcarEntregue,
+    voltarParaPreparo,
+  } = usePedidosAdmin(ehAdmin)
   const [filtro, setFiltro] = useState<FiltroPedido>('to_ship')
   const [abertoId, setAbertoId] = useState<string | null>(null)
 
@@ -64,6 +73,7 @@ export function AdminOrdersPage() {
         <Detalhe
           pedido={aberto}
           aoDespachar={(t, c) => despachar(aberto.id, t, c)}
+          aoAvisar={() => avisarEnvio(aberto.id)}
           aoEntregar={() => marcarEntregue(aberto.id)}
           aoReabrir={() => voltarParaPreparo(aberto.id)}
         />
@@ -153,11 +163,13 @@ export function AdminOrdersPage() {
 function Detalhe({
   pedido,
   aoDespachar,
+  aoAvisar,
   aoEntregar,
   aoReabrir,
 }: {
   pedido: Pedido
   aoDespachar: (transportadora: string, codigo: string) => Promise<string | null>
+  aoAvisar: () => Promise<string | null>
   aoEntregar: () => Promise<string | null>
   aoReabrir: () => Promise<string | null>
 }) {
@@ -166,9 +178,36 @@ function Detalhe({
   const [transportadora, setTransportadora] = useState(pedido.trackingCarrier ?? '')
   const [codigo, setCodigo] = useState(pedido.trackingNumber ?? '')
   const [salvando, setSalvando] = useState(false)
+  const [avisando, setAvisando] = useState(false)
   const [erro, setErro] = useState<string | null>(null)
   const [copiado, setCopiado] = useState(false)
   const [nota, setNota] = useState('')
+
+  const link = linkDeRastreio(pedido.trackingCarrier, pedido.trackingNumber)
+
+  async function enviarAviso() {
+    setAvisando(true)
+    const falha = await aoAvisar()
+    setErro(falha ? `Shipping email failed: ${falha}` : null)
+    setAvisando(false)
+  }
+
+  /**
+   * Despachar e avisar são um gesto só para quem opera, mas dois passos no
+   * código — e nessa ordem. O estado do pedido é o que importa; se o Resend
+   * estiver fora do ar, o despacho fica registrado do mesmo jeito e o botão
+   * de reenviar resolve depois.
+   */
+  async function despacharEAvisar() {
+    setSalvando(true)
+    const falha = await aoDespachar(transportadora, codigo)
+    setSalvando(false)
+    if (falha) {
+      setErro(falha)
+      return
+    }
+    await enviarAviso()
+  }
 
   const endereco = [
     pedido.shipName,
@@ -289,6 +328,33 @@ function Detalhe({
                 {pedido.trackingCarrier ?? 'Carrier not set'}
                 {pedido.trackingNumber ? ` · ${pedido.trackingNumber}` : ' · no tracking number'}
               </p>
+              {link && (
+                <a className="empty-link" href={link} target="_blank" rel="noopener noreferrer">
+                  Open tracking page
+                </a>
+              )}
+
+              {/* O aviso ao cliente é separado do despacho de propósito: se o
+                  e-mail falhar, o pedido continua corretamente despachado e dá
+                  para reenviar sem mexer no estado dele. */}
+              {pedido.shippingEmailSentAt ? (
+                <p className="cart-note">
+                  ✓ Customer notified on {formatarData(pedido.shippingEmailSentAt)}.{' '}
+                  <button type="button" className="empty-link" onClick={enviarAviso}>
+                    {avisando ? 'Sending…' : 'Send again'}
+                  </button>
+                </p>
+              ) : (
+                <button
+                  type="button"
+                  className="btn ghost"
+                  disabled={avisando || !pedido.email}
+                  onClick={enviarAviso}
+                >
+                  {avisando ? 'Sending…' : 'Send shipping email'}
+                </button>
+              )}
+
               <div className="admin-botoes">
                 {pedido.fulfillmentStatus === 'shipped' && (
                   <button
@@ -341,15 +407,18 @@ function Detalhe({
               <button
                 type="button"
                 className="btn"
-                disabled={salvando || transportadora.trim() === '' || codigo.trim() === ''}
-                onClick={() => executar(() => aoDespachar(transportadora, codigo))}
+                disabled={
+                  salvando || avisando || transportadora.trim() === '' || codigo.trim() === ''
+                }
+                onClick={despacharEAvisar}
               >
-                {salvando ? 'Saving…' : 'Mark as shipped'}
+                {salvando ? 'Saving…' : avisando ? 'Sending email…' : 'Mark as shipped'}
               </button>
               {/* Exigir os dois campos é de propósito: "Shipped" sem código de
                   rastreio vira pergunta do cliente no suporte no dia seguinte. */}
               <p className="cart-note">
-                Both fields are required — the customer sees this tracking in My orders.
+                Both fields are required. Marking as shipped emails the customer the tracking and
+                shows it in My orders.
               </p>
             </>
           )}

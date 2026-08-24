@@ -103,6 +103,11 @@ create table if not exists orders (
 -- decidir se estorna" no select do pedido dele. Ver tabela order_admin_notes.
 alter table orders drop column if exists internal_note;
 
+-- Quando o aviso de "seu pedido saiu" foi mandado. Existe para o painel
+-- distinguir "ainda não avisei" de "já avisei" — sem isso, um clique repetido
+-- vira um segundo e-mail para o cliente e ninguém sabe quantos já foram.
+alter table orders add column if not exists shipping_email_sent_at timestamptz;
+
 create index if not exists orders_user_idx on orders (user_id, created_at desc);
 create index if not exists orders_payment_idx on orders (payment_status, created_at desc);
 

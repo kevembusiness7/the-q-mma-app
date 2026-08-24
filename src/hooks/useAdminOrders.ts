@@ -121,6 +121,32 @@ export function usePedidosAdmin(ativo: boolean) {
     [alterar],
   )
 
+  /**
+   * Manda o "seu pedido saiu" para o cliente.
+   *
+   * Quem monta e envia é a Edge Function `notificar-envio`: a chave do Resend
+   * fica no servidor, nunca no app. A função também confere sozinha que quem
+   * chamou é admin e que o pedido está mesmo despachado — não confia em nada
+   * que sai daqui além do id.
+   */
+  const avisarEnvio = useCallback(async (id: string): Promise<string | null> => {
+    if (!supabase) return 'Supabase não está configurado.'
+    const { error } = await supabase.functions.invoke('notificar-envio', {
+      body: { order_id: id },
+    })
+    if (error) {
+      // O corpo da resposta traz o motivo real; o erro do supabase-js só diz
+      // que o status não foi 2xx.
+      const detalhe = await (error as any)?.context?.json?.().catch(() => null)
+      return detalhe?.erro ?? error.message
+    }
+    const agora = new Date().toISOString()
+    setPedidos((atual) =>
+      atual.map((p) => (p.id === id ? { ...p, shippingEmailSentAt: agora } : p)),
+    )
+    return null
+  }, [])
+
   const marcarEntregue = useCallback(
     (id: string) => {
       const agora = new Date().toISOString()
@@ -145,7 +171,16 @@ export function usePedidosAdmin(ativo: boolean) {
     [alterar],
   )
 
-  return { pedidos, carregando, erro, recarregar, despachar, marcarEntregue, voltarParaPreparo }
+  return {
+    pedidos,
+    carregando,
+    erro,
+    recarregar,
+    despachar,
+    avisarEnvio,
+    marcarEntregue,
+    voltarParaPreparo,
+  }
 }
 
 /**
