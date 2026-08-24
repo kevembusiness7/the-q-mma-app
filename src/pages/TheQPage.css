@@ -100,11 +100,12 @@
 
 /* banner-instagram.jpg é bem mais alto que banner-shopnow.png (442px contra
    270px de altura, mesma largura) -- sem isto o banner do Instagram aparece
-   bem maior que os outros, já que todos só têm width: 100%. Recorta na
-   mesma proporção do Shop Now (900x270) em vez de espremer a arte. */
-.banner-instagram img {
-  aspect-ratio: 900 / 270;
-  object-fit: cover;
+   bem maior que os outros, já que todo banner só tem width: 100%. Em vez de
+   recortar a arte (perde o "THE Q" do topo e o botão de baixo), encolhe o
+   banner inteiro e centraliza -- mostra a arte completa, só que menor. */
+.banner-instagram {
+  width: 65%;
+  margin: 0 auto;
 }
 
 /* Feed rolável, com no máximo ~2,5 cards visíveis. */
