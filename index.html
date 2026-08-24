@@ -3,10 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- O iOS ignora os ícones do manifest. Sem este link, o atalho na tela
+         inicial do iPhone vira uma miniatura da página. -->
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <!-- viewport-fit=cover: sem isso o iOS resolve todo env(safe-area-inset-*) como 0,
          e o cálculo de altura da TabBar ignora o home indicator do iPhone. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>the-q-mma-app</title>
+    <!-- Pinta a barra de status do Android com a cor do app. -->
+    <meta name="theme-color" content="#0b0908" />
+    <!-- black-translucent estende o conteúdo por baixo da barra de status do
+         iPhone. É o que faz o safe-area-inset valer também no app instalado,
+         e não só no Safari. -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="The Q" />
+    <title>The Q MMA</title>
   </head>
   <body>
     <div id="root"></div>
