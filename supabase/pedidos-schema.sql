@@ -191,6 +191,7 @@ begin
          subtotal_cents           = coalesce((dados->>'subtotal_cents')::int, subtotal_cents),
          shipping_cents           = coalesce((dados->>'shipping_cents')::int, shipping_cents),
          tax_cents                = coalesce((dados->>'tax_cents')::int, tax_cents),
+         discount_cents           = coalesce((dados->>'discount_cents')::int, discount_cents),
          total_cents              = coalesce((dados->>'total_cents')::int, total_cents),
          ship_name                = coalesce(dados->>'ship_name', ship_name),
          ship_line1               = coalesce(dados->>'ship_line1', ship_line1),
@@ -353,6 +354,55 @@ do $$ begin
         )
       )
     );
+end $$;
+
+-- 9. Cliente salvo no Stripe --------------------------------------------------
+-- Guarda qual Customer do Stripe é de quem. É isso que faz a segunda compra
+-- vir com nome e endereço já preenchidos: a página de pagamento é hospedada
+-- pelo Stripe, então o preenchimento automático mora lá, não aqui.
+
+do $$ begin
+  if to_regclass('public.profiles') is null then
+    raise notice 'profiles ainda não existe — rode auth-schema.sql antes.';
+    return;
+  end if;
+
+  alter table profiles add column if not exists stripe_customer_id text;
+
+  -- Um Customer por pessoa. Dois perfis apontando para o mesmo cliente do
+  -- Stripe misturaria endereço — e, no dia em que houver cartão salvo,
+  -- misturaria meio de pagamento.
+  create unique index if not exists profiles_stripe_customer_idx
+    on profiles (stripe_customer_id) where stripe_customer_id is not null;
+end $$;
+
+-- A política de profiles deixa a pessoa editar o PRÓPRIO perfil, e isto aqui
+-- é uma coluna do próprio perfil. Sem a trava abaixo, bastaria trocar o valor
+-- pelo Customer de outra pessoa para o checkout passar a preencher com o
+-- endereço dela. Só o servidor escreve nesta coluna.
+--
+-- A checagem é pelo papel do banco (current_user), não pelo claim do JWT: o
+-- PostgREST troca para o papel service_role quando a chamada usa a service
+-- key, e isso não dá para forjar do lado do app.
+create or replace function public.protege_stripe_customer()
+returns trigger
+language plpgsql
+as $$
+begin
+  if new.stripe_customer_id is distinct from old.stripe_customer_id
+     and current_user not in ('service_role', 'postgres', 'supabase_admin') then
+    raise exception 'stripe_customer_id só pode ser alterado pelo servidor';
+  end if;
+  return new;
+end;
+$$;
+
+do $$ begin
+  if to_regclass('public.profiles') is null then return; end if;
+  drop trigger if exists protege_stripe_customer on profiles;
+  create trigger protege_stripe_customer
+    before update on profiles
+    for each row execute function public.protege_stripe_customer();
 end $$;
 
 -- Confere o resultado

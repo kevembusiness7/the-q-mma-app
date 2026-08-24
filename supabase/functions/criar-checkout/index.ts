@@ -209,6 +209,58 @@ Deno.serve(async (req) => {
 
   const stripe = new Stripe(STRIPE_SECRET_KEY)
 
+  // ------------------------------------------------ cliente salvo no Stripe
+  // Quem tem conta ganha um Customer no Stripe, guardado em profiles. É ele
+  // que faz a próxima compra já vir com nome e endereço preenchidos: a página
+  // de pagamento é hospedada pelo Stripe, então o prefill só existe por aí —
+  // não adianta guardar endereço no nosso banco, não há onde injetá-lo.
+  //
+  // O id nunca vem do app: é lido e gravado aqui com a service role.
+  let customerId: string | null = null
+  if (userId) {
+    const perfil = await fetch(
+      `${SUPABASE_URL}/rest/v1/profiles?id=eq.${userId}&select=stripe_customer_id`,
+      { headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}` } },
+    )
+    if (perfil.ok) customerId = (await perfil.json())[0]?.stripe_customer_id ?? null
+
+    // Confere que o id ainda vale antes de usar. Customer de teste não existe
+    // em produção, e apagar um cliente no painel do Stripe é um clique: sem
+    // esta checagem, o id velho travaria a compra em vez de só perder o
+    // preenchimento automático.
+    if (customerId) {
+      try {
+        const atual = await stripe.customers.retrieve(customerId)
+        if ((atual as { deleted?: boolean }).deleted) customerId = null
+      } catch {
+        customerId = null
+      }
+    }
+
+    if (!customerId) {
+      try {
+        const cliente = await stripe.customers.create({
+          email: userEmail ?? undefined,
+          metadata: { supabase_user_id: userId },
+        })
+        customerId = cliente.id
+        await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${userId}`, {
+          method: 'PATCH',
+          headers: {
+            apikey: SERVICE_ROLE,
+            Authorization: `Bearer ${SERVICE_ROLE}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ stripe_customer_id: customerId }),
+        })
+      } catch (e) {
+        // Sem Customer a compra continua funcionando — só não vem preenchida.
+        console.error('Não consegui criar o Customer no Stripe:', e)
+      }
+    }
+  }
+
+
   const freteGratis = subtotalCents >= FRETE_GRATIS_A_PARTIR_DE
 
   try {
@@ -225,8 +277,22 @@ Deno.serve(async (req) => {
           },
         },
       })),
-      customer_email: userEmail ?? undefined,
+      // O Stripe recusa `customer` e `customer_email` juntos. Com Customer,
+      // `customer_update` é o que devolve o endereço digitado no checkout
+      // para a ficha dele — sem isso a próxima compra pede tudo de novo.
+      ...(customerId
+        ? {
+            customer: customerId,
+            customer_update: { address: 'auto', name: 'auto', shipping: 'auto' },
+          }
+        : { customer_email: userEmail ?? undefined }),
+
       shipping_address_collection: { allowed_countries: ['US', 'BR'] },
+      // Campo de cupom na página do Stripe. Os códigos são criados no painel
+      // do Stripe (Products → Coupons → Promotion codes); quem valida validade,
+      // limite de uso e valor é ele, não a gente. Cupom que expira sozinho é
+      // melhor do que cupom que a gente esquece de desligar.
+      allow_promotion_codes: true,
       shipping_options: [
         {
           shipping_rate_data: {

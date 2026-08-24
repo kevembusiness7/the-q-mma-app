@@ -138,6 +138,12 @@ function DetalhePedido({ pedido }: { pedido: Pedido }) {
           <span>Shipping</span>
           <span>{pedido.shippingCents === 0 ? 'Free' : formatarPreco(pedido.shippingCents)}</span>
         </div>
+        {pedido.discountCents > 0 && (
+          <div>
+            <span>Discount</span>
+            <span>−{formatarPreco(pedido.discountCents)}</span>
+          </div>
+        )}
         <div className="totals-final">
           <span>Total</span>
           <span>{formatarPreco(pedido.totalCents)}</span>

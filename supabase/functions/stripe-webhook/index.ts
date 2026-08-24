@@ -119,6 +119,55 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({ ok: true }), { status: 200 })
   }
 
+  // ------------------------------------------------------------- estorno --
+  // O estorno é feito à mão no painel do Stripe — construir um botão nosso
+  // seria assumir risco de dinheiro para economizar um clique. Mas sem ouvir
+  // o evento, o pedido continuaria dizendo "Paid" para o cliente e para a
+  // equipe. Aqui só o status muda de lado.
+  //
+  // O estoque NÃO volta sozinho: peça devolvida nem sempre volta vendável, e
+  // repor automaticamente criaria peça fantasma no site. Vira anotação para
+  // alguém conferir.
+  if (evento.type === 'charge.refunded') {
+    const charge = evento.data.object as Stripe.Charge
+    const pi = typeof charge.payment_intent === 'string' ? charge.payment_intent : null
+    if (!pi) return new Response(JSON.stringify({ ok: true }), { status: 200 })
+
+    const total = charge.amount_refunded >= charge.amount
+
+    const achou = await fetch(
+      `${SUPABASE_URL}/rest/v1/orders?stripe_payment_intent_id=eq.${pi}&select=id,order_number`,
+      { headers: db },
+    )
+    const [alvo] = achou.ok ? await achou.json() : []
+    if (!alvo) {
+      console.error('Estorno sem pedido correspondente:', pi)
+      return new Response(JSON.stringify({ ok: true }), { status: 200 })
+    }
+
+    // Estorno parcial não é pedido estornado: o cliente ficou com a compra e
+    // recebeu parte do dinheiro de volta. Marcar tudo como refunded apagaria
+    // uma venda que existe.
+    if (total) {
+      await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${alvo.id}`, {
+        method: 'PATCH',
+        headers: db,
+        body: JSON.stringify({ payment_status: 'refunded' }),
+      })
+    }
+
+    await fetch(`${SUPABASE_URL}/rest/v1/order_admin_notes`, {
+      method: 'POST',
+      headers: db,
+      body: JSON.stringify({
+        order_id: alvo.id,
+        note: `${total ? 'Estorno total' : 'Estorno parcial'} de ${centavos(charge.amount_refunded)} registrado no Stripe. O estoque NÃO foi reposto — confira a peça antes de devolvê-la ao site.`,
+      }),
+    })
+
+    return new Response(JSON.stringify({ ok: true, estornado: alvo.order_number }), { status: 200 })
+  }
+
   if (
     evento.type !== 'checkout.session.completed' &&
     evento.type !== 'checkout.session.async_payment_succeeded'
@@ -182,6 +231,10 @@ Deno.serve(async (req) => {
         subtotal_cents: session.amount_subtotal,
         shipping_cents: session.shipping_cost?.amount_total ?? 0,
         tax_cents: session.total_details?.amount_tax ?? 0,
+        // Cupom aplicado no checkout. O total já vem descontado; guardar o
+        // desconto à parte é o que permite, depois, distinguir promoção de
+        // erro de preço.
+        discount_cents: session.total_details?.amount_discount ?? 0,
         total_cents: session.amount_total,
         ship_name: entrega?.name ?? session.customer_details?.name ?? null,
         ship_line1: endereco?.line1 ?? null,
@@ -229,6 +282,11 @@ Deno.serve(async (req) => {
     <table style="border-collapse:collapse;font-size:14px;width:100%;max-width:420px">
       ${linhasHtml}
       <tr><td style="padding:8px 12px 0 0;color:#666">Shipping</td><td style="text-align:right;padding-top:8px">${centavos(session.shipping_cost?.amount_total ?? 0)}</td></tr>
+      ${
+        (session.total_details?.amount_discount ?? 0) > 0
+          ? `<tr><td style="padding:2px 12px 0 0;color:#666">Discount</td><td style="text-align:right">-${centavos(session.total_details?.amount_discount ?? 0)}</td></tr>`
+          : ''
+      }
       <tr><td style="padding:2px 12px 0 0;font-weight:bold">Total</td><td style="text-align:right;font-weight:bold">${centavos(session.amount_total ?? 0)}</td></tr>
     </table>`
 

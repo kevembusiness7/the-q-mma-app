@@ -54,7 +54,12 @@ No painel do Stripe (ainda em Test mode):
 | Campo | Valor |
 |---|---|
 | Endpoint URL | `https://nruokuqrmnfvidskxrus.supabase.co/functions/v1/stripe-webhook` |
-| Events | `checkout.session.completed`, `checkout.session.expired`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed` |
+| Events | `checkout.session.completed`, `checkout.session.expired`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`, `charge.refunded` |
+
+`charge.refunded` é o que faz o estorno aparecer no app. O estorno em si
+continua sendo feito à mão no painel do Stripe — de propósito: é dinheiro
+saindo, e o painel dele já registra quem clicou e quando. Sem esse evento, o
+pedido continuaria dizendo "Paid" depois de devolvido.
 
 Os dois `async_payment_*` só disparam se um dia você ligar um método de
 pagamento assíncrono no painel do Stripe. Registrá-los agora é o que impede
@@ -131,5 +136,21 @@ Cartões de teste úteis:
   `shipped` no banco e usa o e-mail gravado no pedido — nunca um endereço
   vindo do app. O horário fica em `shipping_email_sent_at`, então o painel
   mostra "Customer notified" em vez de deixar alguém avisar duas vezes.
+- **Cupons:** o campo de código aparece sozinho na página do Stripe. Os
+  códigos nascem no painel dele, em **Products → Coupons → Promotion codes** —
+  validade, limite de uso e valor são responsabilidade do Stripe. Cupom que
+  expira sozinho é melhor do que cupom que a gente esquece de desligar. O
+  desconto aplicado fica em `orders.discount_cents`.
+- **Endereço salvo:** quem tem conta ganha um Customer no Stripe, guardado em
+  `profiles.stripe_customer_id`, e a segunda compra já vem com nome e endereço
+  preenchidos. O prefill mora no Stripe porque a página de pagamento é dele —
+  guardar endereço só no nosso banco não teria onde ser injetado. A coluna tem
+  trigger: só o servidor escreve nela, senão bastaria apontar para o Customer
+  de outra pessoa para ver o endereço dela.
+- **Estorno:** feito no painel do Stripe, não no app. O webhook ouve
+  `charge.refunded` e vira o pedido para `refunded` (estorno parcial só gera
+  anotação — a venda continua existindo). O estoque **não** volta sozinho:
+  peça devolvida nem sempre volta vendável, e repor no automático criaria peça
+  fantasma no site.
 - **Sessão expira em 30 minutos** (mínimo do Stripe). Pedido abandonado vira
   `cancelled` via webhook e não aparece em My Orders.

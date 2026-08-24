@@ -23,6 +23,8 @@ export interface Pedido {
   subtotalCents: number
   shippingCents: number
   taxCents: number
+  /** O que o cupom tirou. Zero quando não houve cupom. */
+  discountCents: number
   totalCents: number
   shipName: string | null
   shipLine1: string | null
@@ -69,6 +71,7 @@ export function paraPedido(row: any): Pedido {
     subtotalCents: row.subtotal_cents,
     shippingCents: row.shipping_cents,
     taxCents: row.tax_cents ?? 0,
+    discountCents: row.discount_cents ?? 0,
     totalCents: row.total_cents,
     shipName: row.ship_name,
     shipLine1: row.ship_line1,
