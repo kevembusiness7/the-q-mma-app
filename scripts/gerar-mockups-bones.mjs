@@ -78,7 +78,7 @@ async function compositarNoBone(logoPath, prefixo) {
   const left = Math.round((baseMeta.width - larguraAlvo) / 2);
   // A aba (brim) começa por volta de 70% da altura do molde -- a logo deve
   // terminar um pouco acima dela, não ficar centralizada perto do botão.
-  const baseDaLogo = Math.round(baseMeta.height * 0.66);
+  const baseDaLogo = Math.round(baseMeta.height * 0.72);
   const top = baseDaLogo - alturaAlvo;
 
   const outPath = path.join(CAPS_DIR, `${prefixo}-black.png`);
