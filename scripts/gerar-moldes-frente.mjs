@@ -27,6 +27,22 @@ async function lerRaw(nome) {
   return img.raw().toBuffer({ resolveWithObject: true });
 }
 
+/** Soma numa janela de raio R em volta de cada índice (box filter). */
+function suavizar(arr, raio) {
+  const n = arr.length;
+  const saida = new Float64Array(n);
+  let acumulado = 0;
+  for (let i = -raio; i <= raio; i++) acumulado += arr[Math.min(n - 1, Math.max(0, i))];
+  for (let l = 0; l < n; l++) {
+    saida[l] = acumulado;
+    const sai = l - raio;
+    const entra = l + raio + 1;
+    acumulado -= arr[Math.min(n - 1, Math.max(0, sai))];
+    acumulado += arr[Math.min(n - 1, Math.max(0, entra))];
+  }
+  return saida;
+}
+
 async function construirLUT(corAlvo) {
   const { data: preto, info } = await lerRaw('back-black.png');
   const { data: colorido } = await lerRaw(`back-${corAlvo}.png`);
@@ -44,9 +60,21 @@ async function construirLUT(corAlvo) {
     conta[l] += 1;
   }
 
+  // Muitos níveis de luminância têm poucas amostras (às vezes zero) -- a
+  // média "crua" por bucket pula de valor e vira um textura granulada
+  // quando aplicada pixel a pixel. Suaviza numa janela larga (pesada pela
+  // contagem de cada bucket) antes de dividir, em vez de suavizar a média
+  // já pronta -- assim buckets quase vazios não pesam igual a um bucket
+  // bem amostrado.
+  const RAIO = 14;
+  const somaRs = suavizar(somaR, RAIO);
+  const somaGs = suavizar(somaG, RAIO);
+  const somaBs = suavizar(somaB, RAIO);
+  const contaS = suavizar(conta, RAIO);
+
   const lut = new Array(256).fill(null);
   for (let l = 0; l < 256; l++) {
-    if (conta[l] > 0) lut[l] = [somaR[l] / conta[l], somaG[l] / conta[l], somaB[l] / conta[l]];
+    if (contaS[l] > 0) lut[l] = [somaRs[l] / contaS[l], somaGs[l] / contaS[l], somaBs[l] / contaS[l]];
   }
   // Preenche buckets vazios com o vizinho mais próximo que tem dado.
   let ultimo = lut.findIndex((v) => v !== null);
