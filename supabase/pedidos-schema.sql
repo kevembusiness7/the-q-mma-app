@@ -1,10 +1,34 @@
 -- THE Q MMA — pedidos, itens e confirmação de pagamento.
 --
 -- COMO USAR: copie o conteúdo DESTE arquivo (não o caminho) e cole no SQL
--- Editor do painel do Supabase. Depende de auth-schema.sql (eh_admin,
--- toca_updated_at) e de loja-schema.sql (product_variants).
+-- Editor do painel do Supabase. Depende de loja-schema.sql (product_variants).
 --
 -- Pode rodar mais de uma vez sem estragar nada.
+
+-- 0. Funções de apoio -------------------------------------------------------
+-- Estas duas nasceram no support-schema.sql. Recriadas aqui de propósito:
+-- `create or replace` não estraga nada se já existirem, e um banco que rodou
+-- só parte dos scripts antigos pode ter uma sem a outra — foi exatamente o
+-- que aconteceu. Um script de schema que quebra por dependência invisível é
+-- pior do que um que repete três linhas.
+
+create or replace function public.toca_updated_at()
+returns trigger language plpgsql as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+create or replace function public.eh_admin()
+returns boolean
+language sql
+security definer
+set search_path = public
+stable
+as $$
+  select coalesce((select is_admin from profiles where id = auth.uid()), false);
+$$;
 
 -- 1. Tipos ------------------------------------------------------------------
 -- Pagamento e entrega são estados SEPARADOS de propósito: um pedido pago pode
