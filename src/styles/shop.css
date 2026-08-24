@@ -246,6 +246,11 @@
   height: 100%;
   object-fit: contain;
   padding: 18%;
+  /* Camisa preta sem isto quase some no fundo escuro do card -- o contorno
+     não tem contraste nenhum pra se separar do fundo. Um glow claro e fraco
+     no formato da peça (drop-shadow segue o alpha do PNG) resolve sem
+     precisar de borda/anel visível nas cores claras. */
+  filter: drop-shadow(0 0 7px rgba(255, 255, 255, 0.3));
 }
 
 .thumb svg {
@@ -327,6 +332,7 @@
   width: calc(100% - 28px);
   height: calc(100% - 28px);
   object-fit: contain;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
 }
 
 /* Cresce junto com a moldura: os 150px de antes ocupavam pouco mais da metade
