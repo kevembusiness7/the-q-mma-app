@@ -61,7 +61,7 @@ export function ProductPage({ productId }: { productId: string }) {
   }
 
   const photo = productImage(product, color?.slug ?? 'black', side);
-  const hasBack = product.mode === 'mockup';
+  const hasBack = product.mode === 'mockup' && product.category !== 'Caps';
 
   const escolherCor = (index: number) => {
     setColorIndex(index);

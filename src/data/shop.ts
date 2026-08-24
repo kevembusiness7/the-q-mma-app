@@ -15,11 +15,20 @@ const MOCKUP_COLORS: ProductColor[] = [
   { name: 'Gold', hex: '#C8A03C', slug: 'gold' },
 ];
 
-/** Paleta do boné clássico, reaproveitada nos bonés de arte dos atletas. */
+/** Paleta do boné clássico (esse é 'art', SVG genérico — não depende de foto). */
 const CAP_COLORS: ProductColor[] = [
   { name: 'Black', hex: '#14110F', slug: 'black' },
   { name: 'Burgundy', hex: '#B0301F', slug: 'burgundy' },
   { name: 'Beige', hex: '#948A81', slug: 'beige' },
+];
+
+/**
+ * Os bonés de arte dos atletas só têm foto de mockup (molde + logo colada)
+ * na cor preta — é a única cor que temos foto do boné em branco. Se um dia
+ * vier foto do boné em bordô/bege, dá pra somar aqui.
+ */
+const CAP_MOCKUP_COLORS: ProductColor[] = [
+  { name: 'Black', hex: '#14110F', slug: 'black' },
 ];
 
 const ART_SHIRT_DETAILS =
@@ -42,11 +51,7 @@ export const products: ProdutoBase[] = [
       'Curved-brim cap with the team logo embroidered on front, snapback adjustable strap.',
     tags: ['TheQMMA', 'Cap', 'Classic'],
     genders: ['Men', 'Women'],
-    colors: [
-      { name: 'Black', hex: '#14110F', slug: 'black' },
-      { name: 'Burgundy', hex: '#B0301F', slug: 'burgundy' },
-      { name: 'Beige', hex: '#948A81', slug: 'beige' },
-    ],
+    colors: CAP_COLORS,
     details:
       'Structured 6-panel cap, pre-curved brim, embroidered raised logo. Snapback adjustable strap, one size fits all.',
     shipping: SHIPPING,
@@ -101,15 +106,15 @@ export const products: ProdutoBase[] = [
     priceCents: 16900,
     badges: ['app'],
     owner: 'ozzy-diaz',
-    description: 'Shirt with Osman "Ozzy" Diaz\'s exclusive illustrated artwork.',
+    description:
+      'Shirt with Osman "Ozzy" Diaz\'s exclusive illustrated artwork. Choose the shirt color and see front and back.',
     tags: ['UFC', 'OzzyDiaz', 'TheQMMA', 'Art'],
     genders: ['Men', 'Women'],
     colors: MOCKUP_COLORS,
     details: ART_SHIRT_DETAILS,
     shipping: SHIPPING,
-    mode: 'art',
-    art: 'tee',
-    artImage: '/images/shirts/ozzyshirt.png',
+    mode: 'mockup',
+    mockupKey: 'ozzy',
   },
   {
     id: 'shane-collins-art',
@@ -119,15 +124,15 @@ export const products: ProdutoBase[] = [
     priceCents: 16900,
     badges: ['app'],
     owner: 'shane-collins',
-    description: 'Shirt with Shane "Hollywood" Collins\'s exclusive illustrated artwork.',
+    description:
+      'Shirt with Shane "Hollywood" Collins\'s exclusive illustrated artwork. Choose the shirt color and see front and back.',
     tags: ['UFC', 'ShaneCollins', 'TheQMMA', 'Art'],
     genders: ['Men', 'Women'],
     colors: MOCKUP_COLORS,
     details: ART_SHIRT_DETAILS,
     shipping: SHIPPING,
-    mode: 'art',
-    art: 'tee',
-    artImage: '/images/shirts/hollywoodshirt.png',
+    mode: 'mockup',
+    mockupKey: 'hollywood',
   },
   {
     id: 'jp-lebosnoyani-art',
@@ -137,15 +142,15 @@ export const products: ProdutoBase[] = [
     priceCents: 16900,
     badges: ['app'],
     owner: 'jp-lebosnoyani',
-    description: 'Shirt with Jean-Paul "Mufasa" Lebosnoyani\'s exclusive illustrated artwork.',
+    description:
+      'Shirt with Jean-Paul "Mufasa" Lebosnoyani\'s exclusive illustrated artwork. Choose the shirt color and see front and back.',
     tags: ['UFC', 'JeanPaulLebosnoyani', 'TheQMMA', 'Art'],
     genders: ['Men', 'Women'],
     colors: MOCKUP_COLORS,
     details: ART_SHIRT_DETAILS,
     shipping: SHIPPING,
-    mode: 'art',
-    art: 'tee',
-    artImage: '/images/shirts/jplshirt.png',
+    mode: 'mockup',
+    mockupKey: 'jp',
   },
   {
     id: 'ozzy-diaz-cap',
@@ -156,15 +161,14 @@ export const products: ProdutoBase[] = [
     badges: ['app'],
     owner: 'ozzy-diaz',
     description:
-      'Curved-brim cap with Osman "Ozzy" Diaz\'s exclusive illustrated artwork embroidered on front.',
+      'Curved-brim cap with Osman "Ozzy" Diaz\'s exclusive illustrated artwork printed on front.',
     tags: ['UFC', 'OzzyDiaz', 'TheQMMA', 'Art', 'Cap'],
     genders: ['Men', 'Women'],
-    colors: CAP_COLORS,
+    colors: CAP_MOCKUP_COLORS,
     details: ART_CAP_DETAILS,
     shipping: SHIPPING,
-    mode: 'art',
-    art: 'cap',
-    artImage: '/images/caps/ozzycap.png',
+    mode: 'mockup',
+    mockupKey: 'ozzy',
   },
   {
     id: 'shane-collins-cap',
@@ -175,15 +179,14 @@ export const products: ProdutoBase[] = [
     badges: ['app'],
     owner: 'shane-collins',
     description:
-      'Curved-brim cap with Shane "Hollywood" Collins\'s exclusive illustrated artwork embroidered on front.',
+      'Curved-brim cap with Shane "Hollywood" Collins\'s exclusive illustrated artwork printed on front.',
     tags: ['UFC', 'ShaneCollins', 'TheQMMA', 'Art', 'Cap'],
     genders: ['Men', 'Women'],
-    colors: CAP_COLORS,
+    colors: CAP_MOCKUP_COLORS,
     details: ART_CAP_DETAILS,
     shipping: SHIPPING,
-    mode: 'art',
-    art: 'cap',
-    artImage: '/images/caps/hollywoodcap.png',
+    mode: 'mockup',
+    mockupKey: 'hollywood',
   },
   {
     id: 'jp-lebosnoyani-cap',
@@ -194,15 +197,32 @@ export const products: ProdutoBase[] = [
     badges: ['app'],
     owner: 'jp-lebosnoyani',
     description:
-      'Curved-brim cap with Jean-Paul "Mufasa" Lebosnoyani\'s exclusive illustrated artwork embroidered on front.',
+      'Curved-brim cap with Jean-Paul "Mufasa" Lebosnoyani\'s exclusive illustrated artwork printed on front.',
     tags: ['UFC', 'JeanPaulLebosnoyani', 'TheQMMA', 'Art', 'Cap'],
     genders: ['Men', 'Women'],
-    colors: CAP_COLORS,
+    colors: CAP_MOCKUP_COLORS,
     details: ART_CAP_DETAILS,
     shipping: SHIPPING,
-    mode: 'art',
-    art: 'cap',
-    artImage: '/images/caps/jplcap.png',
+    mode: 'mockup',
+    mockupKey: 'jp',
+  },
+  {
+    id: 'dione-barbosa-cap',
+    slug: 'dione-barbosa-cap',
+    name: 'Dione Barbosa Art Cap',
+    category: 'Caps',
+    priceCents: 9900,
+    badges: ['app'],
+    owner: 'dione-barbosa',
+    description:
+      'Curved-brim cap with Dione "The Witch" Barbosa\'s exclusive illustrated artwork printed on front.',
+    tags: ['UFC', 'DioneBarbosa', 'TheQMMA', 'Art', 'Cap'],
+    genders: ['Men', 'Women'],
+    colors: CAP_MOCKUP_COLORS,
+    details: ART_CAP_DETAILS,
+    shipping: SHIPPING,
+    mode: 'mockup',
+    mockupKey: 'dione',
   },
 ];
 

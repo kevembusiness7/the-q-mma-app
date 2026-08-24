@@ -132,46 +132,53 @@ values
    'mockup', 'witch', null, null, 5),
 
   ('ozzy-diaz-art', 'Ozzy Diaz Art Shirt', 'Shirts', 16900, '{app}', 'ozzy-diaz',
-   'Shirt with Osman "Ozzy" Diaz''s exclusive illustrated artwork.',
+   'Shirt with Osman "Ozzy" Diaz''s exclusive illustrated artwork. Choose the shirt color and see front and back.',
    '{UFC,OzzyDiaz,TheQMMA,Art}', '{Men,Women}',
    '100% combed cotton, 180g/m², high-durability screen print. Unisex regular fit. Officially licensed piece with The Q MMA authenticity seal.',
    'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.',
-   'art', null, 'tee', '/images/shirts/ozzyshirt.png', 6),
+   'mockup', 'ozzy', null, null, 6),
 
   ('shane-collins-art', 'Shane Collins Art Shirt', 'Shirts', 16900, '{app}', 'shane-collins',
-   'Shirt with Shane "Hollywood" Collins''s exclusive illustrated artwork.',
+   'Shirt with Shane "Hollywood" Collins''s exclusive illustrated artwork. Choose the shirt color and see front and back.',
    '{UFC,ShaneCollins,TheQMMA,Art}', '{Men,Women}',
    '100% combed cotton, 180g/m², high-durability screen print. Unisex regular fit. Officially licensed piece with The Q MMA authenticity seal.',
    'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.',
-   'art', null, 'tee', '/images/shirts/hollywoodshirt.png', 7),
+   'mockup', 'hollywood', null, null, 7),
 
   ('jp-lebosnoyani-art', 'Jean Paul Art Shirt', 'Shirts', 16900, '{app}', 'jp-lebosnoyani',
-   'Shirt with Jean-Paul "Mufasa" Lebosnoyani''s exclusive illustrated artwork.',
+   'Shirt with Jean-Paul "Mufasa" Lebosnoyani''s exclusive illustrated artwork. Choose the shirt color and see front and back.',
    '{UFC,JeanPaulLebosnoyani,TheQMMA,Art}', '{Men,Women}',
    '100% combed cotton, 180g/m², high-durability screen print. Unisex regular fit. Officially licensed piece with The Q MMA authenticity seal.',
    'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.',
-   'art', null, 'tee', '/images/shirts/jplshirt.png', 8),
+   'mockup', 'jp', null, null, 8),
 
   ('ozzy-diaz-cap', 'Ozzy Diaz Art Cap', 'Caps', 9900, '{app}', 'ozzy-diaz',
-   'Curved-brim cap with Osman "Ozzy" Diaz''s exclusive illustrated artwork embroidered on front.',
+   'Curved-brim cap with Osman "Ozzy" Diaz''s exclusive illustrated artwork printed on front.',
    '{UFC,OzzyDiaz,TheQMMA,Art,Cap}', '{Men,Women}',
    'Structured six-panel cap, front artwork print, adjustable snapback closure.',
    'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.',
-   'art', null, 'cap', '/images/caps/ozzycap.png', 9),
+   'mockup', 'ozzy', null, null, 9),
 
   ('shane-collins-cap', 'Shane Collins Art Cap', 'Caps', 9900, '{app}', 'shane-collins',
-   'Curved-brim cap with Shane "Hollywood" Collins''s exclusive illustrated artwork embroidered on front.',
+   'Curved-brim cap with Shane "Hollywood" Collins''s exclusive illustrated artwork printed on front.',
    '{UFC,ShaneCollins,TheQMMA,Art,Cap}', '{Men,Women}',
    'Structured six-panel cap, front artwork print, adjustable snapback closure.',
    'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.',
-   'art', null, 'cap', '/images/caps/hollywoodcap.png', 10),
+   'mockup', 'hollywood', null, null, 10),
 
   ('jp-lebosnoyani-cap', 'Jean Paul Art Cap', 'Caps', 9900, '{app}', 'jp-lebosnoyani',
-   'Curved-brim cap with Jean-Paul "Mufasa" Lebosnoyani''s exclusive illustrated artwork embroidered on front.',
+   'Curved-brim cap with Jean-Paul "Mufasa" Lebosnoyani''s exclusive illustrated artwork printed on front.',
    '{UFC,JeanPaulLebosnoyani,TheQMMA,Art,Cap}', '{Men,Women}',
    'Structured six-panel cap, front artwork print, adjustable snapback closure.',
    'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.',
-   'art', null, 'cap', '/images/caps/jplcap.png', 11)
+   'mockup', 'jp', null, null, 11),
+
+  ('dione-barbosa-cap', 'Dione Barbosa Art Cap', 'Caps', 9900, '{app}', 'dione-barbosa',
+   'Curved-brim cap with Dione "The Witch" Barbosa''s exclusive illustrated artwork printed on front.',
+   '{UFC,DioneBarbosa,TheQMMA,Art,Cap}', '{Men,Women}',
+   'Structured six-panel cap, front artwork print, adjustable snapback closure.',
+   'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.',
+   'mockup', 'dione', null, null, 12)
 on conflict (slug) do update set
   name = excluded.name, category = excluded.category, price_cents = excluded.price_cents,
   badges = excluded.badges, owner = excluded.owner, description = excluded.description,
@@ -207,9 +214,9 @@ cross join (values
   ('Gold', '#C8A03C', 'gold')
 ) c(color_name, color_hex, color_slug);
 
--- As 3 camisas de arte dos atletas: mesma paleta de 6 cores da Dione. A arte
--- em si não muda com a cor (é 'art', uma foto só) -- a cor aqui é só a base
--- da camisa que a pessoa está comprando.
+-- As 3 camisas de arte dos atletas: mesma paleta de 6 cores da Dione, e o
+-- mesmo esquema 'mockup' -- cada cor tem uma foto própria em
+-- /images/shirts/ com a arte já colada na camisa daquela cor.
 insert into cores_do_produto
 select p.slug, c.color_name, c.color_hex, c.color_slug
 from (values ('ozzy-diaz-art'), ('shane-collins-art'), ('jp-lebosnoyani-art')) p(slug)
@@ -222,14 +229,15 @@ cross join (values
   ('Gold', '#C8A03C', 'gold')
 ) c(color_name, color_hex, color_slug);
 
--- Os 3 bonés de arte dos atletas: mesma paleta do boné clássico do time.
+-- Os 4 bonés de arte dos atletas: só preto -- é a única cor que tem foto do
+-- molde de boné (public/images/caps/{ozzy,hollywood,jp,dione}-black.png). Se
+-- vier foto do boné em bordô/bege, dá pra somar aqui e no CAP_MOCKUP_COLORS
+-- do shop.ts.
 insert into cores_do_produto
 select p.slug, c.color_name, c.color_hex, c.color_slug
-from (values ('ozzy-diaz-cap'), ('shane-collins-cap'), ('jp-lebosnoyani-cap')) p(slug)
+from (values ('ozzy-diaz-cap'), ('shane-collins-cap'), ('jp-lebosnoyani-cap'), ('dione-barbosa-cap')) p(slug)
 cross join (values
-  ('Black', '#14110F', 'black'),
-  ('Burgundy', '#B0301F', 'burgundy'),
-  ('Beige', '#948A81', 'beige')
+  ('Black', '#14110F', 'black')
 ) c(color_name, color_hex, color_slug);
 
 -- 7. Variações --------------------------------------------------------------
