@@ -13,6 +13,7 @@ import { AdminOrdersPage } from './pages/AdminOrdersPage';
 import { AdminPromotionAthletesPage } from './pages/AdminPromotionAthletesPage';
 import { PromotionsPage } from './pages/PromotionsPage';
 import { PromotionAthleteProfilePage } from './pages/PromotionAthleteProfilePage';
+import { PromotionBookingPage } from './pages/PromotionBookingPage';
 import { OrdersPage } from './pages/OrdersPage';
 import { CartProvider } from './context/CartContext';
 import { NavigationProvider, useNav } from './context/NavigationContext';
@@ -52,6 +53,8 @@ function Screens() {
       return <PromotionsPage />;
     case 'promotion-athlete':
       return <PromotionAthleteProfilePage slug={overlay.slug} />;
+    case 'promotion-booking':
+      return <PromotionBookingPage athleteSlug={overlay.athleteSlug} packageId={overlay.packageId} />;
     case 'orders':
       return <OrdersPage />;
     case 'coaches':
@@ -132,6 +135,38 @@ function AvisoPedido() {
   );
 }
 
+/**
+ * Retorno do Stripe pra uma reserva de Athlete Promotion. Mesmo espírito de
+ * AvisoPedido, só que sem carrinho pra esvaziar — não existe carrinho aqui.
+ */
+function AvisoPromocao() {
+  const [estado] = useState(() => {
+    if (typeof window === 'undefined') return null;
+    const q = new URLSearchParams(window.location.search);
+    const resultado = q.get('promocao');
+    if (!resultado) return null;
+    const numero = q.get('numero');
+    window.history.replaceState({}, '', window.location.pathname);
+    return { resultado, numero };
+  });
+  const [visivel, setVisivel] = useState(true);
+
+  if (!estado || !visivel) return null;
+
+  return (
+    <div className="aviso-topo" role="status">
+      <span>
+        {estado.resultado === 'sucesso'
+          ? `✓ Booking ${estado.numero ?? ''} received! We'll review your campaign and confirm the schedule — check My Promotions for updates.`
+          : 'Payment was not completed. You can try booking again.'}
+      </span>
+      <button type="button" onClick={() => setVisivel(false)} aria-label="Fechar aviso">
+        ×
+      </button>
+    </div>
+  );
+}
+
 function App() {
   return (
     <NavigationProvider>
@@ -140,6 +175,7 @@ function App() {
           <AppShell>
             <AvisoConfirmacao />
             <AvisoPedido />
+            <AvisoPromocao />
             <Screens />
           </AppShell>
         </CartProvider>

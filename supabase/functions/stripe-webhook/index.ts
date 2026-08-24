@@ -70,6 +70,88 @@ async function enviarEmail(para: string, assunto: string, html: string) {
   }
 }
 
+/**
+ * Confirma o pagamento de uma reserva de Athlete Promotion.
+ *
+ * Irmã mais simples do bloco de pedido de loja logo abaixo: sem item, sem
+ * frete, sem endereço, sem baixa de estoque. Pagar NUNCA aprova o conteúdo —
+ * review_status fica intocado, no 'pending_review' que já trazia por padrão.
+ */
+async function confirmarPromocao(session: Stripe.Checkout.Session): Promise<Response> {
+  const promotionId = session.metadata?.promotion_id
+  if (!promotionId) {
+    console.error('Sessão de promoção sem promotion_id no metadata:', session.id)
+    return new Response('Missing promotion reference', { status: 200 })
+  }
+
+  if (session.payment_status !== 'paid' && session.payment_status !== 'no_payment_required') {
+    console.log('Sessão de promoção concluída mas ainda não paga:', session.id, session.payment_status)
+    return new Response(JSON.stringify({ ok: true, aguardando: session.payment_status }), {
+      status: 200,
+    })
+  }
+
+  const rpc = await fetch(`${SUPABASE_URL}/rest/v1/rpc/confirmar_pagamento_promocao`, {
+    method: 'POST',
+    headers: db,
+    body: JSON.stringify({
+      promo_id: promotionId,
+      dados: {
+        payment_intent_id:
+          typeof session.payment_intent === 'string' ? session.payment_intent : null,
+        total_cents: session.amount_total,
+      },
+    }),
+  })
+  if (!rpc.ok) {
+    console.error('Falha ao confirmar pagamento de promoção:', rpc.status, await rpc.text())
+    return new Response('Could not confirm payment', { status: 500 })
+  }
+  const resultado = await rpc.json()
+  if (!resultado?.reivindicado) {
+    return new Response(JSON.stringify({ ok: true, repetido: true }), { status: 200 })
+  }
+
+  const emailCliente = session.customer_details?.email ?? null
+  if (emailCliente) {
+    await enviarEmail(
+      emailCliente,
+      `[The Q] Booking ${resultado.request_number} received`,
+      `
+      <div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;max-width:560px">
+        <p style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#b8860b;margin:0 0 4px">THE Q MMA</p>
+        <h2 style="margin:0 0 8px;font-size:20px">Payment received — ${resultado.request_number}</h2>
+        <p style="font-size:14px;color:#444;margin:0 0 16px">
+          We received your payment of ${centavos(resultado.total_cents ?? session.amount_total ?? 0)}.
+          Our team will review your campaign and confirm the schedule — you'll see the status
+          update under My Promotions in the app.
+        </p>
+      </div>`,
+    )
+  }
+
+  if (EMAIL_DESTINO) {
+    await enviarEmail(
+      EMAIL_DESTINO,
+      `[The Q] Nova reserva de promoção ${resultado.request_number} — pendente de revisão`,
+      `
+      <div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;max-width:560px">
+        <p style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#b8860b;margin:0 0 4px">THE Q MMA — nova reserva</p>
+        <h2 style="margin:0 0 8px;font-size:20px">${resultado.request_number}</h2>
+        <p style="font-size:14px;margin-top:8px">
+          Pago: ${centavos(resultado.total_cents ?? session.amount_total ?? 0)}<br/>
+          Aguardando revisão no painel Promotion requests.
+        </p>
+      </div>`,
+    )
+  }
+
+  return new Response(
+    JSON.stringify({ ok: true, promocao: resultado.request_number }),
+    { status: 200 },
+  )
+}
+
 Deno.serve(async (req) => {
   if (req.method !== 'POST') return new Response('Method not allowed', { status: 405 })
 
@@ -107,6 +189,26 @@ Deno.serve(async (req) => {
     evento.type === 'checkout.session.async_payment_failed'
   ) {
     const session = evento.data.object as Stripe.Checkout.Session
+
+    if (session.metadata?.order_type === 'promotion') {
+      const promotionId = session.metadata?.promotion_id
+      if (promotionId) {
+        // review_status também muda pra 'cancelled' aqui -- é ele, não
+        // payment_status, quem segura a vaga no índice único de data em
+        // promotion_requests. Sem soltar os dois, a data ficaria travada por
+        // um checkout que ninguém nunca vai terminar.
+        await fetch(
+          `${SUPABASE_URL}/rest/v1/promotion_requests?id=eq.${promotionId}&payment_status=eq.awaiting_payment`,
+          {
+            method: 'PATCH',
+            headers: db,
+            body: JSON.stringify({ payment_status: 'cancelled', review_status: 'cancelled' }),
+          },
+        )
+      }
+      return new Response(JSON.stringify({ ok: true }), { status: 200 })
+    }
+
     const orderId = session.metadata?.order_id
     if (orderId) {
       // Só cancela se ainda estava aguardando: um evento atrasado de expiração
@@ -140,32 +242,62 @@ Deno.serve(async (req) => {
       { headers: db },
     )
     const [alvo] = achou.ok ? await achou.json() : []
-    if (!alvo) {
+    if (alvo) {
+      // Estorno parcial não é pedido estornado: o cliente ficou com a compra e
+      // recebeu parte do dinheiro de volta. Marcar tudo como refunded apagaria
+      // uma venda que existe.
+      if (total) {
+        await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${alvo.id}`, {
+          method: 'PATCH',
+          headers: db,
+          body: JSON.stringify({ payment_status: 'refunded' }),
+        })
+      }
+
+      await fetch(`${SUPABASE_URL}/rest/v1/order_admin_notes`, {
+        method: 'POST',
+        headers: db,
+        body: JSON.stringify({
+          order_id: alvo.id,
+          note: `${total ? 'Estorno total' : 'Estorno parcial'} de ${centavos(charge.amount_refunded)} registrado no Stripe. O estoque NÃO foi reposto — confira a peça antes de devolvê-la ao site.`,
+        }),
+      })
+
+      return new Response(JSON.stringify({ ok: true, estornado: alvo.order_number }), { status: 200 })
+    }
+
+    // Não era pedido de loja -- tenta promoção antes de desistir.
+    const achouPromo = await fetch(
+      `${SUPABASE_URL}/rest/v1/promotion_requests?stripe_payment_intent_id=eq.${pi}&select=id,request_number`,
+      { headers: db },
+    )
+    const [alvoPromo] = achouPromo.ok ? await achouPromo.json() : []
+    if (!alvoPromo) {
       console.error('Estorno sem pedido correspondente:', pi)
       return new Response(JSON.stringify({ ok: true }), { status: 200 })
     }
 
-    // Estorno parcial não é pedido estornado: o cliente ficou com a compra e
-    // recebeu parte do dinheiro de volta. Marcar tudo como refunded apagaria
-    // uma venda que existe.
     if (total) {
-      await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${alvo.id}`, {
+      await fetch(`${SUPABASE_URL}/rest/v1/promotion_requests?id=eq.${alvoPromo.id}`, {
         method: 'PATCH',
         headers: db,
         body: JSON.stringify({ payment_status: 'refunded' }),
       })
     }
 
-    await fetch(`${SUPABASE_URL}/rest/v1/order_admin_notes`, {
+    await fetch(`${SUPABASE_URL}/rest/v1/promotion_admin_notes`, {
       method: 'POST',
       headers: db,
       body: JSON.stringify({
-        order_id: alvo.id,
-        note: `${total ? 'Estorno total' : 'Estorno parcial'} de ${centavos(charge.amount_refunded)} registrado no Stripe. O estoque NÃO foi reposto — confira a peça antes de devolvê-la ao site.`,
+        promotion_id: alvoPromo.id,
+        note: `${total ? 'Estorno total' : 'Estorno parcial'} de ${centavos(charge.amount_refunded)} registrado no Stripe.`,
       }),
     })
 
-    return new Response(JSON.stringify({ ok: true, estornado: alvo.order_number }), { status: 200 })
+    return new Response(
+      JSON.stringify({ ok: true, estornado: alvoPromo.request_number }),
+      { status: 200 },
+    )
   }
 
   if (
@@ -178,6 +310,11 @@ Deno.serve(async (req) => {
 
   // ---------------------------------------------------------------- pagou? --
   const session = evento.data.object as Stripe.Checkout.Session
+
+  if (session.metadata?.order_type === 'promotion') {
+    return await confirmarPromocao(session)
+  }
+
   const orderId = session.metadata?.order_id
   if (!orderId) {
     console.error('Sessão sem order_id no metadata:', session.id)
