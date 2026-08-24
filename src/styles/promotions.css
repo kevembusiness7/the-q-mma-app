@@ -1,0 +1,276 @@
+/* Athlete Promotions. Reaproveita os tokens de shop.css e a pílula base
+   .ticket-status de support.css — só soma as classes que são só daqui. */
+
+/* -------------------------------------------------------- status pills -- */
+
+.ticket-status.pr-pending_review {
+  background: var(--q-gold);
+  color: var(--q-ink);
+}
+
+.ticket-status.pr-under_review {
+  background: #3e6b8c;
+  color: #fff;
+}
+
+.ticket-status.pr-approved {
+  background: #6a8f4f;
+  color: #fff;
+}
+
+.ticket-status.pr-scheduled {
+  background: #8a5fb0;
+  color: #fff;
+}
+
+.ticket-status.pr-posted {
+  background: #4fb477;
+  color: var(--q-ink);
+}
+
+.ticket-status.pr-rejected {
+  background: var(--q-blood);
+  color: #fff;
+}
+
+.ticket-status.pr-cancelled {
+  background: var(--q-canvas);
+  color: var(--q-dust);
+  border: 1px solid var(--q-line);
+}
+
+/* --------------------------------------------------------- admin lista -- */
+
+.promo-admin-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.promo-inactive {
+  color: var(--q-dust);
+  font-weight: normal;
+}
+
+.promo-package-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid var(--q-line);
+  border-radius: 10px;
+  background: var(--q-canvas-2);
+}
+
+/* -------------------------------------------------------------- toggle -- */
+/* Primeiro switch on/off do app -- input checkbox de verdade por baixo
+   (acessível, funciona sem JS extra), só escondido e redesenhado como
+   pílula. */
+
+.promo-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--q-dust);
+}
+
+.promo-toggle {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.promo-toggle input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.promo-toggle-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--q-line);
+  transition: background 0.15s ease;
+}
+
+.promo-toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--q-bone);
+  transition: transform 0.15s ease;
+}
+
+.promo-toggle input:checked ~ .promo-toggle-track {
+  background: var(--q-gold);
+}
+
+.promo-toggle input:checked ~ .promo-toggle-track::after {
+  transform: translateX(18px);
+}
+
+/* ------------------------------------------------------- browse/vitrine -- */
+
+.promo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 0 16px 24px;
+}
+
+.promo-athlete-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0;
+  border: 1px solid var(--q-line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--q-canvas-2);
+  text-align: left;
+  cursor: pointer;
+}
+
+.promo-athlete-card .promo-photo {
+  aspect-ratio: 4 / 5;
+  background: linear-gradient(160deg, var(--q-canvas-2), #171312);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.promo-athlete-card .promo-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.promo-athlete-card-body {
+  padding: 0 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.promo-athlete-card-body b {
+  font-size: 13px;
+}
+
+.promo-athlete-card-body span {
+  font-size: 11px;
+  color: var(--q-dust);
+}
+
+.promo-starting {
+  font-family: var(--q-mono);
+  font-size: 11px;
+  color: var(--q-gold);
+}
+
+/* -------------------------------------------------------------- perfil -- */
+
+.promo-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.promo-stat {
+  padding: 10px;
+  border: 1px solid var(--q-line);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.promo-stat b {
+  display: block;
+  font-size: 16px;
+}
+
+.promo-stat span {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--q-dust);
+}
+
+.promo-stats-asof {
+  font-size: 11px;
+  color: var(--q-dust);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+
+.promo-package-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.promo-package-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid var(--q-line);
+  border-radius: 10px;
+  background: var(--q-canvas-2);
+  cursor: pointer;
+  text-align: left;
+}
+
+.promo-package-card.selected {
+  border-color: var(--q-gold);
+}
+
+.promo-package-card b {
+  display: block;
+  font-size: 13px;
+}
+
+.promo-package-card span {
+  font-size: 11px;
+  color: var(--q-dust);
+}
+
+.promo-package-card .price {
+  font-family: var(--q-mono);
+  color: var(--q-gold);
+  font-size: 14px;
+}
+
+/* -------------------------------------------------------------- upload -- */
+
+.promo-upload-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.promo-upload-preview {
+  font-size: 11px;
+  color: var(--q-dust);
+}
+
+.promo-earned-note {
+  font-size: 11px;
+  color: var(--q-dust);
+  font-style: italic;
+  margin-top: 4px;
+}

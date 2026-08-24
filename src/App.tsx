@@ -10,6 +10,7 @@ import { AuthPage } from './pages/AuthPage';
 import { SupportPage } from './pages/SupportPage';
 import { AdminSupportPage } from './pages/AdminSupportPage';
 import { AdminOrdersPage } from './pages/AdminOrdersPage';
+import { AdminPromotionAthletesPage } from './pages/AdminPromotionAthletesPage';
 import { OrdersPage } from './pages/OrdersPage';
 import { CartProvider } from './context/CartContext';
 import { NavigationProvider, useNav } from './context/NavigationContext';
@@ -43,6 +44,8 @@ function Screens() {
       return <AdminSupportPage />;
     case 'admin-orders':
       return <AdminOrdersPage />;
+    case 'admin-promotion-athletes':
+      return <AdminPromotionAthletesPage />;
     case 'orders':
       return <OrdersPage />;
     case 'coaches':

@@ -17,6 +17,7 @@ export type Screen =
   | { name: 'support'; pedido?: { id: string; numero: string } }
   | { name: 'admin-support' }
   | { name: 'admin-orders' }
+  | { name: 'admin-promotion-athletes' }
   | { name: 'orders' }
   | { name: 'coaches' }
   | { name: 'sponsors' }
