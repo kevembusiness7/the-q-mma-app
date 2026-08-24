@@ -150,10 +150,11 @@ function NovoAtleta({
     .replace(/^-+|-+$/g, '')
 
   // Se o slug bater com um atleta que já existe na aba Athletes, a foto sai
-  // de lá em vez de pedir upload -- é a mesma que já aparece no hero do
-  // perfil dele, sem precisar cadastrar a peça duas vezes.
+  // de lá em vez de pedir upload -- a mesma que aparece nos cards do Fight
+  // Hub (athlete.imageUrl, não a heroImageUrl do topo do perfil), sem
+  // precisar cadastrar a peça duas vezes.
   const atletaExistente = athletes.find((a) => a.slug === slugSugerido)
-  const fotoEncontrada = atletaExistente?.heroImageUrl ?? atletaExistente?.imageUrl ?? null
+  const fotoEncontrada = atletaExistente?.imageUrl ?? null
 
   async function salvar() {
     if (!nome.trim() || !handle.trim() || !slugSugerido) return
@@ -176,7 +177,7 @@ function NovoAtleta({
       </label>
       {slugSugerido && <p className="cart-note">Slug: {slugSugerido}</p>}
       {fotoEncontrada && (
-        <p className="cart-note">✓ Found this athlete's hero photo — will use it automatically.</p>
+        <p className="cart-note">✓ Found this athlete's Fight Hub photo — will use it automatically.</p>
       )}
       {erro && (
         <p className="auth-erro" role="alert">
@@ -234,15 +235,16 @@ function Detalhe({
   const [criandoPacote, setCriandoPacote] = useState(false)
   const [salvandoFoto, setSalvandoFoto] = useState(false)
 
-  // Mesma foto que já aparece no hero do perfil dele na aba Athletes — sem
-  // isto a promoção pedia um upload separado pra uma imagem que já existe.
-  const atletaComHero = athletes.find((a) => a.slug === atleta.slug)
-  const fotoHero = atletaComHero?.heroImageUrl ?? atletaComHero?.imageUrl ?? null
+  // Mesma foto que já aparece nos cards do Fight Hub (athlete.imageUrl) na
+  // aba Athletes — sem isto a promoção pedia um upload separado pra uma
+  // imagem que já existe.
+  const atletaDoFightHub = athletes.find((a) => a.slug === atleta.slug)
+  const fotoFightHub = atletaDoFightHub?.imageUrl ?? null
 
-  async function usarFotoDoHero() {
-    if (!fotoHero) return
+  async function usarFotoDoFightHub() {
+    if (!fotoFightHub) return
     setSalvandoFoto(true)
-    setErro(await aoAtualizar({ photo_url: fotoHero }))
+    setErro(await aoAtualizar({ photo_url: fotoFightHub }))
     setSalvandoFoto(false)
   }
 
@@ -291,9 +293,9 @@ function Detalhe({
             <span className="cart-note">No photo set yet.</span>
           )}
         </div>
-        {fotoHero ? (
-          <button type="button" className="btn ghost" disabled={salvandoFoto} onClick={usarFotoDoHero}>
-            {salvandoFoto ? 'Saving…' : 'Use hero photo from athlete profile'}
+        {fotoFightHub ? (
+          <button type="button" className="btn ghost" disabled={salvandoFoto} onClick={usarFotoDoFightHub}>
+            {salvandoFoto ? 'Saving…' : 'Use Fight Hub photo from athlete profile'}
           </button>
         ) : (
           <p className="cart-note">
