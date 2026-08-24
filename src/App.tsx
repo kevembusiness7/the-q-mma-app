@@ -9,9 +9,12 @@ import { CoachesPage, SponsorsPage, YouPage } from './pages/AccountAndInfoPages'
 import { AuthPage } from './pages/AuthPage';
 import { SupportPage } from './pages/SupportPage';
 import { AdminSupportPage } from './pages/AdminSupportPage';
+import { OrdersPage } from './pages/OrdersPage';
 import { CartProvider } from './context/CartContext';
 import { NavigationProvider, useNav } from './context/NavigationContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { useCart } from './context/CartContext';
+import { useEffect, useState } from 'react';
 import './styles/auth.css';
 
 /**
@@ -37,6 +40,8 @@ function Screens() {
       return <SupportPage />;
     case 'admin-support':
       return <AdminSupportPage />;
+    case 'orders':
+      return <OrdersPage />;
     case 'coaches':
       return <CoachesPage />;
     case 'sponsors':
@@ -70,6 +75,51 @@ function AvisoConfirmacao() {
   );
 }
 
+/**
+ * Retorno do Stripe. O checkout sai do app e volta com ?pedido=sucesso ou
+ * ?pedido=cancelado na URL.
+ *
+ * No sucesso o carrinho é esvaziado AQUI, e não antes do redirecionamento:
+ * quem desiste no meio do pagamento volta com os itens intactos. O banner é
+ * só notícia — quem de fato confirma o pagamento é o webhook do Stripe no
+ * servidor; esta tela não muda estado de pedido nenhum.
+ */
+function AvisoPedido() {
+  const { clear } = useCart();
+  const [estado] = useState(() => {
+    if (typeof window === 'undefined') return null;
+    const q = new URLSearchParams(window.location.search);
+    const resultado = q.get('pedido');
+    if (!resultado) return null;
+    const numero = q.get('numero');
+    // Limpa a URL para o F5 não repetir o aviso (nem re-esvaziar o carrinho).
+    window.history.replaceState({}, '', window.location.pathname);
+    return { resultado, numero };
+  });
+  const [visivel, setVisivel] = useState(true);
+
+  useEffect(() => {
+    if (estado?.resultado === 'sucesso') clear();
+    // `clear` é estável (useMemo no provider); roda uma vez por retorno.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [estado?.resultado]);
+
+  if (!estado || !visivel) return null;
+
+  return (
+    <div className="aviso-topo" role="status">
+      <span>
+        {estado.resultado === 'sucesso'
+          ? `✓ Order ${estado.numero ?? ''} confirmed! Check your email for the receipt.`
+          : 'Payment was not completed. Your items are still in the cart.'}
+      </span>
+      <button type="button" onClick={() => setVisivel(false)} aria-label="Fechar aviso">
+        ×
+      </button>
+    </div>
+  );
+}
+
 function App() {
   return (
     <NavigationProvider>
@@ -77,6 +127,7 @@ function App() {
         <CartProvider>
           <AppShell>
             <AvisoConfirmacao />
+            <AvisoPedido />
             <Screens />
           </AppShell>
         </CartProvider>

@@ -1,0 +1,97 @@
+/* My orders. Reaproveita .ticket, .totals e .admin-ficha dos outros CSS. */
+
+.pedido-resumo {
+  font-size: 13px;
+  color: var(--q-bone);
+  margin-bottom: 6px;
+}
+
+.pedido-detalhe {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 18px;
+}
+
+.pedido-itens {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pedido-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid var(--q-line);
+  border-radius: 12px;
+  background: var(--q-canvas-2);
+}
+
+.pedido-item-thumb {
+  flex: none;
+  width: 52px;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: linear-gradient(160deg, var(--q-canvas-2), #171312);
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--q-line);
+}
+
+.pedido-item-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pedido-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.pedido-item-info b {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.pedido-item-info span {
+  display: block;
+  font-size: 11px;
+  color: var(--q-dust);
+}
+
+.pedido-item-preco {
+  flex: none;
+  font-family: var(--q-mono);
+  font-size: 12px;
+}
+
+.pedido-data {
+  padding-bottom: 8px;
+}
+
+/* Cores dos estados de pagamento nos cards. */
+.ticket-status.pg-paid {
+  background: #4fb477;
+  color: var(--q-ink);
+}
+
+.ticket-status.pg-awaiting_payment {
+  background: var(--q-gold);
+  color: var(--q-ink);
+}
+
+.ticket-status.pg-cancelled {
+  background: #100d0c;
+  color: var(--q-dust);
+  border: 1px solid var(--q-line);
+}
+
+.ticket-status.pg-refunded {
+  background: #3e6b8c;
+  color: #fff;
+}

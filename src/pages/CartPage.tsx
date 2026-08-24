@@ -2,10 +2,13 @@ import { useCart } from '../context/CartContext';
 import { useNav } from '../context/NavigationContext';
 import { ProductArt } from '../lib/productImage';
 import { formatarPreco } from '../hooks/useProducts';
+import { useCheckout } from '../hooks/useCheckout';
+import '../styles/auth.css';
 import '../styles/shop.css';
 
 export function CartPage() {
   const { lines, subtotalCents, setQuantity, remove } = useCart();
+  const { pagar, redirecionando, erro: erroCheckout } = useCheckout();
   const { closeOverlay, openOverlay } = useNav();
 
   if (lines.length === 0) {
@@ -100,12 +103,22 @@ export function CartPage() {
           </div>
         </div>
 
-        {/* Checkout ainda não processa pagamento — ver README-PARTE2.md */}
-        <button type="button" className="btn cart-checkout" disabled>
-          Checkout — em breve
+        {erroCheckout && (
+          <p className="auth-erro" role="alert">
+            {erroCheckout}
+          </p>
+        )}
+
+        <button
+          type="button"
+          className="btn cart-checkout"
+          onClick={() => pagar(lines)}
+          disabled={redirecionando}
+        >
+          {redirecionando ? 'Redirecting to payment…' : 'Checkout'}
         </button>
         <p className="cart-note">
-          O pagamento ainda não está ligado. Os itens ficam salvos só nesta sessão.
+          Secure payment by Stripe. Shipping is chosen on the payment page.
         </p>
       </div>
     </div>

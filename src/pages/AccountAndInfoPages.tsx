@@ -76,9 +76,12 @@ export function YouPage() {
         Shop <span>›</span>
       </button>
 
-      {/* Ainda sem backend proprio; agora o rotulo muda conforme o login. */}
-      <button type="button" className="listrow" disabled>
-        My orders <span>{usuario ? 'Em breve' : 'Sign in'}</span>
+      <button
+        type="button"
+        className="listrow"
+        onClick={() => openOverlay({ name: usuario ? 'orders' : 'auth' })}
+      >
+        My orders <span>{usuario ? '›' : 'Sign in'}</span>
       </button>
       <button type="button" className="listrow" disabled>
         Addresses &amp; payment <span>{usuario ? 'Em breve' : 'Sign in'}</span>
