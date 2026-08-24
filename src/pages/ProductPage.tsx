@@ -125,20 +125,26 @@ export function ProductPage({ productId }: { productId: string }) {
         <div className="price-lg">{formatarPreco(variacao?.priceCents ?? product.priceCents)}</div>
         <p className="desc">{product.description}</p>
 
-        <div className="label">Color — {color?.name}</div>
-        <div className="swatch-row">
-          {product.colors.map((c, index) => (
-            <button
-              key={c.slug}
-              type="button"
-              className={`swatch ${index === colorIndex ? 'on' : ''}`}
-              style={{ background: c.hex }}
-              onClick={() => escolherCor(index)}
-              aria-label={c.name}
-              aria-pressed={index === colorIndex}
-            />
-          ))}
-        </div>
+        {/* Sem seletor quando só existe uma cor (ex.: os bonés, que só têm
+            foto do molde preto) -- escolher entre uma opção não é escolha. */}
+        {product.colors.length > 1 && (
+          <>
+            <div className="label">Color — {color?.name}</div>
+            <div className="swatch-row">
+              {product.colors.map((c, index) => (
+                <button
+                  key={c.slug}
+                  type="button"
+                  className={`swatch ${index === colorIndex ? 'on' : ''}`}
+                  style={{ background: c.hex }}
+                  onClick={() => escolherCor(index)}
+                  aria-label={c.name}
+                  aria-pressed={index === colorIndex}
+                />
+              ))}
+            </div>
+          </>
+        )}
 
         <div className="label">Size</div>
         <div className="sizes">
