@@ -38,7 +38,7 @@ function Screens() {
     case 'auth':
       return <AuthPage />;
     case 'support':
-      return <SupportPage />;
+      return <SupportPage pedido={overlay.pedido} />;
     case 'admin-support':
       return <AdminSupportPage />;
     case 'admin-orders':

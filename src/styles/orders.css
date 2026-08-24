@@ -187,3 +187,11 @@
   color: var(--q-gold);
   font-weight: 600;
 }
+
+/* "Get help with this order". Fica no fim do detalhe, depois da data: é a
+   saída de quem leu tudo e ainda tem dúvida, não a primeira coisa a oferecer. */
+.pedido-ajuda {
+  display: block;
+  width: calc(100% - 36px);
+  margin: 4px 18px 24px;
+}

@@ -93,6 +93,7 @@ export function OrdersPage() {
 }
 
 function DetalhePedido({ pedido }: { pedido: Pedido }) {
+  const { openOverlay } = useNav()
   const endereco = [
     pedido.shipLine1,
     pedido.shipLine2,
@@ -181,6 +182,22 @@ function DetalhePedido({ pedido }: { pedido: Pedido }) {
       <time className="ticket-data pedido-data" dateTime={pedido.createdAt}>
         Placed on {formatarData(pedido.createdAt)}
       </time>
+
+      {/* Leva o pedido junto para o suporte. Sem isto o cliente escreve "meu
+          pedido não chegou" e a equipe gasta uma ida e volta só para
+          descobrir qual é. */}
+      <button
+        type="button"
+        className="btn ghost pedido-ajuda"
+        onClick={() =>
+          openOverlay({
+            name: 'support',
+            pedido: { id: pedido.id, numero: pedido.orderNumber },
+          })
+        }
+      >
+        Get help with this order
+      </button>
     </div>
   )
 }

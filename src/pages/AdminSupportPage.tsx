@@ -87,6 +87,7 @@ export function AdminSupportPage() {
             <div className="ticket-cat">
               {CATEGORIAS.find((x) => x.valor === c.category)?.rotulo ?? c.category}
               {c.screenshotPath && <span className="ticket-clipe" aria-label="Tem anexo"> · 📎</span>}
+              {c.orderNumber && <span className="ticket-pedido">{c.orderNumber}</span>}
             </div>
             <div className="ticket-de">
               {c.name} · {c.email}
@@ -170,6 +171,7 @@ function Detalhe({
           rotulo="Category"
           valor={CATEGORIAS.find((x) => x.valor === chamado.category)?.rotulo ?? chamado.category}
         />
+        {chamado.orderNumber && <Linha rotulo="Order" valor={chamado.orderNumber} />}
         <Linha rotulo="Received" valor={formatarData(chamado.createdAt)} />
         <Linha rotulo="Account" valor={chamado.userId ? 'Signed in' : 'Guest'} />
       </div>

@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase'
 
 export type CategoriaChamado =
   | 'question'
+  | 'order'
   | 'payment'
   | 'technical'
   | 'account'
@@ -20,12 +21,19 @@ export interface Chamado {
   message: string
   screenshotPath: string | null
   status: StatusChamado
+  /** Pedido a que o chamado se refere, quando veio do botão "Get help with
+   *  this order". Nulo no chamado avulso. */
+  orderId: string | null
+  /** Número legível do pedido, trazido no join. Só aparece para quem pode ler
+   *  o pedido — o RLS resolve isso sozinho. */
+  orderNumber: string | null
   createdAt: string
   updatedAt: string
 }
 
 export const CATEGORIAS: { valor: CategoriaChamado; rotulo: string }[] = [
   { valor: 'question', rotulo: 'Question' },
+  { valor: 'order', rotulo: 'Order issue' },
   { valor: 'payment', rotulo: 'Payment' },
   { valor: 'technical', rotulo: 'Technical issue' },
   { valor: 'account', rotulo: 'Account' },
@@ -46,10 +54,13 @@ interface NovoChamado {
   mensagem: string
   anexo: File | null
   usuarioId: string | null
+  /** Pedido citado, ou null. O banco confere que ele é mesmo de quem envia. */
+  pedidoId: string | null
 }
 
-/** Converte a linha do banco (snake_case) para o formato da UI. */
-function paraChamado(row: any): Chamado {
+/** Converte a linha do banco (snake_case) para o formato da UI. Exportada
+ *  porque o painel da equipe lê a mesma tabela e precisa do mesmo formato. */
+export function paraChamado(row: any): Chamado {
   return {
     id: row.id,
     userId: row.user_id,
@@ -59,6 +70,8 @@ function paraChamado(row: any): Chamado {
     message: row.message,
     screenshotPath: row.screenshot_path,
     status: row.status,
+    orderId: row.order_id ?? null,
+    orderNumber: row.orders?.order_number ?? null,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   }
@@ -114,6 +127,7 @@ export function useEnviarChamado() {
           category: dados.categoria,
           message: dados.mensagem,
           screenshot_path: caminhoAnexo,
+          order_id: dados.pedidoId,
         })
 
         if (error) return { erro: error.message, protocolo: null }
@@ -145,7 +159,7 @@ export function useMeusChamados(usuarioId: string | null) {
     setCarregando(true)
     const { data, error } = await supabase
       .from('support_tickets')
-      .select('*')
+      .select('*, orders(order_number)')
       .eq('user_id', usuarioId)
       .order('created_at', { ascending: false })
 

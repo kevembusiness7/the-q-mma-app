@@ -303,6 +303,58 @@ create policy "admin escreve anotacoes" on order_admin_notes
   for insert to authenticated
   with check (public.eh_admin());
 
+-- 8. Chamado ligado ao pedido ------------------------------------------------
+-- O botão "Get help with this order" abre o suporte já sabendo de qual pedido
+-- se trata. Sem isto o cliente escreve "meu pedido não chegou" e a equipe
+-- gasta uma ida e volta só para descobrir qual é.
+--
+-- Guardado por to_regclass porque `support_tickets` nasce em
+-- support-schema.sql: se aquele script ainda não rodou, este pula o trecho em
+-- vez de quebrar no meio.
+
+-- Categoria própria para chamado de pedido. Sem ela o assunto cai em
+-- "Payment" ou "Other" e some no meio da caixa de entrada.
+--
+-- Fica solta, fora de qualquer DO: o Postgres não deixa ALTER TYPE ADD VALUE
+-- rodar dentro de bloco de transação, e um DO é um.
+alter type ticket_category add value if not exists 'order';
+
+do $$ begin
+  if to_regclass('public.support_tickets') is null then
+    raise notice 'support_tickets ainda não existe — rode support-schema.sql e depois este arquivo de novo.';
+    return;
+  end if;
+
+  alter table support_tickets
+    add column if not exists order_id uuid references orders on delete set null;
+
+  create index if not exists support_tickets_order_idx
+    on support_tickets (order_id) where order_id is not null;
+end $$;
+
+-- Abrir chamado citando um pedido: só o dono do pedido pode.
+--
+-- O order_id vem do app, e o app é do usuário — sem esta trava, alguém
+-- anexaria o chamado ao pedido de outra pessoa e a equipe abriria a ficha
+-- errada. Visitante sem conta (auth.uid() nulo) só consegue abrir chamado
+-- sem vínculo, e é o certo: ele não tem como provar que o pedido é dele.
+do $$ begin
+  if to_regclass('public.support_tickets') is null then return; end if;
+
+  drop policy if exists "abre chamado" on support_tickets;
+  create policy "abre chamado" on support_tickets
+    for insert to anon, authenticated
+    with check (
+      (user_id is null or user_id = auth.uid())
+      and (
+        order_id is null
+        or exists (
+          select 1 from orders o where o.id = order_id and o.user_id = auth.uid()
+        )
+      )
+    );
+end $$;
+
 -- Confere o resultado
 select 'orders' as tabela, count(*) as linhas from orders
 union all

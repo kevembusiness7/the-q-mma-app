@@ -72,6 +72,10 @@ alter table support_tickets enable row level security;
 
 -- Abrir chamado: qualquer um, logado ou não. Quem está logado só pode gravar
 -- em seu próprio nome — não dá para abrir chamado se passando por outro.
+--
+-- ATENÇÃO: pedidos-schema.sql redefine esta política para também exigir que
+-- o pedido citado seja de quem envia. Se você rodar este arquivo depois
+-- daquele, rode pedidos-schema.sql de novo — senão a trava do pedido some.
 drop policy if exists "abre chamado" on support_tickets;
 create policy "abre chamado" on support_tickets
   for insert to anon, authenticated

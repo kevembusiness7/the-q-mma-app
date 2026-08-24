@@ -426,3 +426,22 @@
 .support-conversa .admin-conversa {
   padding: 0;
 }
+
+/* Número do pedido citado no chamado. Fica ao lado da categoria, com a cor
+   apagada de propósito: quem varre a fila procura o assunto primeiro; o
+   pedido é o detalhe que resolve, não o que chama. */
+.ticket-pedido {
+  font-family: var(--q-mono);
+  color: var(--q-dust);
+}
+
+.ticket-pedido::before {
+  content: ' · ';
+}
+
+/* Aviso de que o chamado já sai amarrado a um pedido. */
+.support-sobre-pedido b {
+  font-family: var(--q-mono);
+  color: var(--q-gold);
+  letter-spacing: 0.06em;
+}

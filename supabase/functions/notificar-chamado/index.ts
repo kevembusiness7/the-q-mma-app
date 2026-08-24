@@ -20,9 +20,12 @@ const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
 const EMAIL_DESTINO = Deno.env.get('EMAIL_DESTINO')
 const EMAIL_REMETENTE = Deno.env.get('EMAIL_REMETENTE') ?? 'onboarding@resend.dev'
 const WEBHOOK_SEGREDO = Deno.env.get('WEBHOOK_SEGREDO')
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL')
+const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
 
 const CATEGORIAS: Record<string, string> = {
   question: 'Dúvida',
+  order: 'Pedido',
   payment: 'Pagamento',
   technical: 'Problema técnico',
   account: 'Conta',
@@ -68,6 +71,24 @@ Deno.serve(async (req) => {
     return new Response('Missing ticket', { status: 400 })
   }
 
+  // O webhook manda a linha crua, e nela o pedido é um uuid. O número que a
+  // equipe reconhece mora em `orders`; sem esta busca o e-mail traria um id
+  // que ninguém consegue procurar. Falha aqui não cancela o aviso — chamado
+  // sem número de pedido ainda é melhor do que chamado nenhum.
+  let numeroPedido: string | null = null
+  const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+  if (UUID.test(String(chamado.order_id ?? '')) && SUPABASE_URL && SERVICE_ROLE) {
+    try {
+      const r = await fetch(
+        `${SUPABASE_URL}/rest/v1/orders?id=eq.${chamado.order_id}&select=order_number`,
+        { headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}` } },
+      )
+      if (r.ok) numeroPedido = (await r.json())[0]?.order_number ?? null
+    } catch (e) {
+      console.error('Não consegui ler o número do pedido:', e)
+    }
+  }
+
   const protocolo = String(chamado.id).slice(0, 8).toUpperCase()
   const categoria = CATEGORIAS[chamado.category] ?? chamado.category
   const temAnexo = Boolean(chamado.screenshot_path)
@@ -82,6 +103,11 @@ Deno.serve(async (req) => {
         <tr><td style="padding:4px 12px 4px 0;color:#666">Nome</td><td>${escapar(chamado.name ?? '')}</td></tr>
         <tr><td style="padding:4px 12px 4px 0;color:#666">E-mail</td><td><a href="mailto:${escapar(chamado.email ?? '')}">${escapar(chamado.email ?? '')}</a></td></tr>
         <tr><td style="padding:4px 12px 4px 0;color:#666">Conta</td><td>${chamado.user_id ? 'Usuário logado' : 'Visitante'}</td></tr>
+        ${
+          numeroPedido
+            ? `<tr><td style="padding:4px 12px 4px 0;color:#666">Pedido</td><td><b>${escapar(numeroPedido)}</b></td></tr>`
+            : ''
+        }
         <tr><td style="padding:4px 12px 4px 0;color:#666">Anexo</td><td>${temAnexo ? 'Sim — veja no painel' : 'Não'}</td></tr>
       </table>
       <div style="white-space:pre-wrap;border-left:3px solid #d6a62e;padding:8px 0 8px 14px;font-size:14px;line-height:1.6">${escapar(chamado.message ?? '')}</div>
@@ -102,7 +128,7 @@ Deno.serve(async (req) => {
       to: [EMAIL_DESTINO],
       // Responder no cliente de e-mail já endereça o cliente, sem copiar e colar.
       reply_to: chamado.email,
-      subject: `[The Q] #${protocolo} · ${categoria} — ${chamado.name ?? ''}`,
+      subject: `[The Q] #${protocolo} · ${categoria}${numeroPedido ? ` · ${numeroPedido}` : ''} — ${chamado.name ?? ''}`,
       html,
     }),
   })

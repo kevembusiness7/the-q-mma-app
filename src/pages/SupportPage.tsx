@@ -18,7 +18,13 @@ import '../styles/support.css'
 
 type Aba = 'contato' | 'faq' | 'meus'
 
-export function SupportPage() {
+/** Pedido que veio junto do "Get help with this order". */
+export interface PedidoCitado {
+  id: string
+  numero: string
+}
+
+export function SupportPage({ pedido }: { pedido?: PedidoCitado }) {
   const { closeOverlay, openOverlay } = useNav()
   const { usuario } = useAuth()
   const [aba, setAba] = useState<Aba>('contato')
@@ -57,7 +63,7 @@ export function SupportPage() {
         ))}
       </div>
 
-      {aba === 'contato' && <Formulario />}
+      {aba === 'contato' && <Formulario pedido={pedido} />}
       {aba === 'faq' && <Faq />}
       {aba === 'meus' && (
         <MeusChamados usuarioId={usuario?.id ?? null} aoEntrar={() => openOverlay({ name: 'auth' })} />
@@ -68,11 +74,11 @@ export function SupportPage() {
 
 /* ------------------------------------------------------------ formulário -- */
 
-function Formulario() {
+function Formulario({ pedido }: { pedido?: PedidoCitado }) {
   const { usuario } = useAuth()
   const { enviar, enviando } = useEnviarChamado()
 
-  const [categoria, setCategoria] = useState<CategoriaChamado>('question')
+  const [categoria, setCategoria] = useState<CategoriaChamado>(pedido ? 'order' : 'question')
   const [nome, setNome] = useState((usuario?.user_metadata?.full_name as string | undefined) ?? '')
   const [email, setEmail] = useState(usuario?.email ?? '')
   const [mensagem, setMensagem] = useState('')
@@ -95,6 +101,7 @@ function Formulario() {
       mensagem: mensagem.trim(),
       anexo,
       usuarioId: usuario?.id ?? null,
+      pedidoId: pedido?.id ?? null,
     })
 
     if (falha) return setErro(falha)
@@ -132,9 +139,16 @@ function Formulario() {
 
   return (
     <>
-      <p className="support-intro">
-        Need help? Send us a message and our team will get back to you as soon as possible.
-      </p>
+      {pedido ? (
+        <p className="support-intro support-sobre-pedido">
+          About order <b>{pedido.numero}</b> — our team sees it attached to your message,
+          so you don&rsquo;t need to repeat the details.
+        </p>
+      ) : (
+        <p className="support-intro">
+          Need help? Send us a message and our team will get back to you as soon as possible.
+        </p>
+      )}
 
       <form className="auth-form" onSubmit={submeter} noValidate>
         <label className="campo">
@@ -295,6 +309,7 @@ function MeusChamados({
           </div>
           <div className="ticket-cat">
             {CATEGORIAS.find((x) => x.valor === c.category)?.rotulo ?? c.category}
+            {c.orderNumber && <span className="ticket-pedido">{c.orderNumber}</span>}
           </div>
           <p className="ticket-msg">{c.message}</p>
           <time className="ticket-data" dateTime={c.createdAt}>

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
-import type { Chamado, StatusChamado } from './useSupport'
+import { paraChamado, type Chamado, type StatusChamado } from './useSupport'
 
 export interface MensagemChamado {
   id: string
@@ -9,21 +9,6 @@ export interface MensagemChamado {
   isStaff: boolean
   body: string
   createdAt: string
-}
-
-function paraChamado(row: any): Chamado {
-  return {
-    id: row.id,
-    userId: row.user_id,
-    name: row.name,
-    email: row.email,
-    category: row.category,
-    message: row.message,
-    screenshotPath: row.screenshot_path,
-    status: row.status,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at,
-  }
 }
 
 function paraMensagem(row: any): MensagemChamado {
@@ -52,7 +37,9 @@ export function useChamadosAdmin(ativo: boolean) {
     setCarregando(true)
     const { data, error } = await supabase
       .from('support_tickets')
-      .select('*')
+      // O join traz o número do pedido citado, quando existe: sem ele a
+      // equipe teria só um uuid e nada para procurar na fila de pedidos.
+      .select('*, orders(order_number)')
       .order('created_at', { ascending: false })
 
     if (error) setErro(error.message)
