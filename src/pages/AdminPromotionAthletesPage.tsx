@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useNav } from '../context/NavigationContext'
 import { formatarPreco } from '../hooks/useProducts'
+import { useAthletes } from '../hooks/useAthletes'
 import { useAdminPromotionAthletes } from '../hooks/useAdminPromotionAthletes'
 import { ROTULO_CONTEUDO, type PromoContentType, type PromotionAthleteWithPackages, type PromotionPackage } from '../types/promotions'
 import '../styles/shop.css'
@@ -107,8 +108,8 @@ export function AdminPromotionAthletesPage() {
 
       {criando ? (
         <NovoAtleta
-          aoCriar={async (slug, nome, handle) => {
-            const falha = await criarAtleta(slug, nome, handle)
+          aoCriar={async (slug, nome, handle, fotoUrl) => {
+            const falha = await criarAtleta(slug, nome, handle, fotoUrl)
             if (!falha) setCriando(false)
             return falha
           }}
@@ -129,9 +130,10 @@ function NovoAtleta({
   aoCriar,
   aoCancelar,
 }: {
-  aoCriar: (slug: string, nome: string, handle: string) => Promise<string | null>
+  aoCriar: (slug: string, nome: string, handle: string, fotoUrl: string | null) => Promise<string | null>
   aoCancelar: () => void
 }) {
+  const { athletes } = useAthletes()
   const [nome, setNome] = useState('')
   const [handle, setHandle] = useState('')
   const [salvando, setSalvando] = useState(false)
@@ -147,10 +149,16 @@ function NovoAtleta({
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
 
+  // Se o slug bater com um atleta que já existe na aba Athletes, a foto sai
+  // de lá em vez de pedir upload -- é a mesma que já aparece no hero do
+  // perfil dele, sem precisar cadastrar a peça duas vezes.
+  const atletaExistente = athletes.find((a) => a.slug === slugSugerido)
+  const fotoEncontrada = atletaExistente?.heroImageUrl ?? atletaExistente?.imageUrl ?? null
+
   async function salvar() {
     if (!nome.trim() || !handle.trim() || !slugSugerido) return
     setSalvando(true)
-    const falha = await aoCriar(slugSugerido, nome.trim(), handle.trim().replace(/^@/, ''))
+    const falha = await aoCriar(slugSugerido, nome.trim(), handle.trim().replace(/^@/, ''), fotoEncontrada)
     setSalvando(false)
     setErro(falha)
   }
@@ -167,6 +175,9 @@ function NovoAtleta({
         <input value={handle} onChange={(e) => setHandle(e.target.value)} placeholder="ozzydiaz" />
       </label>
       {slugSugerido && <p className="cart-note">Slug: {slugSugerido}</p>}
+      {fotoEncontrada && (
+        <p className="cart-note">✓ Found this athlete's hero photo — will use it automatically.</p>
+      )}
       {erro && (
         <p className="auth-erro" role="alert">
           {erro}
@@ -211,6 +222,7 @@ function Detalhe({
   aoAtualizarPacote: (id: string, campos: Record<string, unknown>) => Promise<string | null>
   aoRemoverPacote: (id: string) => Promise<string | null>
 }) {
+  const { athletes } = useAthletes()
   const [bio, setBio] = useState(atleta.bio ?? '')
   const [followers, setFollowers] = useState(String(atleta.followers))
   const [engagement, setEngagement] = useState(atleta.engagementRate?.toString() ?? '')
@@ -220,6 +232,19 @@ function Detalhe({
   const [salvando, setSalvando] = useState(false)
   const [erro, setErro] = useState<string | null>(null)
   const [criandoPacote, setCriandoPacote] = useState(false)
+  const [salvandoFoto, setSalvandoFoto] = useState(false)
+
+  // Mesma foto que já aparece no hero do perfil dele na aba Athletes — sem
+  // isto a promoção pedia um upload separado pra uma imagem que já existe.
+  const atletaComHero = athletes.find((a) => a.slug === atleta.slug)
+  const fotoHero = atletaComHero?.heroImageUrl ?? atletaComHero?.imageUrl ?? null
+
+  async function usarFotoDoHero() {
+    if (!fotoHero) return
+    setSalvandoFoto(true)
+    setErro(await aoAtualizar({ photo_url: fotoHero }))
+    setSalvandoFoto(false)
+  }
 
   // Editar qualquer número de Instagram atualiza o carimbo "as of" junto —
   // é o que a vitrine mostra pra nunca passar estimativa velha por atual sem
@@ -255,6 +280,38 @@ function Detalhe({
             ? 'Bookable — shows up in the public marketplace'
             : 'Hidden — not visible, no new bookings'}
         </span>
+      </div>
+
+      <div className="admin-acoes">
+        <h4>Photo</h4>
+        <div className="promo-photo-preview">
+          {atleta.photoUrl ? (
+            <img src={atleta.photoUrl} alt="" />
+          ) : (
+            <span className="cart-note">No photo set yet.</span>
+          )}
+        </div>
+        {fotoHero ? (
+          <button type="button" className="btn ghost" disabled={salvandoFoto} onClick={usarFotoDoHero}>
+            {salvandoFoto ? 'Saving…' : 'Use hero photo from athlete profile'}
+          </button>
+        ) : (
+          <p className="cart-note">
+            No matching athlete profile found for slug "{atleta.slug}" — add one in the Athletes tab
+            first, or set a photo URL manually below.
+          </p>
+        )}
+        <label className="campo">
+          <span>Photo URL (manual override)</span>
+          <input
+            defaultValue={atleta.photoUrl ?? ''}
+            onBlur={(e) => {
+              const valor = e.target.value.trim()
+              if (valor !== (atleta.photoUrl ?? '')) aoAtualizar({ photo_url: valor || null })
+            }}
+            placeholder="/images/athletes/osman-diaz-hero.png"
+          />
+        </label>
       </div>
 
       <div className="admin-acoes">

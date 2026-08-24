@@ -69,11 +69,16 @@ export function useAdminPromotionAthletes(ativo: boolean) {
   }, [recarregar])
 
   const criarAtleta = useCallback(
-    async (slug: string, nome: string, instagramHandle: string): Promise<string | null> => {
+    async (
+      slug: string,
+      nome: string,
+      instagramHandle: string,
+      fotoUrl?: string | null,
+    ): Promise<string | null> => {
       if (!supabase) return 'Supabase não está configurado.'
       const { error } = await supabase
         .from('promotion_athletes')
-        .insert({ slug, name: nome, instagram_handle: instagramHandle })
+        .insert({ slug, name: nome, instagram_handle: instagramHandle, photo_url: fotoUrl ?? null })
       if (error) return error.message
       await recarregar()
       return null

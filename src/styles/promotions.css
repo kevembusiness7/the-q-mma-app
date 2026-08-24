@@ -53,6 +53,23 @@
   font-weight: normal;
 }
 
+.promo-photo-preview {
+  width: 120px;
+  aspect-ratio: 4 / 5;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--q-canvas);
+  display: grid;
+  place-items: center;
+  margin-bottom: 10px;
+}
+
+.promo-photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .promo-package-edit {
   display: flex;
   flex-direction: column;
