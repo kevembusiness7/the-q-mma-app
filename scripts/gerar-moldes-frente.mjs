@@ -89,6 +89,35 @@ async function floodFillRemoveWhiteBg(inputPath) {
     if (y < height - 1 && !visited[i + width]) stack.push(i + width);
   }
 
+  // A borda entre o preto da camisa e o fundo branco tem 1-2px de mistura
+  // (JPEG + antialiasing) que o corte acima não pega -- sobra um contorno
+  // cinza-claro meio "brilhando" em volta da silhueta. Descasca mais
+  // algumas camadas: qualquer pixel opaco vizinho de fundo que ainda for
+  // claro demais pra ser tecido também vira fundo, em algumas rodadas.
+  const LUMA_TECIDO = 70;
+  function luma(i) {
+    const o = i * channels;
+    return 0.299 * data[o] + 0.587 * data[o + 1] + 0.114 * data[o + 2];
+  }
+  for (let rodada = 0; rodada < 3; rodada++) {
+    const novos = [];
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const i = y * width + x;
+        if (isBg[i]) continue;
+        if (luma(i) < LUMA_TECIDO) continue;
+        const vizinhoDeFundo =
+          (x > 0 && isBg[i - 1]) ||
+          (x < width - 1 && isBg[i + 1]) ||
+          (y > 0 && isBg[i - width]) ||
+          (y < height - 1 && isBg[i + width]);
+        if (vizinhoDeFundo) novos.push(i);
+      }
+    }
+    if (novos.length === 0) break;
+    for (const i of novos) isBg[i] = 1;
+  }
+
   for (let i = 0; i < width * height; i++) {
     if (isBg[i]) data[i * channels + 3] = 0;
   }

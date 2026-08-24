@@ -110,20 +110,6 @@ insert into products
   (slug, name, category, price_cents, badges, owner, description, tags, genders,
    details, shipping, mode, mockup_key, art, art_image, sort_order)
 values
-  ('theq-classic-cap', 'The Q Classic Cap', 'Caps', 9900, '{}', 'team',
-   'Curved-brim cap with the team logo embroidered on front, snapback adjustable strap.',
-   '{TheQMMA,Cap,Classic}', '{Men,Women}',
-   'Structured six-panel cap, embroidered front logo, adjustable snapback closure.',
-   'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.',
-   'art', null, 'cap', null, 3),
-
-  ('theq-kids-shirt', 'The Q Kids Shirt', 'Kids', 12900, '{}', 'team',
-   'Kids tee with The Q MMA logo, soft cotton and reinforced neckline.',
-   '{TheQMMA,Kids}', '{Kids}',
-   '100% combed cotton, soft hand feel, reinforced neckline for everyday use.',
-   'Ships within 3 business days after payment confirmation. Shipping cost calculated at checkout based on ZIP code. Exchanges and returns within 7 days of delivery, unused and with tags attached.',
-   'art', null, 'kid', null, 4),
-
   ('dione-witch-art', 'Dione Witch Art Shirt', 'Shirts', 16900, '{app}', 'dione-barbosa',
    'Shirt with Dione "The Witch" Barbosa''s exclusive illustrated artwork. Choose the shirt color and see front and back.',
    '{UFC,DioneBarbosa,Art}', '{Men,Women}',
@@ -191,14 +177,6 @@ on conflict (slug) do update set
 
 create temp table cores_do_produto (slug text, color_name text, color_hex text, color_slug text)
 on commit drop;
-
-insert into cores_do_produto values
-  ('theq-classic-cap', 'Black', '#14110F', 'black'),
-  ('theq-classic-cap', 'Burgundy', '#B0301F', 'burgundy'),
-  ('theq-classic-cap', 'Beige', '#948A81', 'beige'),
-
-  ('theq-kids-shirt', 'Black', '#14110F', 'black'),
-  ('theq-kids-shirt', 'Gold', '#C8A03C', 'gold');
 
 -- O produto com foto real usa as 6 cores que têm mockup em
 -- /images/shirts/ — o nome do arquivo depende do color_slug.

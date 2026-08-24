@@ -15,13 +15,6 @@ const MOCKUP_COLORS: ProductColor[] = [
   { name: 'Gold', hex: '#C8A03C', slug: 'gold' },
 ];
 
-/** Paleta do boné clássico (esse é 'art', SVG genérico — não depende de foto). */
-const CAP_COLORS: ProductColor[] = [
-  { name: 'Black', hex: '#14110F', slug: 'black' },
-  { name: 'Burgundy', hex: '#B0301F', slug: 'burgundy' },
-  { name: 'Beige', hex: '#948A81', slug: 'beige' },
-];
-
 /**
  * Os bonés de arte dos atletas só têm foto de mockup (molde + logo colada)
  * na cor preta — é a única cor que temos foto do boné em branco. Se um dia
@@ -39,46 +32,6 @@ const ART_CAP_DETAILS =
 
 /** Sem as variações: quem monta é comVariacoes(), com a mesma regra do SQL. */
 export const products: ProdutoBase[] = [
-  {
-    id: 'theq-classic-cap',
-    slug: 'theq-classic-cap',
-    name: 'The Q Classic Cap',
-    category: 'Caps',
-    priceCents: 9900,
-    badges: [],
-    owner: 'team',
-    description:
-      'Curved-brim cap with the team logo embroidered on front, snapback adjustable strap.',
-    tags: ['TheQMMA', 'Cap', 'Classic'],
-    genders: ['Men', 'Women'],
-    colors: CAP_COLORS,
-    details:
-      'Structured 6-panel cap, pre-curved brim, embroidered raised logo. Snapback adjustable strap, one size fits all.',
-    shipping: SHIPPING,
-    mode: 'art',
-    art: 'cap',
-  },
-  {
-    id: 'theq-kids-shirt',
-    slug: 'theq-kids-shirt',
-    name: 'The Q Kids Shirt',
-    category: 'Kids',
-    priceCents: 12900,
-    badges: [],
-    owner: 'team',
-    description: 'Kids shirt with the team crest, soft 100% cotton fabric.',
-    tags: ['TheQMMA', 'Kids'],
-    genders: ['Kids'],
-    colors: [
-      { name: 'Black', hex: '#14110F', slug: 'black' },
-      { name: 'Gold', hex: '#C8A03C', slug: 'gold' },
-    ],
-    details:
-      '100% cotton kids shirt, reinforced crew neck, team crest printed in high-durability heat-transfer vinyl.',
-    shipping: SHIPPING,
-    mode: 'art',
-    art: 'kid',
-  },
   {
     id: 'dione-witch-art',
     slug: 'dione-witch-art',

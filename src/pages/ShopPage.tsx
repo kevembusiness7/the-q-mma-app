@@ -5,7 +5,7 @@ import { useProducts } from '../hooks/useProducts';
 import { CategoryChips, ProductCard } from '../components/shop/ShopParts';
 import '../styles/shop.css';
 
-const CATEGORIES = ['All', 'Shirts', 'Caps', 'Kids'];
+const CATEGORIES = ['All', 'Shirts', 'Caps'];
 
 export function ShopPage() {
   const [category, setCategory] = useState('All');
