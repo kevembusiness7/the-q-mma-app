@@ -65,13 +65,15 @@ delete from fights
 where athlete_id = (select id from athletes where slug = 'artur-minev');
 
 insert into fights (
-  athlete_id, opponent_name, opponent_record, result, method,
-  round, "time", event_name, event_date, venue, city, broadcaster, is_next_fight
+  athlete_id, opponent_name, opponent_record, opponent_image_url, result,
+  method, round, "time", event_name, event_date, venue, city, broadcaster,
+  is_next_fight
 ) values
   (
     (select id from athletes where slug = 'artur-minev'),
     'Tommy Gantt',
     '11-0',
+    null,             -- sem foto enviada para este adversário
     'loss',
     'TKO · punches from back mount',
     'Round 2',
@@ -87,6 +89,7 @@ insert into fights (
     (select id from athletes where slug = 'artur-minev'),
     'Francisco Prado',
     '12-5',
+    '/images/athletes/Francisco.png',
     'nc',             -- luta ainda não aconteceu; result é obrigatório na
                        -- coluna mas não é lido pro card de próxima luta
     '',

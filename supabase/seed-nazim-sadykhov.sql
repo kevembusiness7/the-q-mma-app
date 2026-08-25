@@ -19,7 +19,7 @@ insert into athletes (
   'Black Wolf',
   'Lightweight',
   'UFC',
-  '/images/athletes/nazim-hero.png',
+  '/images/athletes/nazim.png',
   'Nazim "Black Wolf" Sadykhov',
   32,
   '5''10"',
@@ -64,12 +64,14 @@ delete from fights
 where athlete_id = (select id from athletes where slug = 'nazim-sadykhov');
 
 insert into fights (
-  athlete_id, opponent_name, opponent_record, result, method,
-  round, "time", event_name, event_date, venue, city, broadcaster, is_next_fight
+  athlete_id, opponent_name, opponent_record, opponent_image_url, result,
+  method, round, "time", event_name, event_date, venue, city, broadcaster,
+  is_next_fight
 ) values (
   (select id from athletes where slug = 'nazim-sadykhov'),
   'Matheus Camilo',
   '10-3',
+  '/images/athletes/Matheus.png',
   'loss',
   'TKO · straight right and hammerfists',
   'Round 1',
