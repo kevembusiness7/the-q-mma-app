@@ -19,7 +19,7 @@ insert into athletes (
   '',                 -- sem apelido
   'Welterweight',
   'UFC',
-  '/images/athletes/chokheli-hero.png',
+  '/images/athletes/chokheli.png',
   'Levan Chokheli',
   29,
   '5''11"',
