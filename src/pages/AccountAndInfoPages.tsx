@@ -75,6 +75,9 @@ export function YouPage() {
       <button type="button" className="listrow" onClick={() => openOverlay({ name: 'shop' })}>
         Shop <span>›</span>
       </button>
+      <button type="button" className="listrow" onClick={() => openOverlay({ name: 'vault' })}>
+        The Q Vault <span>›</span>
+      </button>
 
       <button
         type="button"

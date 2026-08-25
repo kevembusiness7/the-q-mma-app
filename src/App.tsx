@@ -18,6 +18,8 @@ import { MyPromotionsPage } from './pages/MyPromotionsPage';
 import { AdminPromotionQueuePage } from './pages/AdminPromotionQueuePage';
 import { AdminNewsPage } from './pages/AdminNewsPage';
 import { AdminAuctionsPage } from './pages/AdminAuctionsPage';
+import { VaultPage } from './pages/VaultPage';
+import { AuctionItemPage } from './pages/AuctionItemPage';
 import { OrdersPage } from './pages/OrdersPage';
 import { CartProvider } from './context/CartContext';
 import { NavigationProvider, useNav } from './context/NavigationContext';
@@ -67,6 +69,10 @@ function Screens() {
       return <AdminNewsPage />;
     case 'admin-auctions':
       return <AdminAuctionsPage />;
+    case 'vault':
+      return <VaultPage />;
+    case 'auction-item':
+      return <AuctionItemPage slug={overlay.slug} />;
     case 'orders':
       return <OrdersPage />;
     case 'coaches':
