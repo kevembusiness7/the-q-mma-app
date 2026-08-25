@@ -109,7 +109,11 @@
   left: 0;
   right: 0;
   top: 0;
-  height: 46px;
+  /* Curto de propósito: o título "NEWS & EVENTS" começa a ~14px do topo da
+     arte. Um degradê mais alto (era 46px) ainda estava escurecendo o início
+     das letras, lido como uma sombra colada nelas -- essa altura resolve
+     antes de chegar no texto. */
+  height: 12px;
   background: linear-gradient(to bottom, #0b0908, transparent);
   pointer-events: none;
 }
