@@ -4,7 +4,7 @@ import { useNews } from '../hooks/useNews';
 import './TheQPage.css';
 
 /** Destinos que esta tela abre — pelos banners ou pelo botão de conta. */
-export type TheQDestination = 'athletes' | 'shop' | 'sponsors' | 'coaches' | 'you';
+export type TheQDestination = 'athletes' | 'shop' | 'sponsors' | 'coaches' | 'you' | 'promotions';
 
 interface TheQPageProps {
   /** Chamado quando um banner ou o botão de conta é tocado. */
@@ -52,14 +52,19 @@ export function TheQPage({ onNavigate }: TheQPageProps) {
         onClick={go('athletes')}
       />
       <BannerLink
-        src="/images/brand/banner-coaches.png"
-        alt="Conhecer os treinadores"
-        onClick={go('coaches')}
+        src="/images/brand/banner-promotions.png"
+        alt="Divulgar sua marca com um atleta"
+        onClick={go('promotions')}
       />
       <BannerLink
         src="/images/brand/banner-shopnow.png"
         alt="Ir para a loja"
         onClick={go('shop')}
+      />
+      <BannerLink
+        src="/images/brand/banner-coaches.png"
+        alt="Conhecer os treinadores"
+        onClick={go('coaches')}
       />
       <BannerLink
         src="/images/brand/banner-sponsors.jpg"
