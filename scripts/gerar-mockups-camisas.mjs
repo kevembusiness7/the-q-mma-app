@@ -96,6 +96,7 @@ async function main() {
     { arquivo: 'dioneshirt.png', prefixo: 'witch', removerFundo: true },
     { arquivo: 'levan.png', prefixo: 'levan', removerFundo: false },
     { arquivo: 'nazim.png', prefixo: 'nazim', removerFundo: false },
+    { arquivo: 'artur1.png', prefixo: 'artur', removerFundo: false },
   ];
 
   for (const arte of artes) {
