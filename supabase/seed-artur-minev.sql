@@ -78,10 +78,10 @@ insert into fights (
     'TKO · punches from back mount',
     'Round 2',
     '2:51',
-    'UFC Fight Night',
+    'UFC Fight Night: Allen vs. Costa',
     '2026-05-16',
-    null,             -- local não informado
-    null,
+    'Meta APEX',
+    'Las Vegas, NV',
     null,
     false
   ),
@@ -97,8 +97,8 @@ insert into fights (
     null,
     'UFC Fight Night',
     '2026-10-10',
-    null,
-    null,
+    'Meta APEX',
+    'Las Vegas, NV',
     null,
     true
   );

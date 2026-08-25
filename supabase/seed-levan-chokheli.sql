@@ -76,10 +76,10 @@ insert into fights (
   'TKO · leg kick and punches',
   'Round 1',
   '0:23',
-  'UFC Fight Night',
+  'UFC Fight Night: Kape vs. Horiguchi 2',
   '2026-06-20',
-  null,               -- local não informado
-  null,
+  'Meta APEX',
+  'Las Vegas, NV',
   null,
   false
 );

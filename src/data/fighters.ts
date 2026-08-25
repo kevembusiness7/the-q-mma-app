@@ -282,17 +282,19 @@ export const fighters: FighterProfile[] = [
       opponent: 'Leon Shahbazyan',
       opponentRecord: '12-4',
       myRecord: '15-3',
-      division: 'UFC Fight Night · Welterweight',
+      division: 'UFC Fight Night: Kape vs. Horiguchi 2 · Welterweight',
       when: 'Jun 20, 2026',
       result: 'win',
       method: 'TKO · leg kick and punches',
       time: 'R1 0:23',
+      venue: 'Meta APEX',
+      city: 'Las Vegas, NV',
     },
     /* Só as lutas profissionais de MMA. O combate cancelado contra Khayal
        Jamilbeyli (2019 Apr 20) ficou de fora — não entra no cartel, e a
        soma aqui bate com o 15-3-0, 1 NC (o NC é o "?" da Konrad Dyrschka). */
     record_list: [
-      { result: 'W', opponent: 'Leon Shahbazyan', opponentRecord: '12-4', method: 'TKO · leg kick and punches', time: 'R1 0:23', card: 'UFC Fight Night · Jun 20, 2026' },
+      { result: 'W', opponent: 'Leon Shahbazyan', opponentRecord: '12-4', method: 'TKO · leg kick and punches', time: 'R1 0:23', card: 'UFC Fight Night: Kape vs. Horiguchi 2 · Jun 20, 2026' },
       { result: 'W', opponent: 'Alexandre Gonçalves', opponentRecord: '15-14-1', method: 'TKO · punches', time: 'R2 2:59', card: 'Phoenix FC 4 · May 24, 2025' },
       { result: 'L', opponent: 'Lorenz Larkin', opponentRecord: '26-8', method: 'TKO · punches', time: 'R1 1:53', card: 'Bellator Champions Series · Sep 7, 2024' },
       { result: 'W', opponent: 'Sabah Homasi', opponentRecord: '17-11', method: 'TKO · front kick', time: 'R1 1:51', card: 'Bellator 299 · Sep 23, 2023' },
@@ -338,18 +340,20 @@ export const fighters: FighterProfile[] = [
       opponent: 'Matheus Camilo',
       opponentRecord: '10-3',
       myRecord: '11-3-1',
-      division: 'UFC Fight Night · Lightweight',
+      division: 'UFC Fight Night: Fiziev vs. Torres · Lightweight',
       when: 'Jun 27, 2026',
       result: 'loss',
       method: 'TKO · straight right and hammerfists',
       time: 'R1 1:31',
+      venue: 'National Gymnastics Arena',
+      city: 'Baku, Azerbaijan',
     },
     /* Só as lutas profissionais de MMA. Os cinco combates cancelados (dois
        contra MarQuel Mederos, e um cada contra Chris Duncan, Feraris Golden
        Jr. e Josh Jackson) ficaram de fora — não entram no cartel, e a soma
        aqui bate com o 11-3-1. */
     record_list: [
-      { result: 'L', opponent: 'Matheus Camilo', opponentRecord: '10-3', method: 'TKO · straight right and hammerfists', time: 'R1 1:31', card: 'UFC Fight Night · Jun 27, 2026' },
+      { result: 'L', opponent: 'Matheus Camilo', opponentRecord: '10-3', method: 'TKO · straight right and hammerfists', time: 'R1 1:31', card: 'UFC Fight Night: Fiziev vs. Torres · Jun 27, 2026' },
       { result: 'L', opponent: 'Fares Ziam', opponentRecord: '17-4', method: 'TKO · elbows and follow-up punches', time: 'R2 4:59', card: 'UFC 323: Dvalishvili vs. Yan 2 · Dec 6, 2025' },
       { result: 'W', opponent: 'Nikolas Motta', opponentRecord: '15-5', method: 'TKO · right hook', time: 'R2 4:17', card: 'UFC Fight Night · Jun 21, 2025' },
       { result: 'W', opponent: 'Ismael Bonfim', opponentRecord: '20-4', method: 'TKO · doctor stoppage', time: 'R1 5:00', card: 'UFC Fight Night · Feb 15, 2025' },
@@ -392,22 +396,26 @@ export const fighters: FighterProfile[] = [
       myRecord: '7-1',
       division: 'UFC Fight Night · Lightweight',
       when: 'Oct 10, 2026',
+      venue: 'Meta APEX',
+      city: 'Las Vegas, NV',
     },
     lastFight: {
       opponent: 'Tommy Gantt',
       opponentRecord: '11-0',
       myRecord: '7-1',
-      division: 'UFC Fight Night · Lightweight',
+      division: 'UFC Fight Night: Allen vs. Costa · Lightweight',
       when: 'May 16, 2026',
       result: 'loss',
       method: 'TKO · punches from back mount',
       time: 'R2 2:51',
+      venue: 'Meta APEX',
+      city: 'Las Vegas, NV',
     },
     /* Só as lutas profissionais já realizadas. A luta contra o Francisco
        Prado ainda não aconteceu (é a nextFight) e por isso fica de fora do
        record_list -- a soma aqui bate com o 7-1-0. */
     record_list: [
-      { result: 'L', opponent: 'Tommy Gantt', opponentRecord: '11-0', method: 'TKO · punches from back mount', time: 'R2 2:51', card: 'UFC Fight Night · May 16, 2026' },
+      { result: 'L', opponent: 'Tommy Gantt', opponentRecord: '11-0', method: 'TKO · punches from back mount', time: 'R2 2:51', card: 'UFC Fight Night: Allen vs. Costa · May 16, 2026' },
       { result: 'W', opponent: 'Derek Campos', opponentRecord: '20-13', method: 'TKO · punches', time: 'R1 3:05', card: 'Fury FC 113 · Jan 18, 2026' },
       { result: 'W', opponent: 'Junior Maranhão', opponentRecord: '25-12', method: 'Decision · majority', time: '3 rounds', card: 'Fury FC 106 · Jul 18, 2025' },
       { result: 'W', opponent: 'Shane Keefe', opponentRecord: '4-1', method: 'TKO · punches', time: 'R1 3:01', card: 'Fury FC 103 · Mar 23, 2025' },

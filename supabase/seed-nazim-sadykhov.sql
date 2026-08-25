@@ -76,10 +76,10 @@ insert into fights (
   'TKO · straight right and hammerfists',
   'Round 1',
   '1:31',
-  'UFC Fight Night',
+  'UFC Fight Night: Fiziev vs. Torres',
   '2026-06-27',
-  null,               -- local não informado
-  null,
+  'National Gymnastics Arena',
+  'Baku, Azerbaijan',
   null,
   false
 );
