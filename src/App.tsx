@@ -22,6 +22,7 @@ import { VaultPage } from './pages/VaultPage';
 import { AuctionItemPage } from './pages/AuctionItemPage';
 import { MyBidsPage } from './pages/MyBidsPage';
 import { CertificatePage } from './pages/CertificatePage';
+import { AdminAuctionQueuePage } from './pages/AdminAuctionQueuePage';
 import { OrdersPage } from './pages/OrdersPage';
 import { CartProvider } from './context/CartContext';
 import { NavigationProvider, useNav } from './context/NavigationContext';
@@ -71,6 +72,8 @@ function Screens() {
       return <AdminNewsPage />;
     case 'admin-auctions':
       return <AdminAuctionsPage />;
+    case 'admin-auction-queue':
+      return <AdminAuctionQueuePage />;
     case 'vault':
       return <VaultPage />;
     case 'auction-item':
