@@ -185,6 +185,39 @@ function AvisoPromocao() {
   );
 }
 
+/**
+ * Retorno do Stripe pra verificação de cartão do The Q Vault (mode:
+ * 'setup', sem carrinho e sem pedido — só confirma que o cartão foi
+ * salvo). Quem de fato grava bid_verified_at é o webhook; este aviso é só
+ * notícia de que o Stripe terminou o passo dele.
+ */
+function AvisoVerificacaoLeilao() {
+  const [estado] = useState(() => {
+    if (typeof window === 'undefined') return null;
+    const q = new URLSearchParams(window.location.search);
+    const resultado = q.get('leilao_cartao');
+    if (!resultado) return null;
+    window.history.replaceState({}, '', window.location.pathname);
+    return { resultado };
+  });
+  const [visivel, setVisivel] = useState(true);
+
+  if (!estado || !visivel) return null;
+
+  return (
+    <div className="aviso-topo" role="status">
+      <span>
+        {estado.resultado === 'sucesso'
+          ? '✓ Card verified! You can now place bids in The Q Vault.'
+          : 'Card verification was not completed. You can try again from the item page.'}
+      </span>
+      <button type="button" onClick={() => setVisivel(false)} aria-label="Fechar aviso">
+        ×
+      </button>
+    </div>
+  );
+}
+
 function App() {
   return (
     <NavigationProvider>
@@ -194,6 +227,7 @@ function App() {
             <AvisoConfirmacao />
             <AvisoPedido />
             <AvisoPromocao />
+            <AvisoVerificacaoLeilao />
             <Screens />
           </AppShell>
         </CartProvider>

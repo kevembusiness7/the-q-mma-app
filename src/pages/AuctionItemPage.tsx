@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { BackBar } from '../components/shop/ShopParts'
 import { useNav } from '../context/NavigationContext'
-import { useAuth } from '../context/AuthContext'
 import { useAuctionItem } from '../hooks/useAuctions'
+import { useAuctionRealtime } from '../hooks/useAuctionRealtime'
 import { formatarPreco } from '../hooks/useProducts'
-import { Countdown } from '../components/auction/Countdown'
+import { BidBox } from '../components/auction/BidBox'
 import '../styles/shop.css'
 import '../styles/auction.css'
 
@@ -16,8 +16,8 @@ function formatarData(iso: string | null): string | null {
 
 export function AuctionItemPage({ slug }: { slug: string }) {
   const { closeOverlay, openOverlay } = useNav()
-  const { usuario } = useAuth()
   const { item, loading, error } = useAuctionItem(slug)
+  const { live, bids } = useAuctionRealtime(item?.id ?? null)
   const [fotoAtiva, setFotoAtiva] = useState(0)
 
   if (loading) {
@@ -38,10 +38,6 @@ export function AuctionItemPage({ slug }: { slug: string }) {
     )
   }
 
-  const bidCents = item.currentBidCents || item.startingPriceCents
-  const proximoLanceMinimo = item.currentBidCents
-    ? item.currentBidCents + item.minIncrementCents
-    : item.startingPriceCents
   const fotos = item.media.filter((m) => m.kind === 'photo')
   const video = item.media.find((m) => m.kind === 'video')
   const midiaAtiva = fotos[fotoAtiva]
@@ -110,34 +106,7 @@ export function AuctionItemPage({ slug }: { slug: string }) {
 
         {item.athleteQuote && <blockquote className="auction-quote">&ldquo;{item.athleteQuote}&rdquo;</blockquote>}
 
-        <div className="auction-bidbox">
-          <div className="auction-bidbox-row">
-            <div>
-              <span className="label">{item.status === 'sold' ? 'Sold for' : 'Current Bid'}</span>
-              <div className="auction-bidbox-amount">{formatarPreco(bidCents)}</div>
-            </div>
-            {item.status === 'live' && (
-              <div className="auction-bidbox-countdown">
-                <span className="label">Ends in</span>
-                <Countdown endsAt={item.endsAt} className="auction-bidbox-clock" />
-              </div>
-            )}
-          </div>
-          <p className="cart-note">
-            {item.bidCount} bid{item.bidCount === 1 ? '' : 's'}
-            {item.status === 'live' && ` · Next minimum bid: ${formatarPreco(proximoLanceMinimo)}`}
-          </p>
-
-          {item.status === 'live' && (
-            <button type="button" className="btn gold" onClick={() => !usuario && openOverlay({ name: 'auth' })}>
-              {usuario ? 'Verify card to bid' : 'Sign in to bid'}
-            </button>
-          )}
-          {item.status === 'scheduled' && <p className="cart-note">Bidding opens {formatarData(item.startsAt) ?? 'soon'}.</p>}
-          {(item.status === 'sold' || item.status === 'unsold' || item.status === 'reserve_not_met') && (
-            <p className="cart-note">This auction has ended.</p>
-          )}
-        </div>
+        <BidBox item={item} live={live} bids={bids} />
 
         {item.description && (
           <>

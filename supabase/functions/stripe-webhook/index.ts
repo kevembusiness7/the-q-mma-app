@@ -9,6 +9,9 @@
  * Eventos tratados:
  *   checkout.session.completed         checkout concluído. Só vira 'paid' se
  *                                      session.payment_status já for 'paid'.
+ *                                      Com metadata.order_type = 'card_verification'
+ *                                      (The Q Vault), não é pagamento nenhum —
+ *                                      só salva o cartão verificado.
  *   checkout.session.async_payment_succeeded  o dinheiro caiu depois (boleto,
  *                                      débito, Pix) -> paid
  *   checkout.session.async_payment_failed     não caiu -> cancelled
@@ -150,6 +153,49 @@ async function confirmarPromocao(session: Stripe.Checkout.Session): Promise<Resp
     JSON.stringify({ ok: true, promocao: resultado.request_number }),
     { status: 200 },
   )
+}
+
+/**
+ * Salva o cartão verificado no The Q Vault.
+ *
+ * Sessão em `mode: 'setup'` não move dinheiro nenhum -- payment_status vem
+ * 'no_payment_required', então o gate de "session.payment_status === paid"
+ * do resto do arquivo já deixa passar sem precisar de exceção. Só lê o
+ * SetupIntent pra pegar o payment_method e grava em profiles.
+ */
+async function confirmarVerificacaoCartao(
+  session: Stripe.Checkout.Session,
+  stripe: Stripe,
+): Promise<Response> {
+  const userId = session.metadata?.supabase_user_id
+  const setupIntentId =
+    typeof session.setup_intent === 'string' ? session.setup_intent : session.setup_intent?.id
+  if (!userId || !setupIntentId) {
+    console.error('Sessão de verificação de cartão sem supabase_user_id/setup_intent:', session.id)
+    return new Response(JSON.stringify({ ok: true }), { status: 200 })
+  }
+
+  const setupIntent = await stripe.setupIntents.retrieve(setupIntentId)
+  const paymentMethodId =
+    typeof setupIntent.payment_method === 'string'
+      ? setupIntent.payment_method
+      : setupIntent.payment_method?.id
+
+  if (setupIntent.status !== 'succeeded' || !paymentMethodId) {
+    console.log('SetupIntent ainda não confirmado:', setupIntentId, setupIntent.status)
+    return new Response(JSON.stringify({ ok: true, aguardando: setupIntent.status }), { status: 200 })
+  }
+
+  await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${userId}`, {
+    method: 'PATCH',
+    headers: db,
+    body: JSON.stringify({
+      stripe_payment_method_id: paymentMethodId,
+      bid_verified_at: new Date().toISOString(),
+    }),
+  })
+
+  return new Response(JSON.stringify({ ok: true, verificado: true }), { status: 200 })
 }
 
 Deno.serve(async (req) => {
@@ -313,6 +359,10 @@ Deno.serve(async (req) => {
 
   if (session.metadata?.order_type === 'promotion') {
     return await confirmarPromocao(session)
+  }
+
+  if (session.metadata?.order_type === 'card_verification') {
+    return await confirmarVerificacaoCartao(session, stripe)
   }
 
   const orderId = session.metadata?.order_id
