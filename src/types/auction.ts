@@ -65,3 +65,45 @@ export const AUCTION_STATUS_LABEL: Record<AuctionStatus, string> = {
   unsold: 'Unsold',
   cancelled: 'Cancelled',
 };
+
+export type AuctionOrderPaymentStatus = 'awaiting_payment' | 'paid' | 'failed' | 'defaulted' | 'refunded';
+
+export interface AuctionOrder {
+  id: string;
+  orderNumber: string;
+  itemId: string;
+  winnerId: string;
+  winningBidCents: number;
+  itemTitleSnapshot: string;
+  athleteNameSnapshot: string;
+  paymentStatus: AuctionOrderPaymentStatus;
+  paymentRetryDeadline: string | null;
+  trackingNumber: string | null;
+  trackingCarrier: string | null;
+  paidAt: string | null;
+  shippedAt: string | null;
+  deliveredAt: string | null;
+  createdAt: string;
+}
+
+export const AUCTION_ORDER_STATUS_LABEL: Record<AuctionOrderPaymentStatus, string> = {
+  awaiting_payment: 'Processing payment',
+  paid: 'Paid',
+  failed: 'Payment failed',
+  defaulted: 'Payment not completed',
+  refunded: 'Refunded',
+};
+
+export type AuctionNotificationKind = 'outbid' | 'won' | 'lost' | 'ending_soon' | 'payment_failed' | 'shipped';
+
+export interface AuctionNotification {
+  id: string;
+  userId: string;
+  itemId: string | null;
+  /** Resolvido no cliente (não existe coluna no banco) — ver useAuctionNotifications. */
+  itemSlug: string | null;
+  kind: AuctionNotificationKind;
+  message: string;
+  readAt: string | null;
+  createdAt: string;
+}

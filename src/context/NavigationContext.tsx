@@ -27,6 +27,7 @@ export type Screen =
   | { name: 'admin-auctions' }
   | { name: 'vault' }
   | { name: 'auction-item'; slug: string }
+  | { name: 'my-bids' }
   | { name: 'orders' }
   | { name: 'coaches' }
   | { name: 'sponsors' }

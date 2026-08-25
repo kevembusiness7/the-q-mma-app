@@ -3,6 +3,7 @@ import { BackBar } from '../components/shop/ShopParts'
 import { useNav } from '../context/NavigationContext'
 import { useAuctionItem } from '../hooks/useAuctions'
 import { useAuctionRealtime } from '../hooks/useAuctionRealtime'
+import { useWatchlist } from '../hooks/useWatchlist'
 import { formatarPreco } from '../hooks/useProducts'
 import { BidBox } from '../components/auction/BidBox'
 import '../styles/shop.css'
@@ -18,6 +19,7 @@ export function AuctionItemPage({ slug }: { slug: string }) {
   const { closeOverlay, openOverlay } = useNav()
   const { item, loading, error } = useAuctionItem(slug)
   const { live, bids } = useAuctionRealtime(item?.id ?? null)
+  const { assistindo, alternar } = useWatchlist(item?.id ?? null)
   const [fotoAtiva, setFotoAtiva] = useState(0)
 
   if (loading) {
@@ -82,7 +84,12 @@ export function AuctionItemPage({ slug }: { slug: string }) {
       </div>
 
       <div className="pdp">
-        <div className="label">{item.athleteName}</div>
+        <div className="auction-item-toprow">
+          <div className="label">{item.athleteName}</div>
+          <button type="button" className="auction-watch-btn" onClick={alternar} aria-pressed={assistindo}>
+            {assistindo ? '★ Watching' : '☆ Watch'}
+          </button>
+        </div>
         <h2>{item.title}</h2>
 
         {(item.eventName || item.opponentName || item.fightResult) && (

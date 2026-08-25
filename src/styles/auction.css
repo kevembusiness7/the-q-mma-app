@@ -419,3 +419,25 @@
   color: var(--bone, #ede7de);
   font-weight: 600;
 }
+
+.auction-item-toprow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.auction-watch-btn {
+  border: 1px solid var(--line, #332c29);
+  background: none;
+  color: var(--dust, #948a81);
+  border-radius: 999px;
+  padding: 5px 11px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.auction-watch-btn[aria-pressed='true'] {
+  border-color: var(--gold, #c8a03c);
+  color: var(--gold, #c8a03c);
+}

@@ -93,6 +93,13 @@ export function YouPage() {
       >
         My promotions <span>{usuario ? '›' : 'Sign in'}</span>
       </button>
+      <button
+        type="button"
+        className="listrow"
+        onClick={() => openOverlay({ name: usuario ? 'my-bids' : 'auth' })}
+      >
+        My bids <span>{usuario ? '›' : 'Sign in'}</span>
+      </button>
       <button type="button" className="listrow" disabled>
         Addresses &amp; payment <span>{usuario ? 'Em breve' : 'Sign in'}</span>
       </button>

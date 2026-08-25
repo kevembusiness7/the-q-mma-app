@@ -18,7 +18,7 @@ function paraMidia(row: any): AuctionMedia {
   }
 }
 
-function paraItem(row: any): AuctionItem {
+export function paraItem(row: any): AuctionItem {
   return {
     id: row.id,
     slug: row.slug,
@@ -62,7 +62,7 @@ function paraItem(row: any): AuctionItem {
 }
 
 /** Colunas públicas — sem reserve_price_cents, que é confidencial. */
-const COLUNAS_PUBLICAS =
+export const COLUNAS_PUBLICAS =
   'id, slug, title, athlete_name, athlete_slug, event_name, opponent_name, fight_date, ' +
   'fight_result, athlete_quote, description, story, condition, autograph_location, ' +
   'authenticity_note, starting_price_cents, min_increment_cents, current_bid_cents, bid_count, ' +
