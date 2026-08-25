@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 480" width="720" height="480">
+  <!-- Bandeira da Georgia (Five Cross Flag): fundo branco, cruz vermelha
+       central e quatro cruzes pequenas nos cantos. Como marca d'água atrás
+       da foto, simplificamos as cruzes pequenas para retângulos em cruz. -->
+  <rect width="720" height="480" fill="#ffffff"/>
+  <rect x="288" y="0" width="144" height="480" fill="#ff0000"/>
+  <rect x="0" y="192" width="720" height="96" fill="#ff0000"/>
+  <g fill="#ff0000">
+    <rect x="126" y="90" width="60" height="18" />
+    <rect x="147" y="69" width="18" height="60" />
+    <rect x="534" y="90" width="60" height="18" />
+    <rect x="555" y="69" width="18" height="60" />
+    <rect x="126" y="372" width="60" height="18" />
+    <rect x="147" y="351" width="18" height="60" />
+    <rect x="534" y="372" width="60" height="18" />
+    <rect x="555" y="351" width="18" height="60" />
+  </g>
+</svg>

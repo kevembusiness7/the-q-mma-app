@@ -37,7 +37,7 @@ export interface FighterProfile {
   /** Abreviação usada no cabeçalho: FLY, MW. */
   divisionShort: string;
   /** Código ISO do país de origem — vira a bandeira de fundo do topo. */
-  country: 'br' | 'us';
+  country: 'br' | 'us' | 'ge';
   /** Foto recortada, fundo transparente, para o topo da tela. */
   photo: string;
   /** Pares rótulo/valor da aba Profile. */
@@ -256,6 +256,61 @@ export const fighters: FighterProfile[] = [
       { result: 'W', opponent: 'James Guidry', opponentRecord: '4-2', method: 'Submission · guillotine choke', time: 'R2 4:02', card: 'Urijah Faber\'s A1 Combat 26 · Feb 7, 2025' },
       { result: 'W', opponent: 'Saifulla Dashlakaev', opponentRecord: '0-0', method: 'Decision · split', time: '3 rounds', card: 'LXF 20 · Oct 26, 2024' },
       { result: 'W', opponent: 'Sal Bruno', opponentRecord: '2-2', method: 'KO/TKO', time: 'R2 4:59', card: 'Urijah Faber\'s A1 Combat 21 · May 25, 2024' },
+    ],
+  },
+  {
+    slug: 'levan-chokheli',
+    name: 'Levan Chokheli',
+    nickname: '',
+    record: '15-3-0',
+    age: 29,
+    divisionShort: 'WW',
+    country: 'ge',
+    photo: '/images/athletes/chokheli-profile.avif',
+    bio: [
+      ['Full name', 'Levan Chokheli'],
+      ['Age', '29 years old · Oct 2, 1996'],
+      ['Height', '5\'11" · 72.0" reach'],
+      ['Weight class', 'Welterweight'],
+      ['Born in', 'Georgia'],
+      ['Fighting out of', 'Tbilisi, Georgia'],
+      ['Foundation style', 'Mixed Martial Arts'],
+      ['Head coach', 'Beqa Elibashvili'],
+      ['Current streak', '2 wins'],
+    ],
+    lastFight: {
+      opponent: 'Leon Shahbazyan',
+      opponentRecord: '12-4',
+      myRecord: '15-3',
+      division: 'UFC Fight Night · Welterweight',
+      when: 'Jun 20, 2026',
+      result: 'win',
+      method: 'TKO · leg kick and punches',
+      time: 'R1 0:23',
+    },
+    /* Só as lutas profissionais de MMA. O combate cancelado contra Khayal
+       Jamilbeyli (2019 Apr 20) ficou de fora — não entra no cartel, e a
+       soma aqui bate com o 15-3-0, 1 NC (o NC é o "?" da Konrad Dyrschka). */
+    record_list: [
+      { result: 'W', opponent: 'Leon Shahbazyan', opponentRecord: '12-4', method: 'TKO · leg kick and punches', time: 'R1 0:23', card: 'UFC Fight Night · Jun 20, 2026' },
+      { result: 'W', opponent: 'Alexandre Gonçalves', opponentRecord: '15-14-1', method: 'TKO · punches', time: 'R2 2:59', card: 'Phoenix FC 4 · May 24, 2025' },
+      { result: 'L', opponent: 'Lorenz Larkin', opponentRecord: '26-8', method: 'TKO · punches', time: 'R1 1:53', card: 'Bellator Champions Series · Sep 7, 2024' },
+      { result: 'W', opponent: 'Sabah Homasi', opponentRecord: '17-11', method: 'TKO · front kick', time: 'R1 1:51', card: 'Bellator 299 · Sep 23, 2023' },
+      { result: 'W', opponent: 'Michael Lombardo', opponentRecord: '13-3', method: 'Decision · unanimous', time: '3 rounds', card: 'Bellator 294 · Apr 21, 2023' },
+      { result: 'W', opponent: 'Roman Faraldo', opponentRecord: '8-0', method: 'Decision · unanimous', time: '3 rounds', card: 'Bellator 288 · Nov 18, 2022' },
+      { result: 'L', opponent: 'Goiti Yamauchi', opponentRecord: '26-5', method: 'Submission · armbar', time: 'R1 3:49', card: 'Bellator 279 · Apr 23, 2022' },
+      { result: 'W', opponent: 'Vinicius de Jesus', opponentRecord: '9-4', method: 'Decision · unanimous', time: '3 rounds', card: 'Bellator 272 · Dec 3, 2021' },
+      { result: 'L', opponent: 'Kyle Crutchmer', opponentRecord: '6-1', method: 'Decision · unanimous', time: '3 rounds', card: 'Bellator 260 · Jun 11, 2021' },
+      { result: '?', opponent: 'Konrad Dyrschka', opponentRecord: '10-1', method: 'No contest · doctor stoppage', time: 'R3 2:05', card: 'EMC 4 · Feb 29, 2020' },
+      { result: 'W', opponent: 'Issa Isakov', opponentRecord: '5-0', method: 'TKO · doctor stoppage', time: 'R1 0:57', card: 'We Love MMA 52 · Jan 18, 2020' },
+      { result: 'W', opponent: 'Ali Moradi', opponentRecord: '3-4', method: 'TKO · referee stoppage', time: 'R1 0:25', card: 'Mglebi 8 · Aug 15, 2019' },
+      { result: 'W', opponent: 'Shahram Haghi', opponentRecord: '1-2', method: 'KO/TKO', time: 'R1 4:00', card: 'WJF 2 · Mar 10, 2019' },
+      { result: 'W', opponent: 'Milad Omrani', opponentRecord: '0-0', method: 'KO/TKO', time: 'R1 3:00', card: 'WJF 1 · Jan 19, 2019' },
+      { result: 'W', opponent: 'Mehdi Bagheri', opponentRecord: '0-0', method: 'KO/TKO', time: 'R1 0:17', card: 'Mglebi 5 · Dec 15, 2018' },
+      { result: 'W', opponent: 'Farhad Meshed', opponentRecord: '0-0', method: 'TKO · punches', time: 'R1 0:31', card: 'GMMAF: Fight Night · Aug 1, 2018' },
+      { result: 'W', opponent: 'Orkhan Veliev', opponentRecord: '0-1', method: 'TKO · punches', time: 'R1 0:22', card: 'GMMAF: Fight Night · Jul 20, 2018' },
+      { result: 'W', opponent: 'Xuta Qobalia', opponentRecord: '0-0', method: 'TKO · punches', time: 'R1 0:57', card: 'GMMAF: Fight Night · Jul 25, 2017' },
+      { result: 'W', opponent: 'Kyamran Suleymanli', opponentRecord: '0-0', method: 'TKO · punches', time: 'R1 0:54', card: 'GMMAF: Gardabani Fight Night · Apr 3, 2016' },
     ],
   },
 ];

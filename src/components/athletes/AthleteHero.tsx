@@ -57,9 +57,11 @@ export function AthleteHero({ athlete }: AthleteHeroProps) {
           </div>
 
           <div className="relative flex-1 min-w-0 flex flex-col justify-center py-4 pr-3.5 -ml-6">
-            <span className="self-start mb-2 border border-(--color-gold) bg-black/50 px-2.5 py-1 text-[10px] font-mono uppercase tracking-[0.12em] text-(--color-gold) whitespace-nowrap [clip-path:polygon(0_0,100%_0,calc(100%-8px)_100%,0_100%)] pr-4">
-              &ldquo;{athlete.nickname}&rdquo;
-            </span>
+            {athlete.nickname && (
+              <span className="self-start mb-2 border border-(--color-gold) bg-black/50 px-2.5 py-1 text-[10px] font-mono uppercase tracking-[0.12em] text-(--color-gold) whitespace-nowrap [clip-path:polygon(0_0,100%_0,calc(100%-8px)_100%,0_100%)] pr-4">
+                &ldquo;{athlete.nickname}&rdquo;
+              </span>
+            )}
 
             <h1
               className={`font-(family-name:--font-display) font-black italic uppercase leading-[0.84] ${tamanhoDoNome(

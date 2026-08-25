@@ -102,6 +102,24 @@ const ozzyLastFight: FightRecord = {
   isNextFight: false,
 }
 
+const chokheliLastFight: FightRecord = {
+  id: 'fight-chokheli-last',
+  athleteId: 'levan-chokheli',
+  opponentName: 'Leon Shahbazyan',
+  opponentRecord: '12-4',
+  opponentImageUrl: null,
+  result: 'win',
+  method: 'TKO · leg kick and punches',
+  round: 'Round 1',
+  time: '0:23',
+  eventName: 'UFC Fight Night',
+  eventDate: '2026-06-20',
+  venue: null,
+  city: null,
+  broadcaster: null,
+  isNextFight: false,
+}
+
 export const ATHLETES: AthleteWithFights[] = [
   {
     id: 'dione-barbosa',
@@ -215,6 +233,36 @@ export const ATHLETES: AthleteWithFights[] = [
     bornIn: 'United States',
     fightingOutOf: 'Los Angeles, CA, USA',
     lastFight: shaneLastFight,
+    nextFight: null,
+  },
+  {
+    id: 'levan-chokheli',
+    slug: 'levan-chokheli',
+    name: 'Levan Chokheli',
+    firstName: 'Levan',
+    lastName: 'Chokheli',
+    nickname: '',
+    division: 'Welterweight',
+    organization: 'UFC',
+    imageUrl: '/images/athletes/chokheli-hero.png',
+    heroImageUrl: '/images/athletes/chokheli.png',
+    imageAlt: 'Levan Chokheli',
+    age: 29,
+    heightLabel: `5'11"`,
+    // Pesagem foi 170.5 lbs; a coluna weight_lbs do Supabase é inteira,
+    // então fica arredondado (mesmo critério do Shane).
+    weightLbs: 171,
+    reachLabel: '72.0"',
+    record: '15-3-0',
+    wins: 15,
+    losses: 3,
+    draws: 0,
+    bio: 'Levan Chokheli is a welterweight competing in the UFC, born in Georgia and fighting out of Tbilisi. A finisher who has ended 12 of his 15 career wins by knockout or submission, he is currently on a two-fight winning streak.',
+    team: 'THE Q MMA',
+    headCoach: 'Beqa Elibashvili',
+    bornIn: 'Georgia',
+    fightingOutOf: 'Tbilisi, Georgia',
+    lastFight: chokheliLastFight,
     nextFight: null,
   },
 ]

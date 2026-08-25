@@ -86,7 +86,7 @@ export function FighterPage({ slug }: { slug: string }) {
 
         {/* O apelido sumia por cima da foto quando era só texto dourado, então
             ganhou uma tarja com borda, como a do hero da aba Athletes. */}
-        <div className="nick">{fighter.nickname}</div>
+        {fighter.nickname && <div className="nick">{fighter.nickname}</div>}
         <h2>
           {firstName}
           <br />
