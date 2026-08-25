@@ -24,6 +24,7 @@ import { MyBidsPage } from './pages/MyBidsPage';
 import { CertificatePage } from './pages/CertificatePage';
 import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
 import { TermsPage } from './pages/TermsPage';
+import { DeleteAccountPage } from './pages/DeleteAccountPage';
 import { AdminAuctionQueuePage } from './pages/AdminAuctionQueuePage';
 import { OrdersPage } from './pages/OrdersPage';
 import { CartProvider } from './context/CartContext';
@@ -52,6 +53,8 @@ function Screens() {
       return <YouPage />;
     case 'auth':
       return <AuthPage />;
+    case 'delete-account':
+      return <DeleteAccountPage />;
     case 'support':
       return <SupportPage pedido={overlay.pedido} />;
     case 'admin-support':

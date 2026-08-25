@@ -12,6 +12,7 @@ export type Screen =
   | { name: 'cart' }
   | { name: 'you' }
   | { name: 'auth' }
+  | { name: 'delete-account' }
   // `support` carrega o pedido quando veio do botão "Get help with this
   // order" — é o que faz o formulário abrir já sabendo do que se trata.
   | { name: 'support'; pedido?: { id: string; numero: string } }

@@ -242,6 +242,19 @@ export function YouPage() {
       <p className="cart-note" style={{ textAlign: 'center', margin: '18px 0 0' }}>
         <a href="/terms">Terms of Service</a> · <a href="/privacy">Privacy Policy</a>
       </p>
+
+      {usuario && (
+        <p style={{ textAlign: 'center', margin: '10px 0 0' }}>
+          <button
+            type="button"
+            className="empty-link"
+            style={{ fontSize: 12 }}
+            onClick={() => openOverlay({ name: 'delete-account' })}
+          >
+            Delete account
+          </button>
+        </p>
+      )}
     </div>
   );
 }
