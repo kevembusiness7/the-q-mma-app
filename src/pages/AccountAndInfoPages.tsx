@@ -238,6 +238,10 @@ export function YouPage() {
           <span>›</span>
         </button>
       )}
+
+      <p className="cart-note" style={{ textAlign: 'center', margin: '18px 0 0' }}>
+        <a href="/terms">Terms of Service</a> · <a href="/privacy">Privacy Policy</a>
+      </p>
     </div>
   );
 }

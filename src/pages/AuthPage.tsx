@@ -150,6 +150,14 @@ export function AuthPage() {
           {enviando ? 'Please wait…' : modo === 'entrar' ? 'Sign in' : 'Create account'}
         </button>
       </form>
+
+      {modo === 'cadastrar' && (
+        <p className="cart-note" style={{ textAlign: 'center', marginTop: 14 }}>
+          By creating an account you agree to our{' '}
+          <a href="/terms">Terms of Service</a> and{' '}
+          <a href="/privacy">Privacy Policy</a>.
+        </p>
+      )}
     </div>
   )
 }

@@ -1,0 +1,73 @@
+# Build de iOS na nuvem, sem precisar de Mac -- o Xcode só roda em Mac, e
+# este projeto é montado em Windows. Este arquivo sozinho não faz nada: só
+# funciona depois que a conta do Codemagic (codemagic.io, tem plano grátis)
+# estiver conectada a este repositório E os itens abaixo estiverem
+# configurados na interface do Codemagic (não dá pra fazer isso por aqui,
+# são credenciais/contas):
+#
+#   1. Conecte este repositório GitHub na sua conta Codemagic.
+#   2. Team settings > Integrations > App Store Connect: crie uma API key
+#      (App Store Connect > Users and Access > Integrations > App Store
+#      Connect API) e cadastre no Codemagic. Dá o nome "app_store_connect"
+#      pra bater com o `auth: integration` usado abaixo (ou troque o nome
+#      aqui pelo que você usar lá).
+#   3. Code signing: no Codemagic, ative "Automatic code signing" pro app
+#      com o Bundle ID com.theqmma.app -- ele gera certificado e provisioning
+#      profile sozinho usando a mesma API key do passo 2, sem precisar
+#      exportar nada do seu computador.
+#   4. Rode o workflow manualmente a primeira vez (Start new build). Depois
+#      disso dá pra automatizar em cada push na main, se quiser.
+
+workflows:
+  ios-workflow:
+    name: THE Q MMA — iOS
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: app_store_connect
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.theqmma.app
+      vars:
+        XCODE_PROJECT: "ios/App/App.xcodeproj"
+        XCODE_SCHEME: "App"
+      node: 20.11.0
+      xcode: latest
+    scripts:
+      - name: Instala as dependências do Node
+        script: npm ci
+
+      - name: Builda o site (dist/ -- server.url é o que carrega em produção,
+          mas o Capacitor ainda copia dist/ pro projeto nativo como parte do sync)
+        script: npm run build
+
+      - name: Sincroniza o projeto iOS com o build e o capacitor.config.ts
+        script: npx cap sync ios
+
+      - name: Configura a assinatura automática de código
+        script: |
+          xcode-project use-profiles
+
+      - name: Sobe o número de build (App Store Connect não aceita repetido)
+        script: |
+          cd $CM_BUILD_DIR/ios/App
+          agvtool new-version -all $BUILD_NUMBER
+
+      - name: Compila e gera o .ipa
+        script: |
+          xcode-project build-ipa \
+            --project "$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+
+    publishing:
+      app_store_connect:
+        auth: integration
+        # Manda pro TestFlight primeiro -- promover pra revisão da App Store
+        # de verdade é um botão manual no App Store Connect, de propósito:
+        # nenhum build sobe pra loja sozinho sem alguém olhar antes.
+        submit_to_testflight: true

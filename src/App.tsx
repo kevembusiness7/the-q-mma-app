@@ -22,6 +22,8 @@ import { VaultPage } from './pages/VaultPage';
 import { AuctionItemPage } from './pages/AuctionItemPage';
 import { MyBidsPage } from './pages/MyBidsPage';
 import { CertificatePage } from './pages/CertificatePage';
+import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
+import { TermsPage } from './pages/TermsPage';
 import { AdminAuctionQueuePage } from './pages/AdminAuctionQueuePage';
 import { OrdersPage } from './pages/OrdersPage';
 import { CartProvider } from './context/CartContext';
@@ -242,6 +244,13 @@ function App() {
   const codigoCertificado = certificadoDaUrl();
   if (codigoCertificado) {
     return <CertificatePage code={codigoCertificado} />;
+  }
+
+  // Mesmo motivo do certificado: as lojas (Apple/Google) exigem uma URL
+  // pública que abra sozinha, sem login e sem o app instalado.
+  if (typeof window !== 'undefined') {
+    if (window.location.pathname === '/privacy') return <PrivacyPolicyPage />;
+    if (window.location.pathname === '/terms') return <TermsPage />;
   }
 
   return (
