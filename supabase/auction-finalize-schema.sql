@@ -112,15 +112,21 @@ security definer
 set search_path = public
 as $$
 begin
+  -- URL do projeto direto no código: não é segredo (é só o endereço
+  -- público da função), e ALTER DATABASE ... SET pra guardar isso numa GUC
+  -- exige um privilégio que o Postgres gerenciado do Supabase não dá nem
+  -- pro papel "postgres" do SQL Editor -- por isso não é um parâmetro lido
+  -- de configuração. Troque a URL se for um projeto Supabase diferente.
   perform net.http_post(
-    url := current_setting('app.settings.supabase_url', true) || '/functions/v1/cobrar-vencedor-leilao',
+    url := 'https://nruokuqrmnfvidskxrus.supabase.co/functions/v1/cobrar-vencedor-leilao',
     headers := '{"Content-Type": "application/json"}'::jsonb,
     body := jsonb_build_object('order_id', p_order_id)
   );
 exception when others then
-  -- Se pg_net ainda não tiver a URL configurada (ver passo 6 abaixo), não
-  -- pode derrubar o fechamento do leilão inteiro por causa disso -- o pedido
-  -- já foi criado como awaiting_payment, e dá pra cobrar à mão depois.
+  -- Se a chamada falhar por qualquer motivo, não pode derrubar o
+  -- fechamento do leilão inteiro por causa disso -- o pedido já foi criado
+  -- como awaiting_payment, e dá pra cobrar à mão depois (botão "Retry
+  -- charge" no admin).
   raise warning 'Não consegui chamar cobrar-vencedor-leilao para %: %', p_order_id, sqlerrm;
 end;
 $$;
@@ -302,14 +308,6 @@ exception when others then null;
 end $$;
 
 select cron.schedule('processar-leiloes', '* * * * *', $$select public.processar_leiloes();$$);
-
--- 6. URL do projeto, pra cobrar_leilao_async saber pra onde chamar -------------
--- Sem isto a chamada à Edge Function falha silenciosamente (o warning acima
--- aparece nos logs, mas o leilão fecha normalmente -- só a cobrança
--- automática que não dispara, e dá pra cobrar à mão). Troque pela URL real
--- do seu projeto se for diferente.
-
-alter database postgres set app.settings.supabase_url = 'https://nruokuqrmnfvidskxrus.supabase.co';
 
 -- Confere o resultado
 select jobname, schedule, active from cron.job where jobname = 'processar-leiloes';
