@@ -156,16 +156,19 @@
 }
 
 /* Feed rolável, com só 2 cards inteiros visíveis -- o resto é rolagem
-   normal, sem pedaço de card espiando embaixo pra sugerir "tem mais". Altura
-   reajustada pro card maior (foto de 140px, fonte maior) -- se algum título
-   quebrar em 2 linhas o card fica mais alto e o corte desliza um pouco, é
-   aproximado por natureza. */
+   normal, sem pedaço de card espiando embaixo pra sugerir "tem mais". Card
+   não tem altura fixa (a foto só acompanha o texto via align-self:stretch),
+   então a altura de "2 cards" varia com o tamanho do título/descrição de
+   cada notícia -- calculado pelo par mais alto que apareceu até agora
+   (Dione: título de 2 linhas + descrição de 3 linhas ≈ 182px; Ozzy: ≈
+   163px), com folga. Se as duas primeiras notícias mudarem pra um texto
+   ainda mais longo, pode precisar subir de novo. */
 .news-feed {
   padding: 0 12px 26px 18px;
   display: flex;
   flex-direction: column;
   gap: 14px;
-  max-height: 320px;
+  max-height: 375px;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--gold, #c8a03c) transparent;
