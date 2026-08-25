@@ -1,0 +1,115 @@
+/* The Q Vault — preto/grafite com detalhe dourado, mesma paleta do resto do
+   app. Reaproveita .admin-acoes/.campo/.admin-botoes/.ticket/.ticket-clicavel
+   de shop.css/support.css; aqui só o que é específico do leilão. */
+
+.auction-status-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.auction-status-pill.scheduled {
+  background: var(--gold, #c8a03c);
+  color: #171312;
+}
+
+.auction-status-pill.live {
+  background: var(--live, #4fb477);
+  color: #0a0908;
+}
+
+.auction-status-pill.sold {
+  background: var(--steel, #3e6b8c);
+  color: #fff;
+}
+
+.auction-status-pill.reserve_not_met,
+.auction-status-pill.unsold,
+.auction-status-pill.cancelled {
+  background: var(--dust, #948a81);
+  color: #171312;
+}
+
+.auction-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.auction-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border: 1px solid var(--gold, #c8a03c);
+  border-radius: 4px;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold, #c8a03c);
+}
+
+/* Grade de mídia no admin: fotos/vídeo já enviados, com botão de remover. */
+.auction-media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.auction-media-tile {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--q-canvas, #262120);
+  border: 1px solid var(--line, #332c29);
+}
+
+.auction-media-tile img,
+.auction-media-tile video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.auction-media-tile .hero-tag {
+  position: absolute;
+  bottom: 3px;
+  left: 3px;
+  padding: 2px 5px;
+  border-radius: 3px;
+  background: rgba(200, 160, 60, 0.92);
+  color: #171312;
+  font-size: 8px;
+  font-family: var(--mono, ui-monospace, monospace);
+  text-transform: uppercase;
+}
+
+.auction-media-tile .remove-media {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(11, 9, 8, 0.75);
+  color: #fff;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.auction-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+  font-size: 13px;
+  color: var(--bone, #ede7de);
+}

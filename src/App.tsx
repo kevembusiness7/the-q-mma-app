@@ -17,6 +17,7 @@ import { PromotionBookingPage } from './pages/PromotionBookingPage';
 import { MyPromotionsPage } from './pages/MyPromotionsPage';
 import { AdminPromotionQueuePage } from './pages/AdminPromotionQueuePage';
 import { AdminNewsPage } from './pages/AdminNewsPage';
+import { AdminAuctionsPage } from './pages/AdminAuctionsPage';
 import { OrdersPage } from './pages/OrdersPage';
 import { CartProvider } from './context/CartContext';
 import { NavigationProvider, useNav } from './context/NavigationContext';
@@ -64,6 +65,8 @@ function Screens() {
       return <AdminPromotionQueuePage />;
     case 'admin-news':
       return <AdminNewsPage />;
+    case 'admin-auctions':
+      return <AdminAuctionsPage />;
     case 'orders':
       return <OrdersPage />;
     case 'coaches':

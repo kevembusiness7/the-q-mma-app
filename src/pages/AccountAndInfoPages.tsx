@@ -195,6 +195,24 @@ export function YouPage() {
           <span>›</span>
         </button>
       )}
+
+      {ehAdmin && (
+        <button
+          type="button"
+          className="listrow"
+          onClick={() => openOverlay({ name: 'admin-auctions' })}
+        >
+          <span className="listrow-titulo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+              <path d="M14 3l7 7-8.5 8.5a2.12 2.12 0 01-3 0l-4-4a2.12 2.12 0 010-3L14 3z" />
+              <path d="M14 3l7 7" />
+              <path d="M4.5 15.5L2 22l6.5-2.5" />
+            </svg>
+            Vault items
+          </span>
+          <span>›</span>
+        </button>
+      )}
     </div>
   );
 }

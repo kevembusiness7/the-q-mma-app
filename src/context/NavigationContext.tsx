@@ -24,6 +24,7 @@ export type Screen =
   | { name: 'my-promotions' }
   | { name: 'admin-promotions' }
   | { name: 'admin-news' }
+  | { name: 'admin-auctions' }
   | { name: 'orders' }
   | { name: 'coaches' }
   | { name: 'sponsors' }
