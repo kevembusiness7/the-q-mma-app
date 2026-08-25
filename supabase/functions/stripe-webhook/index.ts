@@ -245,6 +245,11 @@ async function confirmarCobrancaLeilao(paymentIntent: Stripe.PaymentIntent): Pro
           Your card was charged ${centavos(resultado.winning_bid_cents)} for "${escapar(resultado.item_title_snapshot)}".
           Add your shipping address under My Bids so we can get it moving.
         </p>
+        ${
+          resultado.cert_number
+            ? `<p style="font-size:13px;color:#666;margin:0 0 16px">Certificate of authenticity: <b>${escapar(resultado.cert_number)}</b></p>`
+            : ''
+        }
       </div>`,
     )
   }

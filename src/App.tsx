@@ -21,6 +21,7 @@ import { AdminAuctionsPage } from './pages/AdminAuctionsPage';
 import { VaultPage } from './pages/VaultPage';
 import { AuctionItemPage } from './pages/AuctionItemPage';
 import { MyBidsPage } from './pages/MyBidsPage';
+import { CertificatePage } from './pages/CertificatePage';
 import { OrdersPage } from './pages/OrdersPage';
 import { CartProvider } from './context/CartContext';
 import { NavigationProvider, useNav } from './context/NavigationContext';
@@ -221,7 +222,25 @@ function AvisoVerificacaoLeilao() {
   );
 }
 
+/**
+ * Único desvio da pilha de navegação normal: o QR Code do certificado de
+ * autenticidade precisa abrir direto numa URL real (/certificate/CODIGO),
+ * pra funcionar pra quem nunca abriu o app antes — sem login, sem carrinho,
+ * sem nada da árvore de providers de baixo. A checagem fica aqui, antes de
+ * tudo o mais renderizar.
+ */
+function certificadoDaUrl(): string | null {
+  if (typeof window === 'undefined') return null;
+  const match = window.location.pathname.match(/^\/certificate\/([^/]+)\/?$/);
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
 function App() {
+  const codigoCertificado = certificadoDaUrl();
+  if (codigoCertificado) {
+    return <CertificatePage code={codigoCertificado} />;
+  }
+
   return (
     <NavigationProvider>
       <AuthProvider>
