@@ -37,7 +37,7 @@ export interface FighterProfile {
   /** Abreviação usada no cabeçalho: FLY, MW. */
   divisionShort: string;
   /** Código ISO do país de origem — vira a bandeira de fundo do topo. */
-  country: 'br' | 'us' | 'ge' | 'az';
+  country: 'br' | 'us' | 'ge' | 'az' | 'ua';
   /** Foto recortada, fundo transparente, para o topo da tela. */
   photo: string;
   /** Pares rótulo/valor da aba Profile. */
@@ -364,6 +364,57 @@ export const fighters: FighterProfile[] = [
       { result: 'W', opponent: 'Trent Stump', opponentRecord: '0-0', method: 'KO/TKO', time: 'R1 4:33', card: 'CFFC 77: Wells vs. Pierotti · Aug 16, 2019' },
       { result: 'W', opponent: 'William Dill', opponentRecord: '1-0', method: 'TKO · punch', time: 'R1 0:58', card: 'Ring of Combat 68 · May 31, 2019' },
       { result: 'L', opponent: 'Juan Galarza', opponentRecord: '0-0', method: 'Submission · rear-naked choke', time: 'R1 3:38', card: 'Ring of Combat 66 · Nov 16, 2018' },
+    ],
+  },
+  {
+    slug: 'artur-minev',
+    name: 'Artur Minev',
+    nickname: '"Headhunter"',
+    record: '7-1-0',
+    age: 22,
+    divisionShort: 'LW',
+    country: 'ua',
+    photo: '/images/athletes/artur-profile.avif',
+    bio: [
+      ['Nickname', 'Headhunter'],
+      ['Full name', 'Artur Minev'],
+      ['Age', '22 years old · Sep 27, 2003'],
+      ['Height', '5\'9" · 69.0" reach'],
+      ['Weight class', 'Lightweight'],
+      ['Born in', 'Ukraine'],
+      ['Fighting out of', 'Wakefield, MA, USA'],
+      ['Head coach', 'Matheus Naccache'],
+      ['Current streak', '1 loss'],
+    ],
+    nextFight: {
+      opponent: 'Francisco Prado',
+      opponentRecord: '12-5',
+      myRecord: '7-1',
+      division: 'UFC Fight Night · Lightweight',
+      when: 'Oct 10, 2026',
+    },
+    lastFight: {
+      opponent: 'Tommy Gantt',
+      opponentRecord: '11-0',
+      myRecord: '7-1',
+      division: 'UFC Fight Night · Lightweight',
+      when: 'May 16, 2026',
+      result: 'loss',
+      method: 'TKO · punches from back mount',
+      time: 'R2 2:51',
+    },
+    /* Só as lutas profissionais já realizadas. A luta contra o Francisco
+       Prado ainda não aconteceu (é a nextFight) e por isso fica de fora do
+       record_list -- a soma aqui bate com o 7-1-0. */
+    record_list: [
+      { result: 'L', opponent: 'Tommy Gantt', opponentRecord: '11-0', method: 'TKO · punches from back mount', time: 'R2 2:51', card: 'UFC Fight Night · May 16, 2026' },
+      { result: 'W', opponent: 'Derek Campos', opponentRecord: '20-13', method: 'TKO · punches', time: 'R1 3:05', card: 'Fury FC 113 · Jan 18, 2026' },
+      { result: 'W', opponent: 'Junior Maranhão', opponentRecord: '25-12', method: 'Decision · majority', time: '3 rounds', card: 'Fury FC 106 · Jul 18, 2025' },
+      { result: 'W', opponent: 'Shane Keefe', opponentRecord: '4-1', method: 'TKO · punches', time: 'R1 3:01', card: 'Fury FC 103 · Mar 23, 2025' },
+      { result: 'W', opponent: 'Cristobal Ibanez', opponentRecord: '0-0', method: 'TKO · punches', time: 'R1 0:28', card: 'Fury FC 98: Khera vs. Dixon · Nov 3, 2024' },
+      { result: 'W', opponent: 'Brandon Evans', opponentRecord: '2-1', method: 'Submission · guillotine choke', time: 'R1 3:29', card: 'XFC 51: Evolution · Sep 27, 2024' },
+      { result: 'W', opponent: 'Tony Pike', opponentRecord: '0-3', method: 'Submission · rear-naked choke', time: 'R2 2:46', card: 'Combat FC 5 · Sep 15, 2023' },
+      { result: 'W', opponent: 'Matt Denning', opponentRecord: '8-18', method: 'TKO · submission to strikes', time: 'R1 1:37', card: 'NEF 53: American Valor · Jul 8, 2023' },
     ],
   },
 ];

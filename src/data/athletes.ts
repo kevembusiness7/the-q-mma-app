@@ -138,6 +138,42 @@ const nazimLastFight: FightRecord = {
   isNextFight: false,
 }
 
+const arturNextFight: FightRecord = {
+  id: 'fight-artur-next',
+  athleteId: 'artur-minev',
+  opponentName: 'Francisco Prado',
+  opponentRecord: '12-5',
+  opponentImageUrl: null,
+  result: 'nc',
+  method: '',
+  round: null,
+  time: null,
+  eventName: 'UFC Fight Night',
+  eventDate: '2026-10-10',
+  venue: null,
+  city: null,
+  broadcaster: null,
+  isNextFight: true,
+}
+
+const arturLastFight: FightRecord = {
+  id: 'fight-artur-last',
+  athleteId: 'artur-minev',
+  opponentName: 'Tommy Gantt',
+  opponentRecord: '11-0',
+  opponentImageUrl: null,
+  result: 'loss',
+  method: 'TKO · punches from back mount',
+  round: 'Round 2',
+  time: '2:51',
+  eventName: 'UFC Fight Night',
+  eventDate: '2026-05-16',
+  venue: null,
+  city: null,
+  broadcaster: null,
+  isNextFight: false,
+}
+
 export const ATHLETES: AthleteWithFights[] = [
   {
     id: 'dione-barbosa',
@@ -310,6 +346,34 @@ export const ATHLETES: AthleteWithFights[] = [
     fightingOutOf: 'Brooklyn, New York, USA',
     lastFight: nazimLastFight,
     nextFight: null,
+  },
+  {
+    id: 'artur-minev',
+    slug: 'artur-minev',
+    name: 'Artur Minev',
+    firstName: 'Artur',
+    lastName: 'Minev',
+    nickname: 'Headhunter',
+    division: 'Lightweight',
+    organization: 'UFC',
+    imageUrl: '/images/athletes/artur.png',
+    heroImageUrl: '/images/athletes/artur-hero.png',
+    imageAlt: 'Artur "Headhunter" Minev',
+    age: 22,
+    heightLabel: `5'9"`,
+    weightLbs: 155,
+    reachLabel: '69.0"',
+    record: '7-1-0',
+    wins: 7,
+    losses: 1,
+    draws: 0,
+    bio: 'Artur "Headhunter" Minev is a lightweight competing in the UFC, born in Ukraine and fighting out of Wakefield, MA. He won his first seven professional fights, six by knockout or submission, before dropping his UFC debut to Tommy Gantt, and is booked to return this October.',
+    team: 'THE Q MMA',
+    headCoach: 'Matheus Naccache',
+    bornIn: 'Ukraine',
+    fightingOutOf: 'Wakefield, MA, USA',
+    lastFight: arturLastFight,
+    nextFight: arturNextFight,
   },
 ]
 
