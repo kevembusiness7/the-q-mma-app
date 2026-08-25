@@ -4,7 +4,7 @@ import { useNews } from '../hooks/useNews';
 import './TheQPage.css';
 
 /** Destinos que esta tela abre — pelos banners ou pelo botão de conta. */
-export type TheQDestination = 'athletes' | 'shop' | 'sponsors' | 'coaches' | 'you' | 'promotions';
+export type TheQDestination = 'athletes' | 'shop' | 'sponsors' | 'coaches' | 'you' | 'promotions' | 'vault';
 
 interface TheQPageProps {
   /** Chamado quando um banner ou o botão de conta é tocado. */
@@ -65,6 +65,11 @@ export function TheQPage({ onNavigate }: TheQPageProps) {
         src="/images/brand/banner-shopnow.png"
         alt="Ir para a loja"
         onClick={go('shop')}
+      />
+      <BannerLink
+        src="/images/brand/banner-vault.png"
+        alt="Ver o leilão de itens dos atletas"
+        onClick={go('vault')}
       />
       <BannerLink
         src="/images/brand/banner-sponsors.jpg"
