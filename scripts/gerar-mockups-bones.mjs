@@ -94,6 +94,8 @@ async function main() {
   await compositarNoBone('hollywoodcap.png', 'hollywood');
   await compositarNoBone('jplcap.png', 'jp');
   await compositarNoBone('dionecap.png', 'dione');
+  await compositarNoBone('levan1.png', 'levan');
+  await compositarNoBone('nazim1.png', 'nazim');
 }
 
 main().catch((err) => {
