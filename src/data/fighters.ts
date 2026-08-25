@@ -37,7 +37,7 @@ export interface FighterProfile {
   /** Abreviação usada no cabeçalho: FLY, MW. */
   divisionShort: string;
   /** Código ISO do país de origem — vira a bandeira de fundo do topo. */
-  country: 'br' | 'us' | 'ge';
+  country: 'br' | 'us' | 'ge' | 'az';
   /** Foto recortada, fundo transparente, para o topo da tela. */
   photo: string;
   /** Pares rótulo/valor da aba Profile. */
@@ -311,6 +311,59 @@ export const fighters: FighterProfile[] = [
       { result: 'W', opponent: 'Orkhan Veliev', opponentRecord: '0-1', method: 'TKO · punches', time: 'R1 0:22', card: 'GMMAF: Fight Night · Jul 20, 2018' },
       { result: 'W', opponent: 'Xuta Qobalia', opponentRecord: '0-0', method: 'TKO · punches', time: 'R1 0:57', card: 'GMMAF: Fight Night · Jul 25, 2017' },
       { result: 'W', opponent: 'Kyamran Suleymanli', opponentRecord: '0-0', method: 'TKO · punches', time: 'R1 0:54', card: 'GMMAF: Gardabani Fight Night · Apr 3, 2016' },
+    ],
+  },
+  {
+    slug: 'nazim-sadykhov',
+    name: 'Nazim Sadykhov',
+    nickname: '"Black Wolf"',
+    record: '11-3-1',
+    age: 32,
+    divisionShort: 'LW',
+    country: 'az',
+    photo: '/images/athletes/nazim-profile.avif',
+    bio: [
+      ['Nickname', 'Black Wolf'],
+      ['Full name', 'Nazim Sadykhov'],
+      ['Age', '32 years old · May 16, 1994'],
+      ['Height', '5\'10" · 69.0" reach'],
+      ['Weight class', 'Lightweight'],
+      ['Born in', 'Azerbaijan'],
+      ['Fighting out of', 'Brooklyn, New York, USA'],
+      ['Head coach', 'John Wood'],
+      ['Other coaches', 'Ray Longo'],
+      ['Current streak', '2 losses'],
+    ],
+    lastFight: {
+      opponent: 'Matheus Camilo',
+      opponentRecord: '10-3',
+      myRecord: '11-3-1',
+      division: 'UFC Fight Night · Lightweight',
+      when: 'Jun 27, 2026',
+      result: 'loss',
+      method: 'TKO · straight right and hammerfists',
+      time: 'R1 1:31',
+    },
+    /* Só as lutas profissionais de MMA. Os cinco combates cancelados (dois
+       contra MarQuel Mederos, e um cada contra Chris Duncan, Feraris Golden
+       Jr. e Josh Jackson) ficaram de fora — não entram no cartel, e a soma
+       aqui bate com o 11-3-1. */
+    record_list: [
+      { result: 'L', opponent: 'Matheus Camilo', opponentRecord: '10-3', method: 'TKO · straight right and hammerfists', time: 'R1 1:31', card: 'UFC Fight Night · Jun 27, 2026' },
+      { result: 'L', opponent: 'Fares Ziam', opponentRecord: '17-4', method: 'TKO · elbows and follow-up punches', time: 'R2 4:59', card: 'UFC 323: Dvalishvili vs. Yan 2 · Dec 6, 2025' },
+      { result: 'W', opponent: 'Nikolas Motta', opponentRecord: '15-5', method: 'TKO · right hook', time: 'R2 4:17', card: 'UFC Fight Night · Jun 21, 2025' },
+      { result: 'W', opponent: 'Ismael Bonfim', opponentRecord: '20-4', method: 'TKO · doctor stoppage', time: 'R1 5:00', card: 'UFC Fight Night · Feb 15, 2025' },
+      { result: 'D', opponent: 'Viacheslav Borshchev', opponentRecord: '7-3', method: 'Decision · majority', time: '3 rounds', card: 'UFC 295: Procházka vs. Pereira · Nov 11, 2023' },
+      { result: 'W', opponent: 'Terrance McKinney', opponentRecord: '13-5', method: 'Submission · rear-naked choke', time: 'R2 1:07', card: 'UFC Fight Night · Jul 15, 2023' },
+      { result: 'W', opponent: 'Evan Elder', opponentRecord: '7-1', method: 'TKO · doctor stoppage (cut)', time: 'R3 0:38', card: 'UFC Fight Night · Feb 18, 2023' },
+      { result: 'W', opponent: 'Ahmad Hassanzada', opponentRecord: '9-1', method: 'TKO · right hook', time: 'R3 1:59', card: 'Contender Series 2022 · Aug 16, 2022' },
+      { result: 'W', opponent: 'Joe Boerschig', opponentRecord: '6-4', method: 'KO/TKO', time: 'R1 0:55', card: 'Fury FC 59 · Mar 27, 2022' },
+      { result: 'W', opponent: 'Juan Carlos De Leon', opponentRecord: '1-0', method: 'KO/TKO', time: 'R3 4:38', card: 'Fury FC 55 · Dec 19, 2021' },
+      { result: 'W', opponent: 'John Herrera', opponentRecord: '2-0-1', method: 'Submission · rear-naked choke', time: 'R3 4:38', card: 'Fury FC 52 · Oct 17, 2021' },
+      { result: 'W', opponent: 'Elijah Harris', opponentRecord: '3-2', method: 'Decision · unanimous', time: '3 rounds', card: 'CFFC 81: Sabatini vs. Gonzalez · Feb 1, 2020' },
+      { result: 'W', opponent: 'Trent Stump', opponentRecord: '0-0', method: 'KO/TKO', time: 'R1 4:33', card: 'CFFC 77: Wells vs. Pierotti · Aug 16, 2019' },
+      { result: 'W', opponent: 'William Dill', opponentRecord: '1-0', method: 'TKO · punch', time: 'R1 0:58', card: 'Ring of Combat 68 · May 31, 2019' },
+      { result: 'L', opponent: 'Juan Galarza', opponentRecord: '0-0', method: 'Submission · rear-naked choke', time: 'R1 3:38', card: 'Ring of Combat 66 · Nov 16, 2018' },
     ],
   },
 ];
