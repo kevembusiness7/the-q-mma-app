@@ -23,6 +23,7 @@ export type Screen =
   | { name: 'promotion-booking'; athleteSlug: string; packageId: string }
   | { name: 'my-promotions' }
   | { name: 'admin-promotions' }
+  | { name: 'admin-news' }
   | { name: 'orders' }
   | { name: 'coaches' }
   | { name: 'sponsors' }

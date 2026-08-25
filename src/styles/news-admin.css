@@ -1,0 +1,50 @@
+/* Admin de News & Events — reaproveita .admin-acoes/.campo/.admin-botoes/
+   .ticket/.ticket-clicavel de shop.css e support.css. Só o que é específico
+   desta tela mora aqui. */
+
+/* Mesmas cores de src/pages/TheQPage.css (.ntag), pro admin ver de longe
+   qual selo cada notícia vai ganhar no feed antes mesmo de publicar. */
+.news-admin-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.news-admin-tag.result {
+  background: var(--live, #4fb477);
+  color: #0a0908;
+}
+
+.news-admin-tag.next {
+  background: var(--blood, #b0301f);
+  color: #fff;
+}
+
+.news-admin-tag.event {
+  background: var(--gold, #c8a03c);
+  color: #171312;
+}
+
+/* Prévia da foto — paisagem, já que os cards do feed usam .nimg largo e
+   baixo, diferente do retrato usado nas fotos de atleta. */
+.news-photo-preview {
+  width: 100%;
+  max-width: 260px;
+  aspect-ratio: 16 / 10;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--q-canvas, #262120);
+  display: grid;
+  place-items: center;
+  margin-bottom: 10px;
+}
+
+.news-photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

@@ -150,6 +150,23 @@ export function YouPage() {
         <button
           type="button"
           className="listrow"
+          onClick={() => openOverlay({ name: 'admin-news' })}
+        >
+          <span className="listrow-titulo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="16" rx="2" />
+              <path d="M7 8h10M7 12h10M7 16h6" />
+            </svg>
+            News &amp; Events
+          </span>
+          <span>›</span>
+        </button>
+      )}
+
+      {ehAdmin && (
+        <button
+          type="button"
+          className="listrow"
           onClick={() => openOverlay({ name: 'admin-promotion-athletes' })}
         >
           <span className="listrow-titulo">

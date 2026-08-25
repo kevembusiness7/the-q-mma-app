@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { news as fallbackNews } from '../data/news';
+import { buildAutoNews } from '../lib/autoNews';
+import { useAthletes } from './useAthletes';
 import type { NewsItem } from '../types/news';
 
 interface UseNewsResult {
@@ -13,11 +15,16 @@ interface UseNewsResult {
 /**
  * Mesma estratégia de useAthletes: tenta o Supabase, cai no mock se falhar.
  * Assim a tela nunca aparece vazia, mesmo sem banco configurado.
+ *
+ * O feed final junta as notícias cadastradas à mão (Supabase ou fallback,
+ * nessa ordem de tentativa) com as que nascem sozinhas do cartel de cada
+ * atleta (ver src/lib/autoNews.ts) — por isso também lê useAthletes aqui.
  */
 export function useNews(): UseNewsResult {
-  const [news, setNews] = useState<NewsItem[]>(fallbackNews);
+  const [manualNews, setManualNews] = useState<NewsItem[]>(fallbackNews);
   const [loading, setLoading] = useState(true);
   const [isFallback, setIsFallback] = useState(true);
+  const { athletes } = useAthletes();
 
   useEffect(() => {
     let active = true;
@@ -41,7 +48,7 @@ export function useNews(): UseNewsResult {
         return;
       }
 
-      setNews(
+      setManualNews(
         data.map((row) => ({
           id: row.id,
           type: row.type,
@@ -61,6 +68,11 @@ export function useNews(): UseNewsResult {
       active = false;
     };
   }, []);
+
+  const news = useMemo(
+    () => [...manualNews, ...buildAutoNews(athletes)],
+    [manualNews, athletes],
+  );
 
   return { news, loading, isFallback };
 }

@@ -3,26 +3,12 @@ import type { NewsItem } from '../types/news';
 /**
  * Conteúdo de fallback, usado quando o Supabase não responde ou não está
  * configurado. Mesmo conteúdo do seed em supabase/theq-schema.sql.
+ *
+ * Notícias de última/próxima luta NÃO ficam aqui — elas nascem sozinhas do
+ * cartel de cada atleta (ver src/lib/autoNews.ts), então este arquivo só
+ * guarda o que nenhum cartel cobre (agenda da academia, avisos).
  */
 export const news: NewsItem[] = [
-  {
-    id: 'dione-def-melisano',
-    type: 'result',
-    tag: 'Fight Result',
-    title: 'Dione Barbosa def. Anna Melisano',
-    body: '"The Witch" got the standing rear-naked choke finish in Round 1 at UFC Fight Night, extending her winning streak to two.',
-    date: 'Jul 18, 2026',
-    photo: '/images/news/dione-def-melisano.jpg',
-  },
-  {
-    id: 'ozzy-vs-gandra',
-    type: 'next',
-    tag: 'Next Fight',
-    title: 'Ozzy Diaz faces Ryan Gandra',
-    body: 'Osman "Ozzy" Diaz is set for UFC 331: Van vs. Pantoja 2, September 19 at Crypto.com Arena, Los Angeles.',
-    date: 'Sep 19, 2026',
-    photo: '/images/news/ozzy-vs-gandra.jpg',
-  },
   {
     id: 'open-mat',
     type: 'event',
