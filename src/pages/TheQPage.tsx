@@ -47,6 +47,11 @@ export function TheQPage({ onNavigate }: TheQPageProps) {
       </div>
 
       <BannerLink
+        src="/images/brand/banner-coaches.png"
+        alt="Conhecer os treinadores"
+        onClick={go('coaches')}
+      />
+      <BannerLink
         src="/images/brand/banner-athletes.jpg"
         alt="Ver os atletas do time"
         onClick={go('athletes')}
@@ -60,11 +65,6 @@ export function TheQPage({ onNavigate }: TheQPageProps) {
         src="/images/brand/banner-shopnow.png"
         alt="Ir para a loja"
         onClick={go('shop')}
-      />
-      <BannerLink
-        src="/images/brand/banner-coaches.png"
-        alt="Conhecer os treinadores"
-        onClick={go('coaches')}
       />
       <BannerLink
         src="/images/brand/banner-sponsors.jpg"
