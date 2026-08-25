@@ -65,6 +65,22 @@
   display: block;
 }
 
+/* Realça o dourado do hero sem regravar o JPG -- satura e clareia um pouco
+   a foto inteira, e o brilho por cima (::before, abaixo) soma um halo quente
+   centrado no "Q", como um brilho de estúdio batendo nele. */
+.theq-hero img {
+  filter: saturate(1.18) brightness(1.04) contrast(1.06);
+}
+
+.theq-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(55% 50% at 50% 40%, rgba(255, 208, 110, 0.35), transparent 72%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
 /* Costura entre o hero (THE Q / LAS VEGAS, NV) e o banner de News & Events:
    são dois JPGs separados, cada um com o próprio fundo, e emendados sem
    nada entre eles pareciam duas caixas empilhadas em vez de uma coisa só.
