@@ -151,16 +151,6 @@
   margin-top: 18px;
 }
 
-/* banner-instagram.jpg é bem mais alto que banner-shopnow.png (442px contra
-   270px de altura, mesma largura) -- sem isto o banner do Instagram aparece
-   bem maior que os outros, já que todo banner só tem width: 100%. Em vez de
-   recortar a arte (perde o "THE Q" do topo e o botão de baixo), encolhe o
-   banner inteiro e centraliza -- mostra a arte completa, só que menor. */
-.banner-instagram {
-  width: 65%;
-  margin: 0 auto;
-}
-
 /* Feed rolável, com só 2 cards inteiros visíveis -- o resto é rolagem
    normal, sem pedaço de card espiando embaixo pra sugerir "tem mais". Card
    não tem altura fixa (a foto só acompanha o texto via align-self:stretch),

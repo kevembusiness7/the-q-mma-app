@@ -73,10 +73,9 @@ export function TheQPage({ onNavigate }: TheQPageProps) {
       />
 
       <BannerLink
-        src="/images/brand/banner-instagram.jpg"
+        src="/images/brand/banner-instagram.png"
         alt="Seguir The Q MMA no Instagram"
         href={INSTAGRAM_URL}
-        className="banner-instagram"
       />
     </div>
   );
