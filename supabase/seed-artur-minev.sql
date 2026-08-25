@@ -73,7 +73,7 @@ insert into fights (
     (select id from athletes where slug = 'artur-minev'),
     'Tommy Gantt',
     '11-0',
-    null,             -- sem foto enviada para este adversário
+    '/images/athletes/tommy.png',
     'loss',
     'TKO · punches from back mount',
     'Round 2',

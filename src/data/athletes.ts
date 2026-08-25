@@ -161,7 +161,7 @@ const arturLastFight: FightRecord = {
   athleteId: 'artur-minev',
   opponentName: 'Tommy Gantt',
   opponentRecord: '11-0',
-  opponentImageUrl: null,
+  opponentImageUrl: '/images/athletes/tommy.png',
   result: 'loss',
   method: 'TKO · punches from back mount',
   round: 'Round 2',
