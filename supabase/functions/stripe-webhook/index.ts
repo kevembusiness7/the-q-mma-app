@@ -198,6 +198,91 @@ async function confirmarVerificacaoCartao(
   return new Response(JSON.stringify({ ok: true, verificado: true }), { status: 200 })
 }
 
+/**
+ * Confirma a cobrança do vencedor de um leilão do The Q Vault.
+ *
+ * Diferente dos outros dois fluxos deste arquivo, não nasce de uma Checkout
+ * Session -- cobrar-vencedor-leilao cria o PaymentIntent direto, off-session.
+ * Por isso o evento aqui é payment_intent.succeeded, não
+ * checkout.session.completed, e não existe session.customer_details pra
+ * tirar o e-mail: busca no endpoint admin do GoTrue pelo user_id.
+ */
+async function confirmarCobrancaLeilao(paymentIntent: Stripe.PaymentIntent): Promise<Response> {
+  const orderId = paymentIntent.metadata?.auction_order_id
+  if (!orderId) {
+    console.error('PaymentIntent de leilão sem auction_order_id no metadata:', paymentIntent.id)
+    return new Response(JSON.stringify({ ok: true }), { status: 200 })
+  }
+
+  const rpc = await fetch(`${SUPABASE_URL}/rest/v1/rpc/confirmar_cobranca_leilao`, {
+    method: 'POST',
+    headers: db,
+    body: JSON.stringify({ p_order_id: orderId, p_payment_intent_id: paymentIntent.id }),
+  })
+  if (!rpc.ok) {
+    console.error('Falha ao confirmar cobrança de leilão:', rpc.status, await rpc.text())
+    return new Response('Could not confirm payment', { status: 500 })
+  }
+  const resultado = await rpc.json()
+  if (!resultado?.reivindicado) {
+    return new Response(JSON.stringify({ ok: true, repetido: true }), { status: 200 })
+  }
+
+  const perfilRes = await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${resultado.winner_id}`, {
+    headers: db,
+  })
+  const emailVencedor = perfilRes.ok ? ((await perfilRes.json())?.email ?? null) : null
+
+  if (emailVencedor) {
+    await enviarEmail(
+      emailVencedor,
+      `[The Q Vault] Payment confirmed — ${resultado.order_number}`,
+      `
+      <div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;max-width:560px">
+        <p style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#b8860b;margin:0 0 4px">THE Q VAULT</p>
+        <h2 style="margin:0 0 8px;font-size:20px">You won it! — ${resultado.order_number}</h2>
+        <p style="font-size:14px;color:#444;margin:0 0 16px">
+          Your card was charged ${centavos(resultado.winning_bid_cents)} for "${escapar(resultado.item_title_snapshot)}".
+          Add your shipping address under My Bids so we can get it moving.
+        </p>
+      </div>`,
+    )
+  }
+
+  if (EMAIL_DESTINO) {
+    await enviarEmail(
+      EMAIL_DESTINO,
+      `[The Q Vault] Venda confirmada ${resultado.order_number} — ${centavos(resultado.winning_bid_cents)}`,
+      `
+      <div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;max-width:560px">
+        <p style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#b8860b;margin:0 0 4px">THE Q VAULT — venda confirmada</p>
+        <h2 style="margin:0 0 8px;font-size:20px">${resultado.order_number}</h2>
+        <p style="font-size:14px;margin-top:8px">"${escapar(resultado.item_title_snapshot)}" — ${centavos(resultado.winning_bid_cents)}</p>
+      </div>`,
+    )
+  }
+
+  return new Response(JSON.stringify({ ok: true, pedido: resultado.order_number }), { status: 200 })
+}
+
+/**
+ * O PaymentIntent off-session falhou (recusa, exige autenticação que não dá
+ * pra pedir de novo automaticamente). Mesma regra do resto do arquivo: só
+ * muda o status se ainda estava awaiting_payment.
+ */
+async function marcarCobrancaFalhouLeilao(paymentIntent: Stripe.PaymentIntent): Promise<Response> {
+  const orderId = paymentIntent.metadata?.auction_order_id
+  if (!orderId) return new Response(JSON.stringify({ ok: true }), { status: 200 })
+
+  await fetch(`${SUPABASE_URL}/rest/v1/rpc/marcar_cobranca_falhou`, {
+    method: 'POST',
+    headers: db,
+    body: JSON.stringify({ p_order_id: orderId }),
+  })
+
+  return new Response(JSON.stringify({ ok: true }), { status: 200 })
+}
+
 Deno.serve(async (req) => {
   if (req.method !== 'POST') return new Response('Method not allowed', { status: 405 })
 
@@ -344,6 +429,26 @@ Deno.serve(async (req) => {
       JSON.stringify({ ok: true, estornado: alvoPromo.request_number }),
       { status: 200 },
     )
+  }
+
+  // ------------------------------------------------- cobrança de leilão --
+  // Nasce fora de uma Checkout Session (cobrar-vencedor-leilao cria o
+  // PaymentIntent direto, off-session), então dispara payment_intent.*, não
+  // checkout.session.*.
+  if (evento.type === 'payment_intent.succeeded') {
+    const paymentIntent = evento.data.object as Stripe.PaymentIntent
+    if (paymentIntent.metadata?.order_type === 'auction') {
+      return await confirmarCobrancaLeilao(paymentIntent)
+    }
+    return new Response(JSON.stringify({ ignorado: 'payment_intent nao é de leilão' }), { status: 200 })
+  }
+
+  if (evento.type === 'payment_intent.payment_failed') {
+    const paymentIntent = evento.data.object as Stripe.PaymentIntent
+    if (paymentIntent.metadata?.order_type === 'auction') {
+      return await marcarCobrancaFalhouLeilao(paymentIntent)
+    }
+    return new Response(JSON.stringify({ ignorado: 'payment_intent nao é de leilão' }), { status: 200 })
   }
 
   if (
