@@ -1,8 +1,18 @@
 import type { ReactNode } from 'react'
+import { Capacitor } from '@capacitor/core'
 
 interface AppShellProps {
   children: ReactNode
 }
+
+/**
+ * Dentro do app iOS o Capacitor já desconta o notch nativamente
+ * (contentInset: 'automatic' em capacitor.config.ts) -- somar o
+ * env(safe-area-inset-top) do CSS por cima descontava DUAS vezes e abria a
+ * faixa preta morta acima do hero. No navegador/PWA não existe o inset
+ * nativo, então lá o env() continua sendo quem afasta o conteúdo do notch.
+ */
+const iosNativo = Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios'
 
 /**
  * Mobile app frame. The real deployment target is a phone-width viewport
@@ -25,8 +35,11 @@ export function AppShell({ children }: AppShellProps) {
              arrows, header icons, whatever a page puts first -- land below
              where iOS actually accepts taps instead of under the system UI. */
           style={{
-            paddingTop: 'env(safe-area-inset-top, 0px)',
-            paddingBottom: 'calc(24px + env(safe-area-inset-bottom, 0px))',
+            paddingTop: iosNativo ? '0px' : 'env(safe-area-inset-top, 0px)',
+            paddingBottom: iosNativo ? '24px' : 'calc(24px + env(safe-area-inset-bottom, 0px))',
+            // A rolagem do app vive NESTE contêiner, não no body -- é aqui
+            // que o encadeamento pro elástico nativo do iOS tem que morrer.
+            overscrollBehaviorY: 'none',
           }}
         >
           {children}
