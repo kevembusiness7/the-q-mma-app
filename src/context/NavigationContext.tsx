@@ -34,7 +34,12 @@ export type Screen =
   | { name: 'coaches' }
   | { name: 'sponsors' }
   | { name: 'product'; productId: string }
-  | { name: 'fighter'; slug: string };
+  | { name: 'fighter'; slug: string }
+  | { name: 'visitor-request' }
+  | { name: 'my-visitor-request' }
+  | { name: 'visitor-waiver'; requestId: string }
+  | { name: 'admin-visitors' }
+  | { name: 'admin-fights' };
 
 interface NavValue {
   /** Pilha de telas abertas por cima da The Q. Vazia = está na home. */

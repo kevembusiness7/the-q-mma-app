@@ -1,10 +1,23 @@
 import { BannerLink } from '../components/theq/BannerLink';
 import { NewsCard } from '../components/theq/NewsCard';
 import { useNews } from '../hooks/useNews';
+import { useAuth } from '../context/AuthContext';
+import { useMyVisitorRequest } from '../hooks/useVisitorRequest';
+import { ACTIVE_VISITOR_STATUSES, ROTULO_VISITOR_STATUS } from '../types/visitor';
+import '../styles/visitors.css';
 import './TheQPage.css';
 
 /** Destinos que esta tela abre — pelos banners ou pelo botão de conta. */
-export type TheQDestination = 'athletes' | 'shop' | 'sponsors' | 'coaches' | 'you' | 'promotions' | 'vault';
+export type TheQDestination =
+  | 'athletes'
+  | 'shop'
+  | 'sponsors'
+  | 'coaches'
+  | 'you'
+  | 'promotions'
+  | 'vault'
+  | 'visitor-request'
+  | 'my-visitor-request';
 
 interface TheQPageProps {
   /** Chamado quando um banner ou o botão de conta é tocado. */
@@ -46,6 +59,8 @@ export function TheQPage({ onNavigate }: TheQPageProps) {
         )}
       </div>
 
+      <VisitorHomeCard onNavigate={onNavigate} />
+
       <BannerLink
         src="/images/brand/banner-coaches.png"
         alt="Conhecer os treinadores"
@@ -82,6 +97,48 @@ export function TheQPage({ onNavigate }: TheQPageProps) {
         alt="Seguir The Q MMA no Instagram"
         href={INSTAGRAM_URL}
       />
+    </div>
+  );
+}
+
+/**
+ * Único ponto de entrada da home que não é um BannerLink estático — precisa
+ * refletir o pedido de visita ao vivo (ou a ausência dele), o que uma
+ * imagem fixa não consegue. Some silenciosamente se a checagem ainda está
+ * carregando, para não piscar entre os dois estados.
+ */
+function VisitorHomeCard({ onNavigate }: { onNavigate?: (destination: TheQDestination) => void }) {
+  const { usuario, carregando: carregandoAuth } = useAuth();
+  const { request, carregando } = useMyVisitorRequest(usuario?.id ?? null);
+
+  if (carregandoAuth || (usuario && carregando)) return null;
+
+  const ativo = usuario && request && ACTIVE_VISITOR_STATUSES.includes(request.status);
+
+  if (ativo && request) {
+    return (
+      <button
+        type="button"
+        className="visitor-status-card"
+        onClick={() => onNavigate?.('my-visitor-request')}
+      >
+        <div className="ticket-topo">
+          <span className={`ticket-status vr-${request.status}`}>{ROTULO_VISITOR_STATUS[request.status]}</span>
+          <span className="visitor-status-link">View status ›</span>
+        </div>
+        <p>{request.requestedClassName}</p>
+      </button>
+    );
+  }
+
+  return (
+    <div className="visitor-cta-card">
+      <span className="visitor-cta-eyebrow">Las Vegas, NV</span>
+      <h3>Visit The Academy</h3>
+      <p>Request a trial class at THE Q MMA. Our team reviews every request personally.</p>
+      <button type="button" className="btn" onClick={() => onNavigate?.('visitor-request')}>
+        Request a Visitor Class
+      </button>
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { useNav } from '../context/NavigationContext';
 import { useAuth } from '../context/AuthContext';
 import { coaches, sponsors } from '../data/shop';
 import { BackBar } from '../components/shop/ShopParts';
+import { useVisitorPendingCount } from '../hooks/useAdminVisitors';
 import '../styles/shop.css';
 import '../styles/auth.css';
 import '../styles/support.css';
@@ -13,6 +14,7 @@ export function YouPage() {
   const { count } = useCart();
   const { closeOverlay, openOverlay } = useNav();
   const { usuario, ehAdmin, carregando, sair } = useAuth();
+  const pendentesVisitantes = useVisitorPendingCount(ehAdmin);
 
   const nome = (usuario?.user_metadata?.full_name as string | undefined) ?? usuario?.email ?? '';
   const inicial = nome.trim().charAt(0) || '?';
@@ -96,6 +98,13 @@ export function YouPage() {
         onClick={() => openOverlay({ name: usuario ? 'my-bids' : 'auth' })}
       >
         My bids <span>{usuario ? '›' : 'Sign in'}</span>
+      </button>
+      <button
+        type="button"
+        className="listrow"
+        onClick={() => openOverlay({ name: usuario ? 'my-visitor-request' : 'auth' })}
+      >
+        My visitor request <span>{usuario ? '›' : 'Sign in'}</span>
       </button>
       <button type="button" className="listrow" disabled>
         Addresses &amp; payment <span>{usuario ? 'Em breve' : 'Sign in'}</span>
@@ -236,6 +245,41 @@ export function YouPage() {
             Vault orders &amp; bids
           </span>
           <span>›</span>
+        </button>
+      )}
+
+      {ehAdmin && (
+        <button
+          type="button"
+          className="listrow"
+          onClick={() => openOverlay({ name: 'admin-fights' })}
+        >
+          <span className="listrow-titulo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+              <path d="M7 4h10v5a5 5 0 01-10 0z" />
+              <path d="M7 6H4v2a3 3 0 003 3M17 6h3v2a3 3 0 01-3 3" />
+              <path d="M12 14v3M9 20h6M10 17h4" />
+            </svg>
+            Fight records
+          </span>
+          <span>›</span>
+        </button>
+      )}
+
+      {ehAdmin && (
+        <button
+          type="button"
+          className="listrow"
+          onClick={() => openOverlay({ name: 'admin-visitors' })}
+        >
+          <span className="listrow-titulo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+              <circle cx="12" cy="8.5" r="3.5" />
+              <path d="M5 20a7 7 0 0 1 14 0" />
+            </svg>
+            Visitor requests
+          </span>
+          <span>{pendentesVisitantes > 0 ? pendentesVisitantes : '›'}</span>
         </button>
       )}
 

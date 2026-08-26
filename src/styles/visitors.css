@@ -1,0 +1,309 @@
+/* Visitor Class Request + Waiver + Cleared to Train. Reaproveita os tokens
+   de shop.css e a pílula base .ticket-status de support.css -- só soma o
+   que é próprio daqui. */
+
+/* -------------------------------------------------------- status pills -- */
+
+.ticket-status.vr-draft {
+  background: var(--q-canvas);
+  color: var(--q-dust);
+  border: 1px solid var(--q-line);
+}
+
+.ticket-status.vr-submitted {
+  background: var(--q-gold);
+  color: var(--q-ink);
+}
+
+.ticket-status.vr-under_review {
+  background: #3e6b8c;
+  color: #fff;
+}
+
+.ticket-status.vr-approved_pending_waiver {
+  background: #8a5fb0;
+  color: #fff;
+}
+
+.ticket-status.vr-cleared_to_train {
+  background: #4fb477;
+  color: var(--q-ink);
+}
+
+.ticket-status.vr-rejected {
+  background: var(--q-blood);
+  color: #fff;
+}
+
+.ticket-status.vr-cancelled,
+.ticket-status.vr-expired {
+  background: var(--q-canvas);
+  color: var(--q-dust);
+  border: 1px solid var(--q-line);
+}
+
+/* ------------------------------------------------------------ home CTA -- */
+/* Único ponto de entrada da home que não é uma imagem estática -- precisa
+   refletir o status ao vivo, então é card+texto, não um BannerLink. */
+
+.visitor-cta-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 16px 18px;
+  padding: 18px;
+  border: 1px solid var(--q-gold);
+  border-radius: 14px;
+  background: linear-gradient(160deg, rgba(200, 160, 60, 0.1), var(--q-canvas-2));
+  text-align: left;
+}
+
+.visitor-cta-eyebrow {
+  font-family: var(--q-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--q-gold);
+}
+
+.visitor-cta-card h3 {
+  margin: 0;
+  font-family: var(--display, Impact, sans-serif);
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 19px;
+  letter-spacing: 0.01em;
+}
+
+.visitor-cta-card p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--q-dust);
+}
+
+.visitor-cta-card .btn {
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+.visitor-status-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 18px;
+  padding: 16px;
+  border: 1px solid var(--q-line);
+  border-radius: 14px;
+  background: var(--q-canvas-2);
+  text-align: left;
+  cursor: pointer;
+}
+
+.visitor-status-card .ticket-topo {
+  margin-bottom: 0;
+}
+
+.visitor-status-card p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--q-dust);
+}
+
+.visitor-status-card span.visitor-status-link {
+  font-family: var(--q-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--q-gold);
+}
+
+/* -------------------------------------------------------------- metrics -- */
+
+.visitor-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 0 18px 16px;
+}
+
+.visitor-metric {
+  padding: 10px 6px;
+  border: 1px solid var(--q-line);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.visitor-metric b {
+  display: block;
+  font-size: 18px;
+  color: var(--q-gold);
+}
+
+.visitor-metric span {
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--q-dust);
+}
+
+/* ---------------------------------------------------------- age helper -- */
+
+.visitor-age-aviso {
+  margin: 0;
+  font-size: 12px;
+  color: var(--q-blood-hot, #d9503f);
+}
+
+.visitor-age-ok {
+  margin: 0;
+  font-size: 12px;
+  color: var(--q-dust);
+}
+
+/* -------------------------------------------------------------- waiver -- */
+
+.waiver-draft-banner {
+  margin: 0 18px 16px;
+  padding: 12px 13px;
+  border: 1px solid var(--q-blood);
+  border-radius: 10px;
+  background: rgba(154, 42, 34, 0.14);
+  color: var(--q-bone);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.waiver-draft-banner b {
+  color: var(--q-blood-hot, #d9503f);
+  font-family: var(--q-mono);
+  letter-spacing: 0.04em;
+}
+
+.waiver-scrollbox {
+  margin: 0 18px 14px;
+  padding: 14px;
+  max-height: 320px;
+  overflow-y: auto;
+  border: 1px solid var(--q-line);
+  border-radius: 12px;
+  background: var(--q-canvas-2);
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--q-bone);
+  white-space: pre-wrap;
+}
+
+.waiver-scroll-hint {
+  margin: -8px 18px 14px;
+  font-family: var(--q-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--q-dust);
+  text-align: center;
+}
+
+.waiver-scroll-hint.ok {
+  color: #4fb477;
+}
+
+.waiver-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 18px;
+  margin-bottom: 14px;
+}
+
+.waiver-check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--q-line);
+  border-radius: 10px;
+  background: var(--q-canvas-2);
+  cursor: pointer;
+}
+
+.waiver-check-row input {
+  margin-top: 2px;
+  flex: none;
+  width: 17px;
+  height: 17px;
+  accent-color: var(--q-gold);
+}
+
+.waiver-check-row span {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--q-bone);
+}
+
+.waiver-check-row.disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------- confirm modal -- */
+/* Primeiro modal do app. position: absolute + inset: 0 fica confinado ao
+   frame do telefone (o wrapper de AppShell é o ancestral relative mais
+   próximo), não cobre a janela inteira do navegador. */
+
+.confirm-dialog-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(5, 4, 2, 0.72);
+  backdrop-filter: blur(2px);
+}
+
+.confirm-dialog-card {
+  width: 100%;
+  max-width: 320px;
+  padding: 20px;
+  border: 1px solid var(--q-gold);
+  border-radius: 14px;
+  background: var(--q-canvas-2);
+  text-align: center;
+}
+
+.confirm-dialog-card h3 {
+  margin: 0 0 8px;
+  font-family: var(--display, Impact, sans-serif);
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 17px;
+}
+
+.confirm-dialog-card p {
+  margin: 0 0 18px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--q-dust);
+}
+
+.confirm-dialog-botoes {
+  display: flex;
+  gap: 8px;
+}
+
+.confirm-dialog-botoes .btn {
+  flex: 1;
+}
+
+/* ------------------------------------------------------------- passport -- */
+
+.visitor-pass-shareline {
+  margin: 12px 18px 0;
+  font-size: 11.5px;
+  color: var(--q-dust);
+  text-align: center;
+  word-break: break-all;
+}

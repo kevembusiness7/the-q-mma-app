@@ -27,6 +27,12 @@ import { TermsPage } from './pages/TermsPage';
 import { DeleteAccountPage } from './pages/DeleteAccountPage';
 import { AdminAuctionQueuePage } from './pages/AdminAuctionQueuePage';
 import { OrdersPage } from './pages/OrdersPage';
+import { VisitorRequestPage } from './pages/VisitorRequestPage';
+import { MyVisitorRequestPage } from './pages/MyVisitorRequestPage';
+import { AdminVisitorsPage } from './pages/AdminVisitorsPage';
+import { VisitorWaiverPage } from './pages/VisitorWaiverPage';
+import { VisitorPassPage } from './pages/VisitorPassPage';
+import { AdminFightsPage } from './pages/AdminFightsPage';
 import { CartProvider } from './context/CartContext';
 import { NavigationProvider, useNav } from './context/NavigationContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -95,6 +101,16 @@ function Screens() {
       return <ProductPage productId={overlay.productId} />;
     case 'fighter':
       return <FighterPage slug={overlay.slug} />;
+    case 'visitor-request':
+      return <VisitorRequestPage />;
+    case 'my-visitor-request':
+      return <MyVisitorRequestPage />;
+    case 'admin-visitors':
+      return <AdminVisitorsPage />;
+    case 'visitor-waiver':
+      return <VisitorWaiverPage requestId={overlay.requestId} />;
+    case 'admin-fights':
+      return <AdminFightsPage />;
     default:
       return <TheQPage onNavigate={(destino) => openOverlay({ name: destino })} />;
   }
@@ -243,10 +259,22 @@ function certificadoDaUrl(): string | null {
   return match ? decodeURIComponent(match[1]) : null;
 }
 
+/** Mesmo motivo do certificado, agora para o QR Code do Visitor Pass. */
+function visitorPassDaUrl(): string | null {
+  if (typeof window === 'undefined') return null;
+  const match = window.location.pathname.match(/^\/visitor-pass\/([^/]+)\/?$/);
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
 function App() {
   const codigoCertificado = certificadoDaUrl();
   if (codigoCertificado) {
     return <CertificatePage code={codigoCertificado} />;
+  }
+
+  const codigoVisitorPass = visitorPassDaUrl();
+  if (codigoVisitorPass) {
+    return <VisitorPassPage code={codigoVisitorPass} />;
   }
 
   // Mesmo motivo do certificado: as lojas (Apple/Google) exigem uma URL
