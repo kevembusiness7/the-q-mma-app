@@ -36,6 +36,14 @@
     background: var(--color-bg-main);
   }
 
+  /* Sem o elástico do iOS: puxar além do topo descolava o hero da borda e
+     abria uma faixa preta morta acima do logo. none também corta o
+     pull-to-refresh, que não faz sentido num app que já é ao vivo. */
+  html,
+  body {
+    overscroll-behavior-y: none;
+  }
+
   body {
     font-family: var(--font-body);
     color: var(--color-text-primary);
