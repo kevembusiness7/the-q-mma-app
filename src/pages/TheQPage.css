@@ -149,10 +149,10 @@
   outline-offset: -2px;
 }
 
-/* O último banner (Instagram) fica separado do feed. */
-.news-feed + .banner-btn {
-  margin-top: 18px;
-}
+/* Nenhuma margem extra entre o feed e o primeiro banner (Visitor Class):
+   o respiro fica só no padding-bottom do próprio feed, calibrado pra ser o
+   mesmo vão que os banners têm entre si (~14px, os ~7px embutidos em cada
+   arte). */
 
 /* Feed rolável, com só 2 cards inteiros visíveis -- o resto é rolagem
    normal, sem pedaço de card espiando embaixo pra sugerir "tem mais". Card
@@ -163,7 +163,7 @@
    163px), com folga. Se as duas primeiras notícias mudarem pra um texto
    ainda mais longo, pode precisar subir de novo. */
 .news-feed {
-  padding: 0 12px 26px 18px;
+  padding: 0 12px 14px 18px;
   display: flex;
   flex-direction: column;
   gap: 14px;
