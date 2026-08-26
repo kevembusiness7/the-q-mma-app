@@ -61,14 +61,14 @@ export function TheQPage({ onNavigate }: TheQPageProps) {
         onClick={go('my-visitor-request')}
       />
       <BannerLink
-        src="/images/brand/banner-coaches.png"
-        alt="Conhecer os treinadores"
-        onClick={go('coaches')}
-      />
-      <BannerLink
         src="/images/brand/banner-athletes.jpg"
         alt="Ver os atletas do time"
         onClick={go('athletes')}
+      />
+      <BannerLink
+        src="/images/brand/banner-coaches.png"
+        alt="Conhecer os treinadores"
+        onClick={go('coaches')}
       />
       <BannerLink
         src="/images/brand/banner-promotions.png"
