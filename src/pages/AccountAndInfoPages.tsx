@@ -97,12 +97,8 @@ export function YouPage() {
 
       {aba === 'main' ? (
         <div className="menu-grade">
-          <MenuCard rotulo="Athletes" onClick={() => openOverlay({ name: 'athletes' })}>
-            <IconeCorredor />
-          </MenuCard>
-          <MenuCard rotulo="Shop" onClick={() => openOverlay({ name: 'shop' })}>
-            <IconeSacola />
-          </MenuCard>
+          {/* Athletes e Shop entram pelos banners da home -- eram os mesmos
+              destinos duplicados aqui. */}
           <MenuCard rotulo="Cart" badge={count} onClick={() => openOverlay({ name: 'cart' })}>
             <IconeCarrinho />
           </MenuCard>
@@ -237,26 +233,6 @@ function Svg({ children }: { children: ReactNode }) {
     >
       {children}
     </svg>
-  );
-}
-
-function IconeCorredor() {
-  return (
-    <Svg>
-      <circle cx="14.5" cy="4.5" r="2" />
-      <path d="M9.5 20.5l2.7-4.7-2.4-2.6 3.2-3.7 3.2 2.3 3.3.6" />
-      <path d="M12.8 9.2L10 8l-3 2.5" />
-      <path d="M3.5 12.5h3M2.5 16h3.5M2 19.5h4" />
-    </Svg>
-  );
-}
-
-function IconeSacola() {
-  return (
-    <Svg>
-      <path d="M5.5 8h13l-1.2 12.5H6.7z" />
-      <path d="M9 8V6a3 3 0 016 0v2" />
-    </Svg>
   );
 }
 
