@@ -120,6 +120,10 @@ export function useMeusPedidos(usuarioId: string | null) {
     const { data, error } = await supabase
       .from('orders')
       .select('*, order_items(*)')
+      // O RLS deixa admin ler TODOS os pedidos (pra fila de despacho) -- sem
+      // este filtro, o My orders de uma conta admin listava as compras de
+      // todo mundo. Aqui é sempre "os meus", seja admin ou não.
+      .eq('user_id', usuarioId)
       // Pedido abandonado no Stripe não interessa ao cliente — só confunde.
       .neq('payment_status', 'awaiting_payment')
       .order('created_at', { ascending: false })

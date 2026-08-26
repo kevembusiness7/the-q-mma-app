@@ -51,6 +51,10 @@ export function useMinhasPromocoes(usuarioId: string | null) {
     const { data, error } = await supabase
       .from('promotion_requests')
       .select('*')
+      // O RLS deixa admin ler TODAS as promoções (pra fila do painel) -- sem
+      // este filtro, o My promotions de uma conta admin listava as reservas
+      // de todo mundo. Aqui é sempre "as minhas", seja admin ou não.
+      .eq('user_id', usuarioId)
       .neq('payment_status', 'awaiting_payment')
       .order('created_at', { ascending: false })
 
