@@ -56,20 +56,11 @@ export function MyVisitorRequestPage() {
 
       {carregandoAuth || carregando ? (
         <p className="empty">Loading…</p>
-      ) : !usuario ? (
-        <div className="auth-aviso">
-          <h3>Sign in to see your request</h3>
-          <p>Visitor requests, waivers, and passes are tied to your account.</p>
-          <button type="button" className="btn" onClick={() => openOverlay({ name: 'auth' })}>
-            Sign in
-          </button>
-        </div>
-      ) : erro ? (
-        <p className="empty">Could not load your request: {erro}</p>
-      ) : !request || NAO_ATIVO.has(request.status) ? (
-        <div className="auth-aviso">
-          {request && NAO_ATIVO.has(request.status) ? (
-            <>
+      ) : !usuario || !request || NAO_ATIVO.has(request.status) ? (
+        <>
+          {erro && <p className="empty">Could not load your request: {erro}</p>}
+          {usuario && request && NAO_ATIVO.has(request.status) && (
+            <div className="auth-aviso">
               <h3>
                 {request.status === 'rejected'
                   ? 'Your last request was not approved'
@@ -83,17 +74,21 @@ export function MyVisitorRequestPage() {
               {request.status === 'expired' && (
                 <p>Your Visitor Pass is no longer valid. Submit a new request to train again.</p>
               )}
-            </>
-          ) : (
-            <>
-              <h3>Visit THE Q MMA</h3>
-              <p>Request a trial class at the academy. Our team reviews every request personally.</p>
-            </>
+            </div>
           )}
-          <button type="button" className="btn" onClick={() => openOverlay({ name: 'visitor-request' })}>
-            Request a Visitor Class
-          </button>
-        </div>
+          {/* A mesma caixa pra visitante deslogado: o formulário
+              (VisitorRequestPage) é quem pede o login na hora certa. */}
+          <div className="visitor-cta-card">
+            <span className="visitor-cta-eyebrow">Las Vegas, NV</span>
+            <h3>Visit The Academy</h3>
+            <p>Request a trial class at THE Q MMA. Our team reviews every request personally.</p>
+            <button type="button" className="btn" onClick={() => openOverlay({ name: 'visitor-request' })}>
+              Request a Visitor Class
+            </button>
+          </div>
+        </>
+      ) : erro ? (
+        <p className="empty">Could not load your request: {erro}</p>
       ) : (
         <div className="pedido-detalhe">
           <div className="ticket-topo">
