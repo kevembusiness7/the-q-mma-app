@@ -2,10 +2,40 @@ import { useState } from 'react';
 import { useNav } from '../context/NavigationContext';
 import { fighters } from '../data/fighters';
 import { useProducts } from '../hooks/useProducts';
+import { useAthletes } from '../hooks/useAthletes';
 import { ProductCard } from '../components/shop/ShopParts';
 import type { ScheduledBout } from '../data/fighters';
+import type { AthleteWithFights, FightRecord } from '../types/athlete';
 import '../styles/shop.css';
 import '../styles/fighter.css';
+
+/**
+ * Converte uma luta do banco (tabela `fights`, editada em Fight records no
+ * painel admin) pro formato que o BoutCard já entendia. Assim a aba Fights
+ * fica em dia sozinha com o que o admin cadastra, e o mock de
+ * src/data/fighters.ts segue como reserva pra quem não está no banco.
+ */
+function boutDoBanco(fight: FightRecord, atleta: AthleteWithFights): ScheduledBout {
+  const [ano, mes, dia] = fight.eventDate.split('-').map(Number);
+  const quando = new Date(ano, mes - 1, dia).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+  return {
+    opponent: fight.opponentName,
+    opponentRecord: fight.opponentRecord ?? '',
+    myRecord: atleta.record,
+    division: atleta.division,
+    when: `${fight.eventName} · ${quando}`,
+    result: fight.result === 'win' || fight.result === 'loss' ? fight.result : undefined,
+    method: fight.method || undefined,
+    time: [fight.round, fight.time].filter(Boolean).join(' · ') || undefined,
+    venue: fight.venue ?? undefined,
+    city: fight.city ?? undefined,
+    broadcaster: fight.broadcaster ?? undefined,
+  };
+}
 
 type Panel = 'profile' | 'fights' | 'products';
 
@@ -47,9 +77,20 @@ export function FighterPage({ slug }: { slug: string }) {
   const fighter = fighters.find((f) => f.slug === slug);
   const { closeOverlay, openOverlay } = useNav();
   const { produtos } = useProducts();
+  const { athletes } = useAthletes();
   const [panel, setPanel] = useState<Panel>('profile');
   const [showRecord, setShowRecord] = useState(false);
   const [following, setFollowing] = useState(false);
+
+  // Banco primeiro, mock como reserva -- mesma ordem de useAthletes.
+  const atletaDb = athletes.find((a) => a.slug === slug) ?? null;
+  const proximaLuta = atletaDb?.nextFight
+    ? boutDoBanco(atletaDb.nextFight, atletaDb)
+    : fighter?.nextFight;
+  const ultimaLuta = atletaDb?.lastFight
+    ? boutDoBanco(atletaDb.lastFight, atletaDb)
+    : fighter?.lastFight;
+  const recordAtual = atletaDb?.record ?? fighter?.record;
 
   if (!fighter) {
     return (
@@ -94,7 +135,7 @@ export function FighterPage({ slug }: { slug: string }) {
         </h2>
         <div className="recordrow">
           <div>
-            <b>{fighter.record}</b>
+            <b>{recordAtual}</b>
             <i>Record</i>
           </div>
           <div>
@@ -150,8 +191,8 @@ export function FighterPage({ slug }: { slug: string }) {
 
       {panel === 'fights' && (
         <div className="panel">
-          {fighter.nextFight ? (
-            <BoutCard bout={fighter.nextFight} isNext />
+          {proximaLuta ? (
+            <BoutCard bout={proximaLuta} isNext />
           ) : (
             <div className="fightcard next">
               <div className="when">Next fight</div>
@@ -162,7 +203,7 @@ export function FighterPage({ slug }: { slug: string }) {
             </div>
           )}
 
-          {fighter.lastFight && <BoutCard bout={fighter.lastFight} isNext={false} />}
+          {ultimaLuta && <BoutCard bout={ultimaLuta} isNext={false} />}
 
           <button
             type="button"
@@ -170,7 +211,7 @@ export function FighterPage({ slug }: { slug: string }) {
             onClick={() => setShowRecord((v) => !v)}
             aria-expanded={showRecord}
           >
-            {showRecord ? 'Hide full record' : `View full record (${fighter.record})`}
+            {showRecord ? 'Hide full record' : `View full record (${recordAtual})`}
           </button>
 
           {showRecord && (
