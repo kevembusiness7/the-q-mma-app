@@ -161,21 +161,21 @@
    mesmo vão que os banners têm entre si (~14px, os ~7px embutidos em cada
    arte). */
 
-/* Feed rolável, com só 2 cards inteiros visíveis -- o resto é rolagem
-   normal, sem pedaço de card espiando embaixo pra sugerir "tem mais". Card
-   não tem altura fixa (a foto só acompanha o texto via align-self:stretch),
-   então a altura de "2 cards" varia com o tamanho do título/descrição de
-   cada notícia -- calculado pelo par mais alto que apareceu até agora
-   (Dione: título de 2 linhas + descrição de 3 linhas ≈ 182px; Ozzy: ≈
-   163px), com folga. Se as duas primeiras notícias mudarem pra um texto
-   ainda mais longo, pode precisar subir de novo. */
+/* Feed rolável mostrando SEMPRE 2 cards inteiros, nunca um pedaço do
+   terceiro espiando embaixo. A receita: todo card tem a MESMA altura
+   (--news-card-h, com título/descrição cortados por line-clamp pra nunca
+   estourar), o feed mede exatos 2 cards + 1 vão, e o scroll-snap faz a
+   rolagem sempre parar alinhada num par -- o próximo card começa 14px
+   abaixo da borda, fora da vista, em qualquer posição. */
 .news-feed {
+  --news-card-h: 184px;
   padding: 0 12px 14px 18px;
   display: flex;
   flex-direction: column;
   gap: 14px;
-  max-height: 375px;
+  max-height: calc(2 * var(--news-card-h) + 14px + 14px);
   overflow-y: auto;
+  scroll-snap-type: y mandatory;
   scrollbar-width: thin;
   scrollbar-color: var(--gold, #c8a03c) transparent;
 }
@@ -204,6 +204,10 @@
   flex: none;
   display: flex;
   gap: 14px;
+  /* Altura idêntica em todo card é o que garante os "2 por vez" exatos do
+     feed -- texto que não couber é cortado pelos line-clamp abaixo. */
+  height: var(--news-card-h, 184px);
+  scroll-snap-align: start;
   background: var(--canvas-2, #262120);
   border: 1px solid var(--gold, #c8a03c);
   border-radius: 16px;
@@ -265,6 +269,10 @@
   font-size: 15px;
   font-weight: 600;
   line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .news-card p {
@@ -272,13 +280,20 @@
   font-size: 12.5px;
   line-height: 1.5;
   color: var(--dust, #948a81);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .news-card .ndate {
   display: flex;
   align-items: center;
   gap: 5px;
-  margin-top: 10px;
+  /* auto empurra a data pro pé do card -- com altura fixa, texto curto
+     deixaria a data flutuando no meio. */
+  margin-top: auto;
+  padding-top: 8px;
   font-family: var(--mono, ui-monospace, monospace);
   font-size: 10.5px;
   color: var(--dust, #948a81);
