@@ -118,9 +118,8 @@ export function YouPage() {
           <MenuCard rotulo="My Bids" onClick={() => openOverlay({ name: usuario ? 'my-bids' : 'auth' })}>
             <IconeMartelo />
           </MenuCard>
-          <MenuCard rotulo="My Visitor Request" onClick={() => openOverlay({ name: 'my-visitor-request' })}>
-            <IconeCracha />
-          </MenuCard>
+          {/* Pedido de visita entra só pelo banner da home -- era o mesmo
+              destino duplicado aqui. */}
           <MenuCard rotulo="Addresses & Payment" breve>
             <IconeCarteira />
           </MenuCard>
@@ -295,18 +294,6 @@ function IconeMartelo() {
     <Svg>
       <path d="M14 3l7 7-8.5 8.5a2.12 2.12 0 01-3 0l-4-4a2.12 2.12 0 010-3L14 3z" />
       <path d="M4.5 15.5L2 22l6.5-2.5" />
-    </Svg>
-  );
-}
-
-function IconeCracha() {
-  return (
-    <Svg>
-      <rect x="3" y="5" width="18" height="14" rx="2" />
-      <path d="M10 5V3h4v2" />
-      <circle cx="8.7" cy="10.5" r="1.8" />
-      <path d="M5.8 15.5a3 3 0 015.8 0" />
-      <path d="M14.5 9.5h4M14.5 12.2h4M14.5 14.9h3" />
     </Svg>
   );
 }
