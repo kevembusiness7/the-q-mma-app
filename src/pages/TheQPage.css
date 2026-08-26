@@ -144,6 +144,13 @@
   display: block;
 }
 
+/* Respiro extra pra igualar o vão Shop Now -> Vault (~12px na tela, quase
+   todo embutido na arte do Shop Now). A arte de Coaches/Promotions quase não
+   tem preto embutido (~3px somados), então os ~9px que faltam entram aqui. */
+.banner-btn.banner-respiro {
+  margin-top: 9px;
+}
+
 .banner-btn:focus-visible {
   outline: 2px solid var(--gold, #c8a03c);
   outline-offset: -2px;

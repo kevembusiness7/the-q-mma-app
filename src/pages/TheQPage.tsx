@@ -74,6 +74,7 @@ export function TheQPage({ onNavigate }: TheQPageProps) {
         src="/images/brand/banner-promotions.png"
         alt="Divulgar sua marca com um atleta"
         onClick={go('promotions')}
+        className="banner-respiro"
       />
       <BannerLink
         src="/images/brand/banner-shopnow.png"
