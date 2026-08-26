@@ -19,22 +19,20 @@
   padding: 0;
 }
 
-/* Âncora para o botão de conta, que flutua sobre a arte do hero.
-   A margem negativa anula o padding-top de área segura do <main>
-   (AppShell.tsx) SÓ aqui: a arte do hero sobe e preenche a faixa atrás da
-   status bar do iPhone, em vez de deixar um vão preto morto acima dela.
-   As outras telas continuam empurradas pra baixo da área segura. */
+/* Âncora para o botão de conta, que flutua sobre a arte do hero. */
 .theq-hero {
   position: relative;
-  margin-top: calc(-1 * env(safe-area-inset-top, 0px));
 }
 
-/* Canto superior direito do hero. Como o hero se estende por baixo da status
-   bar, o botão precisa somar a área segura de volta pra continuar numa zona
-   onde o iOS aceita toque. */
+/* Canto superior direito do hero. O respiro da notch vem do padding-top do
+   <main> (AppShell.tsx), que empurra a tela toda -- inclusive este hero --
+   para baixo da área segura. Esse offset é só a folga visual dentro do hero.
+   (A tentativa de subir o hero por baixo da status bar com margem negativa
+   não funcionou no app nativo por causa do contentInset automático do
+   WKWebView -- ver capacitor.config.ts; o ajuste certo é lá, no build.) */
 .theq-you {
   position: absolute;
-  top: calc(12px + env(safe-area-inset-top, 0px));
+  top: 12px;
   right: 14px;
   z-index: 5;
   display: flex;

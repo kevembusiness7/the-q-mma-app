@@ -19,7 +19,14 @@ const config: CapacitorConfig = {
     androidScheme: 'https',
   },
   ios: {
-    contentInset: 'automatic',
+    // 'never' (o padrão do Capacitor): o WKWebView não empurra a página pra
+    // baixo por conta própria -- quem afasta o conteúdo da status bar é só o
+    // env(safe-area-inset-top) do CSS (AppShell.tsx), igual ao PWA. Com
+    // 'automatic' o iOS somava um recuo nativo POR CIMA do recuo do CSS e
+    // abria uma faixa preta morta no topo de todas as telas do app nativo.
+    // Esta mudança só vale a partir do próximo build iOS (config é embutida
+    // no instalador).
+    contentInset: 'never',
   },
   backgroundColor: '#0b0908',
   plugins: {
