@@ -1,0 +1,173 @@
+/* Tela You no formato "Menu": título serifado, abas Main | Admin e grade de
+   cards com ícones dourados. Reaproveita os tokens de shop.css. */
+
+.menu-cabeca {
+  padding: 6px 18px 2px;
+  text-align: center;
+}
+
+.menu-titulo {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: 34px;
+  letter-spacing: 0.02em;
+  color: #f5efe4;
+  text-shadow: 0 0 18px rgba(228, 184, 61, 0.25);
+}
+
+.menu-divisor {
+  width: 74px;
+  height: 2px;
+  margin: 10px auto 0;
+  background: linear-gradient(90deg, transparent, var(--q-gold, #c8a03c), transparent);
+  border-radius: 2px;
+}
+
+/* ------------------------------------------------------------- abas pill -- */
+
+.menu-abas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin: 18px 18px 20px;
+  padding: 4px;
+  border: 1px solid rgba(200, 160, 60, 0.45);
+  border-radius: 999px;
+  background: rgba(200, 160, 60, 0.04);
+}
+
+.menu-aba {
+  padding: 11px 10px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: none;
+  color: var(--q-dust, #948a81);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.menu-aba.on {
+  border-color: rgba(228, 184, 61, 0.7);
+  background: rgba(200, 160, 60, 0.12);
+  color: var(--q-gold, #c8a03c);
+  box-shadow: 0 0 14px rgba(228, 184, 61, 0.18);
+}
+
+/* ----------------------------------------------------------------- grade -- */
+
+.menu-grade {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  padding: 0 18px;
+}
+
+.menu-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 30px 10px 26px;
+  border: 1px solid rgba(200, 160, 60, 0.45);
+  border-radius: 16px;
+  background: radial-gradient(130% 110% at 50% 0%, #17120b 0%, #0b0907 62%);
+  color: #f2ead9;
+  font: inherit;
+  font-size: 15px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.menu-card:active {
+  transform: scale(0.97);
+}
+
+.menu-card-icone {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.menu-card-icone svg {
+  width: 52px;
+  height: 52px;
+  color: #e4b83d;
+  filter: drop-shadow(0 3px 8px rgba(228, 184, 61, 0.3));
+}
+
+/* Reflexo dourado embaixo do ícone, como no mock. */
+.menu-card-icone::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: 52px;
+  height: 10px;
+  transform: translateX(-50%);
+  background: radial-gradient(50% 50% at 50% 50%, rgba(228, 184, 61, 0.4), transparent 70%);
+  filter: blur(2px);
+}
+
+.menu-card-rotulo {
+  line-height: 1.25;
+}
+
+/* Card desativado (Addresses & Payment). */
+.menu-card.breve {
+  cursor: default;
+  border-color: rgba(148, 138, 129, 0.35);
+}
+
+.menu-card.breve .menu-card-icone svg {
+  color: #8a8378;
+  filter: none;
+}
+
+.menu-card.breve .menu-card-icone::after {
+  display: none;
+}
+
+.menu-card.breve .menu-card-rotulo {
+  color: var(--q-dust, #948a81);
+}
+
+.menu-card-breve {
+  font-family: var(--q-mono, ui-monospace, monospace);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--q-gold, #c8a03c);
+}
+
+.menu-card-breve::before {
+  content: '— ';
+}
+
+.menu-card-breve::after {
+  content: ' —';
+}
+
+/* Contador (carrinho, pedidos de visita pendentes). */
+.menu-card-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  min-width: 21px;
+  padding: 3px 6px;
+  border-radius: 999px;
+  background: var(--q-gold, #c8a03c);
+  color: var(--q-ink, #0b0908);
+  font-family: var(--q-mono, ui-monospace, monospace);
+  font-size: 11px;
+  line-height: 1;
+  text-align: center;
+}
+
+/* ---------------------------------------------------------------- rodapé -- */
+
+.menu-rodape {
+  padding: 8px 18px 0;
+}

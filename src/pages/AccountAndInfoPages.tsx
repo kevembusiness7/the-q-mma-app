@@ -1,3 +1,4 @@
+import { useState, type ReactNode } from 'react';
 import { useCart } from '../context/CartContext';
 import { useNav } from '../context/NavigationContext';
 import { useAuth } from '../context/AuthContext';
@@ -7,14 +8,23 @@ import { useVisitorPendingCount } from '../hooks/useAdminVisitors';
 import '../styles/shop.css';
 import '../styles/auth.css';
 import '../styles/support.css';
+import '../styles/menu.css';
 
 /* ---------------------------------------------------------------- You ---- */
 
+type AbaMenu = 'main' | 'admin';
+
+/**
+ * Tela You no formato "Menu": grade de cards com ícones dourados, separada
+ * em Main (todo mundo) e Admin (só contas da equipe -- e esconder a aba é
+ * conveniência, não segurança: o RLS é quem barra de fato cada tela).
+ */
 export function YouPage() {
   const { count } = useCart();
   const { closeOverlay, openOverlay } = useNav();
   const { usuario, ehAdmin, carregando, sair } = useAuth();
   const pendentesVisitantes = useVisitorPendingCount(ehAdmin);
+  const [aba, setAba] = useState<AbaMenu>('main');
 
   const nome = (usuario?.user_metadata?.full_name as string | undefined) ?? usuario?.email ?? '';
   const inicial = nome.trim().charAt(0) || '?';
@@ -28,9 +38,13 @@ export function YouPage() {
               <path d="M15 5l-7 7 7 7" />
             </svg>
           </button>
-          <span className="wordmark">My account</span>
         </div>
       </header>
+
+      <div className="menu-cabeca">
+        <h2 className="menu-titulo">Menu</h2>
+        <div className="menu-divisor" />
+      </div>
 
       {usuario ? (
         <div className="conta-logada">
@@ -47,259 +61,346 @@ export function YouPage() {
           </button>
         </div>
       ) : (
-        <div className="memcard">
-          <div className="tier">Fan since 2024</div>
-          <h3>
-            Member
-            <br />
-            The Q MMA
-          </h3>
-          <p>Order updates, athlete news, and exclusive app releases.</p>
+        !carregando && (
+          <button
+            type="button"
+            className="listrow"
+            onClick={() => openOverlay({ name: 'auth' })}
+          >
+            Sign in or create account <span>›</span>
+          </button>
+        )
+      )}
+
+      {ehAdmin && (
+        <div className="menu-abas" role="tablist">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={aba === 'main'}
+            className={`menu-aba ${aba === 'main' ? 'on' : ''}`}
+            onClick={() => setAba('main')}
+          >
+            Main
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={aba === 'admin'}
+            className={`menu-aba ${aba === 'admin' ? 'on' : ''}`}
+            onClick={() => setAba('admin')}
+          >
+            Admin
+          </button>
         </div>
       )}
 
-      {!usuario && !carregando && (
-        <button
-          type="button"
-          className="listrow"
-          onClick={() => openOverlay({ name: 'auth' })}
-        >
-          Sign in or create account <span>›</span>
-        </button>
-      )}
-
-      <button type="button" className="listrow" onClick={() => openOverlay({ name: 'cart' })}>
-        Cart <span>{count}</span>
-      </button>
-      <button type="button" className="listrow" onClick={() => openOverlay({ name: 'athletes' })}>
-        Athletes <span>›</span>
-      </button>
-      <button type="button" className="listrow" onClick={() => openOverlay({ name: 'shop' })}>
-        Shop <span>›</span>
-      </button>
-
-      <button
-        type="button"
-        className="listrow"
-        onClick={() => openOverlay({ name: usuario ? 'orders' : 'auth' })}
-      >
-        My orders <span>{usuario ? '›' : 'Sign in'}</span>
-      </button>
-      <button
-        type="button"
-        className="listrow"
-        onClick={() => openOverlay({ name: usuario ? 'my-promotions' : 'auth' })}
-      >
-        My promotions <span>{usuario ? '›' : 'Sign in'}</span>
-      </button>
-      <button
-        type="button"
-        className="listrow"
-        onClick={() => openOverlay({ name: usuario ? 'my-bids' : 'auth' })}
-      >
-        My bids <span>{usuario ? '›' : 'Sign in'}</span>
-      </button>
-      <button
-        type="button"
-        className="listrow"
-        onClick={() => openOverlay({ name: usuario ? 'my-visitor-request' : 'auth' })}
-      >
-        My visitor request <span>{usuario ? '›' : 'Sign in'}</span>
-      </button>
-      <button type="button" className="listrow" disabled>
-        Addresses &amp; payment <span>{usuario ? 'Em breve' : 'Sign in'}</span>
-      </button>
-      <button
-        type="button"
-        className="listrow"
-        onClick={() => openOverlay({ name: 'support' })}
-      >
-        <span className="listrow-titulo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
-            <path d="M4 14v-2a8 8 0 0116 0v2" />
-            <path d="M4 14h2a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1z" />
-            <path d="M20 14h-2a1 1 0 00-1 1v3a1 1 0 001 1h1a1 1 0 001-1z" />
-            <path d="M20 19a3 3 0 01-3 3h-2" />
-          </svg>
-          Help &amp; Support
-        </span>
-        <span>›</span>
-      </button>
-
-      {/* Esconder a linha é conveniência, não segurança: quem barra de fato é
-          o RLS no Supabase, que só entrega os chamados a quem é admin. */}
-      {ehAdmin && (
-        <button
-          type="button"
-          className="listrow"
-          onClick={() => openOverlay({ name: 'admin-orders' })}
-        >
-          <span className="listrow-titulo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
-              <path d="M3 7l9-4 9 4-9 4-9-4z" />
-              <path d="M3 7v10l9 4 9-4V7" />
-              <path d="M12 11v10" />
-            </svg>
-            Orders to ship
-          </span>
-          <span>›</span>
-        </button>
-      )}
-
-      {ehAdmin && (
-        <button
-          type="button"
-          className="listrow"
-          onClick={() => openOverlay({ name: 'admin-support' })}
-        >
-          <span className="listrow-titulo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
-              <path d="M4 5h16v11H8l-4 4z" />
-            </svg>
-            Support inbox
-          </span>
-          <span>›</span>
-        </button>
-      )}
-
-      {ehAdmin && (
-        <button
-          type="button"
-          className="listrow"
-          onClick={() => openOverlay({ name: 'admin-news' })}
-        >
-          <span className="listrow-titulo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
-              <rect x="3" y="4" width="18" height="16" rx="2" />
-              <path d="M7 8h10M7 12h10M7 16h6" />
-            </svg>
-            News &amp; Events
-          </span>
-          <span>›</span>
-        </button>
-      )}
-
-      {ehAdmin && (
-        <button
-          type="button"
-          className="listrow"
-          onClick={() => openOverlay({ name: 'admin-promotion-athletes' })}
-        >
-          <span className="listrow-titulo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
-              <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-            </svg>
-            Promotion athletes
-          </span>
-          <span>›</span>
-        </button>
-      )}
-
-      {ehAdmin && (
-        <button
-          type="button"
-          className="listrow"
-          onClick={() => openOverlay({ name: 'admin-promotions' })}
-        >
-          <span className="listrow-titulo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
-              <path d="M9 11l3 3L22 4" />
-              <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
-            </svg>
-            Promotion requests
-          </span>
-          <span>›</span>
-        </button>
-      )}
-
-      {ehAdmin && (
-        <button
-          type="button"
-          className="listrow"
-          onClick={() => openOverlay({ name: 'admin-auctions' })}
-        >
-          <span className="listrow-titulo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
-              <path d="M14 3l7 7-8.5 8.5a2.12 2.12 0 01-3 0l-4-4a2.12 2.12 0 010-3L14 3z" />
-              <path d="M14 3l7 7" />
-              <path d="M4.5 15.5L2 22l6.5-2.5" />
-            </svg>
-            Vault items
-          </span>
-          <span>›</span>
-        </button>
-      )}
-
-      {ehAdmin && (
-        <button
-          type="button"
-          className="listrow"
-          onClick={() => openOverlay({ name: 'admin-auction-queue' })}
-        >
-          <span className="listrow-titulo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
-              <rect x="3" y="4" width="18" height="16" rx="2" />
-              <path d="M8 2v4M16 2v4M3 10h18" />
-              <path d="M8 15l2.5 2.5L16 12" />
-            </svg>
-            Vault orders &amp; bids
-          </span>
-          <span>›</span>
-        </button>
-      )}
-
-      {ehAdmin && (
-        <button
-          type="button"
-          className="listrow"
-          onClick={() => openOverlay({ name: 'admin-fights' })}
-        >
-          <span className="listrow-titulo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
-              <path d="M7 4h10v5a5 5 0 01-10 0z" />
-              <path d="M7 6H4v2a3 3 0 003 3M17 6h3v2a3 3 0 01-3 3" />
-              <path d="M12 14v3M9 20h6M10 17h4" />
-            </svg>
-            Fight records
-          </span>
-          <span>›</span>
-        </button>
-      )}
-
-      {ehAdmin && (
-        <button
-          type="button"
-          className="listrow"
-          onClick={() => openOverlay({ name: 'admin-visitors' })}
-        >
-          <span className="listrow-titulo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
-              <circle cx="12" cy="8.5" r="3.5" />
-              <path d="M5 20a7 7 0 0 1 14 0" />
-            </svg>
-            Visitor requests
-          </span>
-          <span>{pendentesVisitantes > 0 ? pendentesVisitantes : '›'}</span>
-        </button>
-      )}
-
-      <p className="cart-note" style={{ textAlign: 'center', margin: '18px 0 0' }}>
-        <a href="/terms">Terms of Service</a> · <a href="/privacy">Privacy Policy</a>
-      </p>
-
-      {usuario && (
-        <p style={{ textAlign: 'center', margin: '10px 0 0' }}>
-          <button
-            type="button"
-            className="empty-link"
-            style={{ fontSize: 12 }}
-            onClick={() => openOverlay({ name: 'delete-account' })}
+      {aba === 'main' ? (
+        <div className="menu-grade">
+          <MenuCard rotulo="Athletes" onClick={() => openOverlay({ name: 'athletes' })}>
+            <IconeCorredor />
+          </MenuCard>
+          <MenuCard rotulo="Shop" onClick={() => openOverlay({ name: 'shop' })}>
+            <IconeSacola />
+          </MenuCard>
+          <MenuCard rotulo="Cart" badge={count} onClick={() => openOverlay({ name: 'cart' })}>
+            <IconeCarrinho />
+          </MenuCard>
+          <MenuCard rotulo="My Orders" onClick={() => openOverlay({ name: usuario ? 'orders' : 'auth' })}>
+            <IconeCaixa />
+          </MenuCard>
+          <MenuCard
+            rotulo="My Promotions"
+            onClick={() => openOverlay({ name: usuario ? 'my-promotions' : 'auth' })}
           >
-            Delete account
-          </button>
-        </p>
+            <IconeIngresso />
+          </MenuCard>
+          <MenuCard rotulo="My Bids" onClick={() => openOverlay({ name: usuario ? 'my-bids' : 'auth' })}>
+            <IconeMartelo />
+          </MenuCard>
+          <MenuCard rotulo="My Visitor Request" onClick={() => openOverlay({ name: 'my-visitor-request' })}>
+            <IconeCracha />
+          </MenuCard>
+          <MenuCard rotulo="Addresses & Payment" breve>
+            <IconeCarteira />
+          </MenuCard>
+          <MenuCard rotulo="Help & Support" onClick={() => openOverlay({ name: 'support' })}>
+            <IconeFone />
+          </MenuCard>
+        </div>
+      ) : (
+        <div className="menu-grade">
+          <MenuCard rotulo="Orders to Ship" onClick={() => openOverlay({ name: 'admin-orders' })}>
+            <IconeCaixa />
+          </MenuCard>
+          <MenuCard rotulo="Support Inbox" onClick={() => openOverlay({ name: 'admin-support' })}>
+            <IconeBalao />
+          </MenuCard>
+          <MenuCard rotulo="News & Events" onClick={() => openOverlay({ name: 'admin-news' })}>
+            <IconeJornal />
+          </MenuCard>
+          <MenuCard
+            rotulo="Promotion Athletes"
+            onClick={() => openOverlay({ name: 'admin-promotion-athletes' })}
+          >
+            <IconePulso />
+          </MenuCard>
+          <MenuCard rotulo="Promotion Requests" onClick={() => openOverlay({ name: 'admin-promotions' })}>
+            <IconeChecagem />
+          </MenuCard>
+          <MenuCard rotulo="Vault Items" onClick={() => openOverlay({ name: 'admin-auctions' })}>
+            <IconeEtiqueta />
+          </MenuCard>
+          <MenuCard rotulo="Vault Orders & Bids" onClick={() => openOverlay({ name: 'admin-auction-queue' })}>
+            <IconeAgenda />
+          </MenuCard>
+          <MenuCard rotulo="Fight Records" onClick={() => openOverlay({ name: 'admin-fights' })}>
+            <IconeTrofeu />
+          </MenuCard>
+          <MenuCard
+            rotulo="Visitor Requests"
+            badge={pendentesVisitantes}
+            onClick={() => openOverlay({ name: 'admin-visitors' })}
+          >
+            <IconePessoa />
+          </MenuCard>
+        </div>
       )}
+
+      <div className="menu-rodape">
+        <p className="cart-note" style={{ textAlign: 'center', margin: '18px 0 0' }}>
+          <a href="/terms">Terms of Service</a> · <a href="/privacy">Privacy Policy</a>
+        </p>
+
+        {usuario && (
+          <p style={{ textAlign: 'center', margin: '10px 0 0' }}>
+            <button
+              type="button"
+              className="empty-link"
+              style={{ fontSize: 12 }}
+              onClick={() => openOverlay({ name: 'delete-account' })}
+            >
+              Delete account
+            </button>
+          </p>
+        )}
+      </div>
     </div>
+  );
+}
+
+/* --------------------------------------------------------- card do menu -- */
+
+function MenuCard({
+  rotulo,
+  badge,
+  breve,
+  onClick,
+  children,
+}: {
+  rotulo: string;
+  badge?: number;
+  breve?: boolean;
+  onClick?: () => void;
+  children: ReactNode;
+}) {
+  if (breve) {
+    return (
+      <div className="menu-card breve">
+        <span className="menu-card-icone">{children}</span>
+        <span className="menu-card-rotulo">{rotulo}</span>
+        <span className="menu-card-breve">Coming Soon</span>
+      </div>
+    );
+  }
+
+  return (
+    <button type="button" className="menu-card" onClick={onClick}>
+      {badge !== undefined && badge > 0 && <span className="menu-card-badge">{badge}</span>}
+      <span className="menu-card-icone">{children}</span>
+      <span className="menu-card-rotulo">{rotulo}</span>
+    </button>
+  );
+}
+
+/* Ícones em traço, todos no mesmo peso, pra grade ler como uma família. */
+
+function Svg({ children }: { children: ReactNode }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {children}
+    </svg>
+  );
+}
+
+function IconeCorredor() {
+  return (
+    <Svg>
+      <circle cx="14.5" cy="4.5" r="2" />
+      <path d="M9.5 20.5l2.7-4.7-2.4-2.6 3.2-3.7 3.2 2.3 3.3.6" />
+      <path d="M12.8 9.2L10 8l-3 2.5" />
+      <path d="M3.5 12.5h3M2.5 16h3.5M2 19.5h4" />
+    </Svg>
+  );
+}
+
+function IconeSacola() {
+  return (
+    <Svg>
+      <path d="M5.5 8h13l-1.2 12.5H6.7z" />
+      <path d="M9 8V6a3 3 0 016 0v2" />
+    </Svg>
+  );
+}
+
+function IconeCarrinho() {
+  return (
+    <Svg>
+      <circle cx="9.5" cy="20" r="1.4" />
+      <circle cx="17" cy="20" r="1.4" />
+      <path d="M3 4h2.2L7.6 16h10.2l2.7-8.5H6" />
+    </Svg>
+  );
+}
+
+function IconeCaixa() {
+  return (
+    <Svg>
+      <path d="M3 7l9-4 9 4-9 4-9-4z" />
+      <path d="M3 7v10l9 4 9-4V7" />
+      <path d="M12 11v10" />
+    </Svg>
+  );
+}
+
+function IconeIngresso() {
+  return (
+    <Svg>
+      <path d="M3 8a2 2 0 002-2h14a2 2 0 002 2v2a2 2 0 000 4v2a2 2 0 00-2 2H5a2 2 0 00-2-2v-2a2 2 0 000-4z" />
+      <path d="M12 9.6l.8 1.6 1.8.3-1.3 1.2.3 1.8-1.6-.8-1.6.8.3-1.8-1.3-1.2 1.8-.3z" />
+    </Svg>
+  );
+}
+
+function IconeMartelo() {
+  return (
+    <Svg>
+      <path d="M14 3l7 7-8.5 8.5a2.12 2.12 0 01-3 0l-4-4a2.12 2.12 0 010-3L14 3z" />
+      <path d="M4.5 15.5L2 22l6.5-2.5" />
+    </Svg>
+  );
+}
+
+function IconeCracha() {
+  return (
+    <Svg>
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="M10 5V3h4v2" />
+      <circle cx="8.7" cy="10.5" r="1.8" />
+      <path d="M5.8 15.5a3 3 0 015.8 0" />
+      <path d="M14.5 9.5h4M14.5 12.2h4M14.5 14.9h3" />
+    </Svg>
+  );
+}
+
+function IconeCarteira() {
+  return (
+    <Svg>
+      <path d="M4 7h14a2 2 0 012 2v9a2 2 0 01-2 2H6a2 2 0 01-2-2z" />
+      <path d="M4 7V6a2 2 0 012-2h11" />
+      <circle cx="16.5" cy="14.5" r="1" />
+    </Svg>
+  );
+}
+
+function IconeFone() {
+  return (
+    <Svg>
+      <path d="M4 14v-2a8 8 0 0116 0v2" />
+      <path d="M4 14h2a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1z" />
+      <path d="M20 14h-2a1 1 0 00-1 1v3a1 1 0 001 1h1a1 1 0 001-1z" />
+      <path d="M20 19a3 3 0 01-3 3h-2" />
+    </Svg>
+  );
+}
+
+function IconeBalao() {
+  return (
+    <Svg>
+      <path d="M4 5h16v11H8l-4 4z" />
+    </Svg>
+  );
+}
+
+function IconeJornal() {
+  return (
+    <Svg>
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <path d="M7 8h10M7 12h10M7 16h6" />
+    </Svg>
+  );
+}
+
+function IconePulso() {
+  return (
+    <Svg>
+      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+    </Svg>
+  );
+}
+
+function IconeChecagem() {
+  return (
+    <Svg>
+      <path d="M9 11l3 3L22 4" />
+      <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+    </Svg>
+  );
+}
+
+function IconeEtiqueta() {
+  return (
+    <Svg>
+      <path d="M3 3h8l10 10-8 8L3 11z" />
+      <circle cx="7.5" cy="7.5" r="1.5" />
+    </Svg>
+  );
+}
+
+function IconeAgenda() {
+  return (
+    <Svg>
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <path d="M8 2v4M16 2v4M3 10h18" />
+      <path d="M8 15l2.5 2.5L16 12" />
+    </Svg>
+  );
+}
+
+function IconeTrofeu() {
+  return (
+    <Svg>
+      <path d="M7 4h10v5a5 5 0 01-10 0z" />
+      <path d="M7 6H4v2a3 3 0 003 3M17 6h3v2a3 3 0 01-3 3" />
+      <path d="M12 14v3M9 20h6M10 17h4" />
+    </Svg>
+  );
+}
+
+function IconePessoa() {
+  return (
+    <Svg>
+      <circle cx="12" cy="8.5" r="3.5" />
+      <path d="M5 20a7 7 0 0114 0" />
+    </Svg>
   );
 }
 
