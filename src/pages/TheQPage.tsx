@@ -1,5 +1,5 @@
 import { BannerLink } from '../components/theq/BannerLink';
-import { NewsCard } from '../components/theq/NewsCard';
+import { NewsCarousel } from '../components/theq/NewsCarousel';
 import { useNews } from '../hooks/useNews';
 import './TheQPage.css';
 
@@ -45,15 +45,13 @@ export function TheQPage({ onNavigate }: TheQPageProps) {
         <img src="/images/brand/banner-news.jpg" alt="Notícias e eventos" />
       </div>
 
-      <div className="news-feed">
-        {loading && news.length === 0 ? (
-          <p className="news-empty">Carregando novidades…</p>
-        ) : news.length === 0 ? (
-          <p className="news-empty">Nenhuma novidade por enquanto. Volte em breve.</p>
-        ) : (
-          news.map((item) => <NewsCard key={item.id} item={item} />)
-        )}
-      </div>
+      {loading && news.length === 0 ? (
+        <p className="news-empty">Carregando novidades…</p>
+      ) : news.length === 0 ? (
+        <p className="news-empty">Nenhuma novidade por enquanto. Volte em breve.</p>
+      ) : (
+        <NewsCarousel items={news} />
+      )}
 
       <BannerLink
         src="/images/brand/banner-visitorclass.png"

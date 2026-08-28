@@ -156,56 +156,111 @@
   outline-offset: -2px;
 }
 
-/* Nenhuma margem extra entre o feed e o primeiro banner (Visitor Class):
-   o respiro fica só no padding-bottom do próprio feed, calibrado pra ser o
-   mesmo vão que os banners têm entre si (~14px, os ~7px embutidos em cada
+/* Nenhuma margem extra entre o carrossel e o primeiro banner (Visitor Class):
+   o respiro fica só no padding-bottom do próprio carrossel, calibrado pra ser
+   o mesmo vão que os banners têm entre si (~14px, os ~7px embutidos em cada
    arte). */
+.news-carousel {
+  padding-bottom: 14px;
+}
 
-/* Feed rolável mostrando SEMPRE 2 cards inteiros, nunca um pedaço do
-   terceiro espiando embaixo. A receita: todo card tem a MESMA altura
-   (--news-card-h, com título/descrição cortados por line-clamp pra nunca
-   estourar), o feed mede exatos 2 cards + 1 vão, e o scroll-snap faz a
-   rolagem sempre parar alinhada num par -- o próximo card começa 14px
-   abaixo da borda, fora da vista, em qualquer posição. */
+/* Carrossel de notícias: UM card por tela, avançando sozinho a cada 5s (o
+   relógio e a pausa ao toque vivem em NewsCarousel.tsx). Aqui fica só o
+   trilho. A receita da largura: cada card é `flex: 0 0 100%` da área útil,
+   ou seja, largura da tela menos os 18px de padding de cada lado -- com isso
+   card + vão é sempre a mesma distância, e o componente calcula a posição de
+   qualquer índice multiplicando. O scroll-snap é o que garante que arrastar
+   com o dedo também pare sempre alinhado num card, nunca no meio de dois.
+   A altura continua fixa (--news-card-h, texto cortado por line-clamp) pra
+   seção não pular de tamanho quando a notícia seguinte tem texto menor. */
 .news-feed {
   --news-card-h: 184px;
-  padding: 0 12px 14px 18px;
+  padding: 0 18px;
   display: flex;
-  flex-direction: column;
   gap: 14px;
-  max-height: calc(2 * var(--news-card-h) + 14px + 14px);
-  overflow-y: auto;
-  scroll-snap-type: y mandatory;
-  scrollbar-width: thin;
-  scrollbar-color: var(--gold, #c8a03c) transparent;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 18px;
+  /* A barra some: quem indica posição são as bolinhas abaixo do trilho. */
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .news-feed::-webkit-scrollbar {
+  display: none;
+}
+
+/* Wrap porque o feed junta as notícias manuais com uma por luta do cartel de
+   cada atleta -- passar de 10 bolinhas é normal, e elas não podem estourar a
+   largura da tela. */
+.news-dots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 6px 4px;
+  margin-top: 10px;
+  padding: 0 18px;
+}
+
+/* O botão é bem maior que a bolinha que ele desenha -- a bolinha tem 6px,
+   mas o alvo de toque precisa dos ~20px pra ser pegável com o polegar. */
+.news-dot {
+  width: 20px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.news-dot::after {
+  content: '';
   width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--dust, #948a81);
+  opacity: 0.5;
+  transition: width 0.25s ease, background 0.25s ease, opacity 0.25s ease;
 }
 
-.news-feed::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.news-feed::-webkit-scrollbar-thumb {
+.news-dot.is-active::after {
+  width: 16px;
   background: var(--gold, #c8a03c);
-  border-radius: 3px;
+  opacity: 1;
+}
+
+.news-dot:focus-visible {
+  outline: 2px solid var(--gold, #c8a03c);
+  outline-offset: 1px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .news-dot::after {
+    transition: none;
+  }
 }
 
 .news-empty {
   margin: 0;
-  padding: 18px 6px;
+  padding: 18px 24px;
   font-size: 12px;
   color: var(--dust, #948a81);
 }
 
 .news-card {
-  flex: none;
+  /* Um card por tela: 100% da área útil do trilho (tela menos os 18px de
+     padding de cada lado). É o que faz o carrossel mostrar um de cada vez. */
+  flex: 0 0 100%;
   display: flex;
   gap: 14px;
-  /* Altura idêntica em todo card é o que garante os "2 por vez" exatos do
-     feed -- texto que não couber é cortado pelos line-clamp abaixo. */
+  /* Altura idêntica em todo card mantém a seção do mesmo tamanho a cada
+     troca -- texto que não couber é cortado pelos line-clamp abaixo. */
   height: var(--news-card-h, 184px);
   scroll-snap-align: start;
   background: var(--canvas-2, #262120);
