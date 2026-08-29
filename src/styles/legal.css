@@ -6,7 +6,7 @@
   min-height: 100dvh;
   color: var(--bone, #ede7de);
   font-family: var(--body, system-ui, sans-serif);
-  padding: 28px 20px 60px;
+  padding: calc(28px + var(--topo-seguro)) 20px 60px;
 }
 
 .legal-inner {

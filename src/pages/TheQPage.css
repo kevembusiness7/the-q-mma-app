@@ -46,7 +46,7 @@
   /* env() aqui e nao a --recuo-nativo: este e o recuo de verdade da area
      segura, que a marca precisa respeitar pra nao ficar atras do relogio.
      Na web ele vale 0 e nada muda. */
-  top: calc(10px + env(safe-area-inset-top, 0px));
+  top: calc(10px + var(--topo-seguro));
   left: 14px;
   z-index: 2;
   width: auto;
@@ -89,7 +89,7 @@
   position: absolute;
   /* O iPhone nao aceita toque na faixa da status bar, entao este botao tem
      de ficar abaixo dela mesmo com a arte indo ate a borda de cima. */
-  top: calc(12px + env(safe-area-inset-top, 0px));
+  top: calc(12px + var(--topo-seguro));
   right: 14px;
   z-index: 5;
   display: flex;

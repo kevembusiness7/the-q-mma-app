@@ -48,6 +48,18 @@
   }
 }
 
+
+/* Altura da faixa do topo onde o iPhone não aceita toque (status bar /
+   Dynamic Island). Todo elemento que encosta no topo da tela soma isto ao
+   próprio respiro -- é o que mantém setas de voltar, logo e botão de conta
+   todos na mesma linha, em vez de cada tela escolher um valor.
+
+   Não confundir com a --recuo-nativo do ios-webview.css: aquela é quanto o
+   WKWebView empurra sozinho e vira 0 num build com contentInset 'never'.
+   Esta é o recuo real do aparelho e vale sempre. Na web dá 0. */
+:root {
+  --topo-seguro: env(safe-area-inset-top, 0px);
+}
 @layer base {
   html,
   body,
