@@ -3,6 +3,7 @@ import { useCart } from '../context/CartContext';
 import { useNav } from '../context/NavigationContext';
 import { useAuth } from '../context/AuthContext';
 import { coaches, sponsors } from '../data/shop';
+import type { Coach } from '../types/shop';
 import { BackBar } from '../components/shop/ShopParts';
 import { useVisitorPendingCount } from '../hooks/useAdminVisitors';
 import '../styles/shop.css';
@@ -64,10 +65,10 @@ export function YouPage() {
         !carregando && (
           <button
             type="button"
-            className="listrow"
+            className="btn conta-entrar"
             onClick={() => openOverlay({ name: 'auth' })}
           >
-            Sign in or create account <span>›</span>
+            Create account
           </button>
         )
       )}
@@ -377,37 +378,95 @@ export function CoachesPage() {
       <BackBar label="Coaches" onBack={closeOverlay} />
       <div className="coach-grid">
         {coaches.map((coach) => (
-          <article key={coach.id} className="coach-card">
-            <div className="coach-photo">
-              <img src={coach.photo} alt={coach.name} loading="lazy" />
-            </div>
-            <div className="coach-body">
-              <h4>{coach.name}</h4>
-              <div className="spec">{coach.role}</div>
-              <p className="bio">{coach.bio}</p>
-              <p className="bio coach-meta">
-                {coach.belt}
-                <br />
-                {coach.city}
-              </p>
-              <a
-                className="coach-ig"
-                href={coach.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-                  <rect x="3" y="3" width="18" height="18" rx="5" />
-                  <circle cx="12" cy="12" r="4" />
-                  <circle cx="17.5" cy="6.5" r="1" fill="currentColor" />
-                </svg>
-                <b>Instagram</b>
-              </a>
-            </div>
-          </article>
+          <CoachCard key={coach.id} coach={coach} />
         ))}
       </div>
     </div>
+  );
+}
+
+/**
+ * A bio do coach tem duas versões: a curta fica sempre à vista e a completa
+ * abre no botão. Cabe tudo num card só porque a longa passa de seis
+ * parágrafos -- aberta de cara, ela empurraria o Instagram e o próximo coach
+ * pra muito longe da dobra.
+ */
+function CoachCard({ coach }: { coach: Coach }) {
+  const [aberto, setAberto] = useState(false);
+  const idBio = `coach-bio-${coach.id}`;
+
+  return (
+    <article className="coach-card">
+      <div className="coach-photo">
+        <img src={coach.photo} alt={coach.name} loading="lazy" />
+      </div>
+      <div className="coach-body">
+        <h4>{coach.name}</h4>
+        <div className="spec">{coach.role}</div>
+
+        {coach.stats.length > 0 && (
+          <dl className="coach-stats">
+            {coach.stats.map((stat) => (
+              <div key={stat.label}>
+                <dt>{stat.label}</dt>
+                <dd>{stat.value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+
+        <p className="bio">{coach.bio}</p>
+
+        <button
+          type="button"
+          className="coach-more"
+          onClick={() => setAberto((estava) => !estava)}
+          aria-expanded={aberto}
+          aria-controls={idBio}
+        >
+          {aberto ? 'Show less' : 'Read full bio'}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </button>
+
+        {aberto && (
+          <div className="coach-full" id={idBio}>
+            {coach.fullBio.map((paragrafo) => (
+              <p key={paragrafo.slice(0, 40)} className="bio">
+                {paragrafo}
+              </p>
+            ))}
+
+            {coach.quote && <blockquote className="coach-quote">{coach.quote}</blockquote>}
+
+            <div className="coach-athletes">
+              <span className="coach-athletes-label">Athletes coached</span>
+              <p className="bio">{coach.notable}</p>
+            </div>
+          </div>
+        )}
+
+        <p className="bio coach-meta">
+          {coach.belt}
+          <br />
+          {coach.city}
+        </p>
+        <a
+          className="coach-ig"
+          href={coach.instagram}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="5" />
+            <circle cx="12" cy="12" r="4" />
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" />
+          </svg>
+          <b>Instagram</b>
+        </a>
+      </div>
+    </article>
   );
 }
 

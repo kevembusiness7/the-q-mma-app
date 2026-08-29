@@ -3,7 +3,7 @@
 
 @theme {
   /* Backgrounds */
-  --color-bg-main: #050505;
+  --color-bg-main: #000000;
   --color-bg-secondary: #0a0a0a;
   --color-bg-card: #0d0d0d;
   --color-bg-elevated: #111111;
@@ -26,6 +26,26 @@
   --font-display: "Barlow Condensed", "Oswald", "Anton", sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  /* Animação do ShineBorder (src/components/ui/shine-border.tsx). O pacote
+     original pedia pra estender o tailwind.config.js -- sintaxe do Tailwind
+     v3, que este projeto não usa: na v4 a config é este @theme, e um
+     tailwind.config.js criado do zero seria ignorado. O `--animate-*` é o que
+     faz a classe `animate-shine` existir; a duração vem da prop do
+     componente, via --duration inline. */
+  --animate-shine: shine var(--duration, 14s) infinite linear;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
 }
 
 @layer base {

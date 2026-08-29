@@ -4,37 +4,122 @@
   padding-bottom: 40px;
 }
 
+/* ------------------------------------------------------------- marca ---- */
+
+.auth-brand {
+  padding: 8px 18px 20px;
+  text-align: center;
+}
+
+.auth-brand img {
+  display: block;
+  width: auto;
+  height: 66px;
+  margin: 0 auto 14px;
+  filter: drop-shadow(0 6px 20px rgba(200, 160, 60, 0.28));
+}
+
+/* Mesmo dourado recortado na letra do "NEWS & EVENTS" da home -- é o que
+   faz o login ler como o mesmo app, e não como uma tela de biblioteca. */
+.auth-brand h2 {
+  margin: 0;
+  font-family: var(--q-display);
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  background-image: linear-gradient(180deg, #ffe3a0 0%, #f2c24e 32%, #d6a62e 60%, #9a7220 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Sem isto o WebKit ignora o clip e pinta a letra na cor herdada -- é o
+     que quebraria o efeito justamente no app nativo, que roda em WKWebView. */
+  -webkit-text-fill-color: transparent;
+}
+
+.auth-brand p {
+  margin: 7px 0 0;
+  font-family: var(--q-mono);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  /* O letter-spacing sobra depois da última letra e empurra o texto pra
+     esquerda; o indent devolve essa sobra e recentraliza. */
+  text-indent: 0.28em;
+  color: var(--q-gold);
+  opacity: 0.72;
+}
+
+/* ------------------------------------------------------------ cartão ---- */
+
+/* O ShineBorder chega com utilitários de fábrica pensados pra uma demo
+   (w-fit, min-w-[300px], p-3, bg-white/dark:bg-black, text-black). Todos são
+   neutralizados aqui. Isso funciona porque este arquivo é CSS sem @layer, e
+   CSS sem camada vence as utilities do Tailwind, que ficam em @layer
+   utilities -- não é sorte de especificidade.
+   O bg-white importa em especial: o `dark:` do Tailwind segue o tema do
+   SISTEMA, então num aparelho com tema claro o cartão nasceria branco no
+   meio de um app que é preto sempre. */
+.auth-card {
+  width: auto;
+  min-width: 0;
+  min-height: 0;
+  margin: 0 18px;
+  padding: 16px 16px 20px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #14110f 0%, #0a0908 100%);
+  color: var(--q-bone);
+}
+
+/* --------------------------------------------------------------- abas --- */
+
 .auth-abas {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  padding: 0 18px 18px;
+  gap: 6px;
+  padding: 4px;
+  margin-bottom: 18px;
+  border: 1px solid var(--q-line);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.45);
 }
 
 .auth-aba {
-  padding: 11px 0;
-  border: 1px solid var(--q-line);
-  border-radius: 10px;
-  background: var(--q-canvas);
+  padding: 10px 0;
+  border: 0;
+  border-radius: 9px;
+  background: none;
   color: var(--q-dust);
   font-family: var(--q-mono);
-  font-size: 11px;
+  font-size: 10.5px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
+  transition: color 0.18s ease, background 0.18s ease;
 }
 
+/* Era var(--q-bone): a aba ativa ficava branca, o único branco chapado do
+   app inteiro. Em dourado ela entra na paleta e ainda marca melhor qual das
+   duas está selecionada. */
 .auth-aba.on {
-  background: var(--q-bone);
-  border-color: var(--q-bone);
-  color: var(--q-ink);
+  background: linear-gradient(180deg, #f2c24e 0%, #c8a03c 100%);
+  color: #14110f;
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(200, 160, 60, 0.28);
+}
+
+.auth-aba:focus-visible {
+  outline: 2px solid var(--q-gold);
+  outline-offset: 2px;
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  padding: 0 18px;
+  padding: 0;
 }
 
 .campo {
@@ -60,7 +145,7 @@
   padding: 12px 13px;
   border: 1px solid var(--q-line);
   border-radius: 10px;
-  background: var(--q-canvas-2);
+  background: rgba(0, 0, 0, 0.5);
   color: var(--q-bone);
   font-family: inherit;
   font-size: max(16px, 1em);
@@ -92,12 +177,10 @@
   line-height: 1.45;
 }
 
+/* Fica DENTRO do .auth-card agora, então não desenha moldura nem fundo
+   próprios -- quem faz isso é o cartão com a borda em brilho. */
 .auth-aviso {
-  margin: 10px 18px;
-  padding: 26px 20px;
-  border: 1px solid var(--q-line);
-  border-radius: 14px;
-  background: var(--q-canvas-2);
+  padding: 10px 4px 4px;
   text-align: center;
 }
 
@@ -108,14 +191,6 @@
   margin-bottom: 12px;
 }
 
-.auth-aviso h3 {
-  margin: 0 0 8px;
-  font-family: var(--q-display);
-  font-size: 20px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-weight: 400;
-}
 
 .auth-aviso p {
   margin: 0 0 18px;
@@ -232,4 +307,39 @@
   font-size: 18px;
   line-height: 1;
   cursor: pointer;
+}
+
+/* Aviso legal abaixo do cartão, só no modo "Create account". Era .cart-note,
+   classe do carrinho -- reaproveitá-la aqui obrigava a corrigir o alinhamento
+   por style inline na página. */
+.auth-legal {
+  margin: 16px 18px 0;
+  text-align: center;
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--q-dust);
+}
+
+.auth-legal a {
+  color: var(--q-gold);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(200, 160, 60, 0.4);
+}
+
+/* Entrada de conta na tela Menu, para quem não está logado. Ocupa a largura
+   inteira sem margem nem raio: substitui uma linha de lista que também ia de
+   ponta a ponta, e manter esse recorte evita um botão flutuando solto no
+   meio das outras linhas do menu.
+
+   A margem embaixo não é enfeite: .menu-grade tem `padding: 0 18px`, sem
+   nada no topo, então a grade de cards (Cart, My Orders...) encosta na borda
+   de quem vier antes. A linha de lista anterior era transparente e o encosto
+   passava batido; um bloco dourado sólido colado nos cards lê como se
+   estivesse por cima deles. 18px é o mesmo respiro que o .conta-logada dá
+   quando há alguém logado, então as duas versões da tela ficam iguais. */
+.conta-entrar {
+  border-radius: 0;
+  padding: 16px 18px;
+  margin-bottom: 18px;
+  box-shadow: none;
 }

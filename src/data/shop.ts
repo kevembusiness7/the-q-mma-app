@@ -337,8 +337,24 @@ export const coaches: Coach[] = [
     specialty: 'Fight Camp Preparation',
     city: 'Rio de Janeiro, RJ',
     instagram: 'https://www.instagram.com/matheusnaccache/',
-    notable: 'Osman "Ozzy" Diaz, Dione Barbosa',
-    bio: 'Head coach at The Q MMA, originally from Rio de Janeiro, RJ. Black belt in Muay Thai, specializing in fight camp preparation. Leads training for the team\'s pro roster, including Ozzy Diaz and Dione Barbosa.',
+    notable:
+      'Aljamain Sterling, Osman "Ozzy" Diaz, Dione Barbosa, Jean-Paul Lebosnoyani, Levan Chokheli, César Almeida, Shane Collins, Nazim Sadykhov, Artur Minev',
+    bio: 'Coach Naccache is the Head Coach of The Q MMA, with approximately 19 years of experience in combat sports. A former professional MMA, Muay Thai/Kickboxing, and Boxing competitor, he completed 46 professional bouts and has spent approximately 11 years coaching athletes. His methodology combines technical development, individualized strategy, and opponent-specific game planning.',
+    fullBio: [
+      'Coach Naccache began training in Muay Thai at the age of 14. Now 33, he has accumulated approximately 19 years of experience in combat sports. At around the age of 22, he began coaching MMA and Muay Thai athletes while continuing to pursue his own competitive career.',
+      'His martial arts foundation was established at the renowned Boxe Thai academy under Master Luiz Alves, with direct instruction from Johnny Eduardo. After transitioning to MMA, he continued his development at Nova União under the leadership of Master André “Dedé” Pederneiras.',
+      'As a professional athlete, Naccache competed across three combat sports: MMA, Muay Thai/Kickboxing, and Boxing. He completed 46 professional bouts throughout his career, including 6 MMA fights, 32 Muay Thai/Kickboxing fights, and 8 Boxing matches. This multidisciplinary experience gives him a practical and comprehensive understanding of the technical, physical, and mental demands faced by high-level competitors.',
+      'Naccache has served as Head Coach of The Q MMA since the academy opened in May 2026, leading the technical and strategic development of its athletes.',
+      'His approach to fight preparation is intelligent, individualized, and strategy-driven. Each training camp is designed around the athlete’s strengths, developmental needs, the specific demands of the matchup, and the opponent’s fighting style. His work includes technical analysis, skill development, correction of vulnerabilities, strategic preparation, and the creation of a customized game plan for each competition.',
+      'Beyond preparing athletes to compete, Coach Naccache emphasizes personal responsibility, discipline, and accountability for every decision.',
+    ],
+    stats: [
+      { label: 'Experience', value: '19 yrs' },
+      { label: 'Pro bouts', value: '46' },
+      { label: 'Coaching', value: '11 yrs' },
+    ],
+    quote:
+      'Do what you want and think as you choose, but never blame anyone else for your results.',
     photo: '/images/coaches/matheus-naccache.jpg',
   },
 ];

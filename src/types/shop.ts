@@ -81,7 +81,14 @@ export interface Coach {
   instagram: string;
   /** Atletas que o treinador prepara. */
   notable: string;
+  /** Versão curta — é a que fica visível no card fechado. */
   bio: string;
+  /** Versão longa, um item por parágrafo. Aparece ao abrir "Read full bio". */
+  fullBio: string[];
+  /** Números que resumem a carreira, na linha abaixo do nome. */
+  stats: { label: string; value: string }[];
+  /** Frase que resume a filosofia de trabalho. */
+  quote?: string;
   photo: string;
 }
 

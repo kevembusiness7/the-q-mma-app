@@ -18,7 +18,7 @@
 html,
 body {
   overscroll-behavior-y: none;
-  background: #0b0908;
+  background: var(--color-bg-main, #000000);
 }
 
 /* Textos de interface não devem poder ser selecionados por toque longo.

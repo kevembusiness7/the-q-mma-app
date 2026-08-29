@@ -2,26 +2,78 @@
    Usa as variáveis já definidas no :root do projeto (--gold, --canvas-2, etc.).
    Se alguma não existir no seu index.css, veja o bloco comentado no final. */
 
-/* Preto liso, não degradê -- o degradê anterior clareava conforme descia
-   (era mais visível nos vãos ao redor dos cards de notícia), e o hero e os
-   banners abaixo já são quase preto puro (~#050402, conferido pixel a
-   pixel nas próprias artes). Um valor só garante que a página inteira --
-   do topo do hero até o banner de Athletes lá embaixo -- lê como um único
-   fundo, sem nenhum vão parecendo "cinza" ao lado da arte. */
+/* Sem background próprio: o fundo do app inteiro vem de um lugar só, o
+   --color-bg-main do index.css, herdado pelo AppShell. Cada tela pintar o
+   seu era justamente o que produzia as marcas -- home em #050402, shell em
+   #050505, hero em #0a0908, artes dos banners em #000000, quatro pretos
+   diferentes empilhados e cada emenda aparecendo.
+   O valor único é #000000 porque é o que as 9 artes de banner têm baked;
+   qualquer outro tom desenha uma borda visível em volta de cada uma. */
 .theq-screen {
-  background: #050402;
   min-height: 100%;
 }
 
-/* Banners ocupam a largura toda, sem padding — o texto faz parte da arte. */
-.theq-hero,
-.theq-section-banner {
+/* O hero ocupa a largura toda, sem padding -- a marca e a animação vão até
+   a borda da tela. */
+.theq-hero {
   padding: 0;
 }
 
-/* Âncora para o botão de conta, que flutua sobre a arte do hero. */
+/* Âncora para o botão de conta e para as camadas do hero (fundo animado +
+   marca). A proporção é a mesma da arte antiga (theq-hero.jpg, 900x556):
+   sem ela o hero ficaria sem altura própria -- quem dava altura era a
+   imagem, que saiu. Mantida igual pra o resto da home não subir na tela. */
 .theq-hero {
   position: relative;
+  aspect-ratio: 900 / 556;
+  overflow: hidden;
+}
+
+/* A esfera de partículas. z-index 0 e sem eventos: é papel de parede, o
+   toque precisa atravessar até o botão de conta. */
+.theq-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Canto superior esquerdo, pareado com o botão de conta (38px, top 12) do
+   outro lado -- os dois na mesma linha leem como uma barra do hero, não
+   como dois elementos soltos. Sai do centro pra esfera aparecer inteira. */
+.theq-hero-logo {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  z-index: 2;
+  width: auto;
+  height: 44px;
+  display: block;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.65));
+}
+
+/* Centralizado por left/right 0 em vez de translateX: o letter-spacing largo
+   deixa a largura do texto imprevisível, e centralizar pela caixa inteira
+   evita ter que compensar isso. */
+.theq-hero-city {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 16px;
+  z-index: 2;
+  text-align: center;
+  pointer-events: none;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--gold, #c8a03c);
+  letter-spacing: 0.42em;
+  /* O letter-spacing sobra depois da última letra e empurra o texto pra
+     esquerda; o indent devolve essa sobra e recentraliza. */
+  text-indent: 0.42em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
 }
 
 /* Canto superior direito do hero. O respiro da notch vem do padding-top do
@@ -68,65 +120,110 @@
   outline-offset: 2px;
 }
 
-.theq-hero img,
-.theq-section-banner img {
-  width: 100%;
-  display: block;
-}
-
-/* Realça o dourado do hero sem regravar o JPG -- satura e clareia um pouco
-   a foto inteira, e o brilho por cima (::before, abaixo) soma um halo quente
-   centrado no "Q", como um brilho de estúdio batendo nele. */
-.theq-hero img {
-  filter: saturate(1.18) brightness(1.04) contrast(1.06);
-}
-
+/* O halo quente que existia na arte antiga, agora sobre a esfera: é o que
+   liga o fundo animado ao dourado da marca. Baixado de 0.35 pra 0.2 quando
+   o logo saiu do centro: com o meio livre, o halo cheio lavava as partículas
+   justo onde a esfera é mais densa. z-index 1 -- acima do fundo,
+   abaixo do logo, senão o screen lavaria o dourado do próprio "Q". */
 .theq-hero::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(55% 50% at 50% 40%, rgba(255, 208, 110, 0.35), transparent 72%);
+  z-index: 1;
+  background: radial-gradient(55% 50% at 50% 42%, rgba(255, 208, 110, 0.2), transparent 70%);
   mix-blend-mode: screen;
   pointer-events: none;
 }
 
-/* Costura entre o hero (THE Q / LAS VEGAS, NV) e o banner de News & Events:
-   são dois JPGs separados, cada um com o próprio fundo, e emendados sem
-   nada entre eles pareciam duas caixas empilhadas em vez de uma coisa só.
-   As duas artes já escurecem pra quase preto na borda que elas compartilham
-   (conferido pixel a pixel: ambas ~(5,3,1)) -- o degradê aqui não muda a
-   cor, só afunda o que sobra de padrão/borda dourada bem na linha da
-   costura, pra a transição ler como contínua. */
-.theq-hero::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 60px;
-  background: linear-gradient(to bottom, transparent, #050402 85%);
-  pointer-events: none;
+/* Título da seção de notícias. Substitui banner-news.jpg, que trazia esse
+   mesmo texto pintado na arte.
+
+   Não pinta fundo: assenta direto no #000000 do app, igual ao hero acima e
+   aos banners abaixo. Aqui existia uma costura (um degradê de 60px no pé do
+   hero) pra disfarçar o encontro de dois pretos diferentes -- com um preto
+   só ela virou dispensável, e sair dela devolveu os 60px finais da esfera,
+   que ela vinha escurecendo.
+
+   O dourado é gradiente recortado pela própria letra (background-clip: text)
+   -- é o efeito do demo do ShineBorder, onde o texto ganha um degradê que
+   clareia em cima e afunda embaixo. Trocada a paleta dele pela nossa: claro
+   no topo (#ffe3a0), ouro no meio (#d6a62e), sombra embaixo. Isso é o que dá
+   o ar metálico que a arte antiga tinha. */
+.news-heading {
+  padding: 18px 18px 12px;
+  text-align: center;
 }
 
-.theq-section-banner {
-  position: relative;
+.news-heading h2 {
+  margin: 0;
+  font-family: var(--display, Impact, 'Haettenschweiler', sans-serif);
+  /* clamp porque o título é a maior peça de texto da home: num iPhone SE
+     ele precisa caber, num tablet não pode ficar perdido no meio. */
+  font-size: clamp(30px, 9.4vw, 46px);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.005em;
+  /* Duas camadas dentro do recorte da letra: em cima a faixa de luz que
+     varre, embaixo o dourado base. Só a faixa tem 300% de largura, então a
+     animação de background-position move a luz e não mexe no degradê base.
+     Mesma receita da borda dos cards -- aqui o recorte é a própria letra
+     (background-clip: text) em vez de uma moldura. */
+  background-image:
+    linear-gradient(
+      100deg,
+      rgba(255, 246, 216, 0) 42%,
+      rgba(255, 250, 232, 0.95) 50%,
+      rgba(255, 246, 216, 0) 58%
+    ),
+    linear-gradient(180deg, #ffe3a0 0%, #f2c24e 30%, #d6a62e 58%, #9a7220 100%);
+  background-size: 300% 100%, 100% 100%;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Sem isto o WebKit ignora o clip e pinta a letra na cor herdada -- é o
+     que quebraria o efeito justamente no app nativo, que roda em WKWebView. */
+  -webkit-text-fill-color: transparent;
+  /* 3,6s contra os 3s da borda dos cards: períodos diferentes de propósito,
+     pra as duas luzes não passarem sempre juntas e a seção não piscar
+     inteira no mesmo compasso. */
+  animation: news-title-shine 3.6s linear infinite;
 }
 
-.theq-section-banner::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  /* Curto de propósito: o título "NEWS & EVENTS" começa a ~14px do topo da
-     arte. Um degradê mais alto (era 46px) ainda estava escurecendo o início
-     das letras, lido como uma sombra colada nelas -- essa altura resolve
-     antes de chegar no texto. */
-  height: 12px;
-  background: linear-gradient(to bottom, #050402, transparent);
-  pointer-events: none;
+@keyframes news-title-shine {
+  0% {
+    background-position: 0% 0, 0 0;
+  }
+  100% {
+    background-position: 100% 0, 0 0;
+  }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .news-heading h2 {
+    animation: none;
+  }
+}
+
+.news-heading p {
+  margin: 9px 0 0;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  /* O letter-spacing sobra depois da última letra e empurra o texto pra
+     esquerda; o indent devolve essa sobra e recentraliza. */
+  text-indent: 0.3em;
+  background-image: linear-gradient(180deg, #e4b83d 0%, #a07a2a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
 .banner-btn {
   display: block;
   width: 100%;
@@ -263,11 +360,79 @@
      troca -- texto que não couber é cortado pelos line-clamp abaixo. */
   height: var(--news-card-h, 184px);
   scroll-snap-align: start;
+  position: relative;
   background: var(--canvas-2, #262120);
-  border: 1px solid var(--gold, #c8a03c);
+  /* Sem border: quem desenha a moldura agora é o ::after abaixo. Manter as
+     duas daria dois anéis dourados concêntricos -- o do border e o do
+     brilho, que fica 1px pra dentro dele. */
+  border: 0;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 6px 18px rgba(200, 160, 60, 0.1);
+}
+
+/* Borda em brilho: um anel dourado fixo com um realce claro que varre o card.
+   A técnica é a mesma do ShineBorder (src/components/ui/shine-border.tsx) --
+   gradiente grande atrás de uma máscara que recorta o miolo e deixa só a
+   moldura. Aqui ela é escrita direto no card em vez de usar o componente: o
+   ShineBorder é uma <div> que ENVOLVE o conteúdo, e um invólucro entre o
+   trilho e o card quebraria o `flex: 0 0 100%` e o `scroll-snap-align`
+   acima, que são a conta do "um card por tela" do carrossel.
+
+   O realce varre na HORIZONTAL, não na diagonal como no componente original:
+   o card tem 184px de altura e a largura da tela inteira, e numa diagonal o
+   brilho passa a maior parte do trajeto fora dessa faixa baixa -- era o que
+   fazia ele quase não aparecer. No eixo comprido ele cruza a moldura inteira.
+
+   São duas camadas de fundo: a faixa que se move e o anel base (linear
+   chapado). Só a primeira tem 300% de largura, então a animação de
+   background-position move o brilho e não mexe no anel. */
+.news-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  padding: 1.5px;
+  border-radius: inherit;
+  background-image:
+    linear-gradient(
+      100deg,
+      rgba(255, 240, 190, 0) 42%,
+      rgba(255, 245, 214, 1) 50%,
+      rgba(255, 240, 190, 0) 58%
+    ),
+    linear-gradient(var(--gold, #c8a03c), var(--gold, #c8a03c));
+  background-size: 300% 100%, 100% 100%;
+  background-repeat: no-repeat;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: news-shine 3s linear infinite;
+}
+
+/* A faixa cruza a parte visível no meio do trajeto; as pontas são o intervalo
+   entre uma passada e a seguinte. Por isso 3s dá um brilho a cada ~3s, não um
+   risco de luz permanente correndo em volta. */
+@keyframes news-shine {
+  0% {
+    background-position: 0% 0, 0 0;
+  }
+  100% {
+    background-position: 100% 0, 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .news-card::after {
+    animation: none;
+  }
 }
 
 .news-card .nimg {

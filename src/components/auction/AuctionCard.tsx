@@ -54,7 +54,7 @@ export function AuctionCard({ item, onOpen }: AuctionCardProps) {
           {item.status === 'scheduled' && <> · Starts {formatarData(item.startsAt)}</>}
         </div>
 
-        {item.status === 'live' && <span className="btn gold auction-card-cta">Place Bid</span>}
+        {item.status === 'live' && <span className="btn auction-card-cta">Place Bid</span>}
         {item.status === 'scheduled' && <span className="btn ghost auction-card-cta">Coming Soon</span>}
         {item.status === 'sold' && <span className="btn ghost auction-card-cta">View Sale</span>}
       </div>

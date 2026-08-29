@@ -4,7 +4,6 @@
 
 .cert-screen {
   min-height: 100dvh;
-  background: #050402;
   color: var(--bone, #ede7de);
   font-family: var(--body, system-ui, sans-serif);
   padding: 32px 18px 60px;

@@ -1,4 +1,5 @@
 import { BannerLink } from '../components/theq/BannerLink';
+import RecursiveErosionBackground from '../components/ui/recursive-erosion';
 import { NewsCarousel } from '../components/theq/NewsCarousel';
 import { useNews } from '../hooks/useNews';
 import './TheQPage.css';
@@ -30,7 +31,17 @@ export function TheQPage({ onNavigate }: TheQPageProps) {
   return (
     <div className="theq-screen">
       <div className="theq-hero">
-        <img src="/images/brand/theq-hero.jpg" alt="The Q MMA — Las Vegas, NV" />
+        {/* Fundo animado atrás da marca. aria-hidden porque é decoração pura:
+            quem usa leitor de tela precisa ouvir o alt do logo, não a esfera. */}
+        <div className="theq-hero-bg" aria-hidden="true">
+          <RecursiveErosionBackground mode="dark" />
+        </div>
+        {/* Logo no canto, pareado com o botão de conta do outro lado: saiu do
+            centro pra esfera aparecer inteira, que é o ponto do fundo animado. */}
+        <img className="theq-hero-logo" src="/images/brand/logo-theq.png" alt="The Q MMA" />
+        {/* Único texto sobre a animação. Era pintado na arte antiga
+            (theq-hero.jpg); virou texto quando o JPG saiu. */}
+        <span className="theq-hero-city">Las Vegas, NV</span>
         {/* Conta do usuário. Fica sobre a arte do hero porque, sem a barra
             de abas, este é o único ponto de entrada para a tela You. */}
         <button type="button" className="theq-you" onClick={go('you')} aria-label="Minha conta">
@@ -41,9 +52,13 @@ export function TheQPage({ onNavigate }: TheQPageProps) {
         </button>
       </div>
 
-      <div className="theq-section-banner">
-        <img src="/images/brand/banner-news.jpg" alt="Notícias e eventos" />
-      </div>
+      {/* Era um JPG com o texto pintado (banner-news.jpg). Virou texto de
+          verdade pra receber o gradiente dourado -- e de quebra fica legível
+          em leitor de tela e nítido em qualquer densidade de tela. */}
+      <header className="news-heading">
+        <h2>News &amp; Events</h2>
+        <p>Stay updated. Never miss a moment.</p>
+      </header>
 
       {loading && news.length === 0 ? (
         <p className="news-empty">Carregando novidades…</p>

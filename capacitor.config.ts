@@ -28,7 +28,7 @@ const config: CapacitorConfig = {
     // no instalador).
     contentInset: 'never',
   },
-  backgroundColor: '#0b0908',
+  backgroundColor: '#000000',
   plugins: {
     SplashScreen: {
       // Some no autoHide de 3s padrão: em server.url o app depende de
@@ -36,7 +36,7 @@ const config: CapacitorConfig = {
       // decide a hora certa de esconder a splash é o próprio app assim que
       // monta (ver src/lib/nativeApp.ts), não um temporizador fixo.
       launchAutoHide: false,
-      backgroundColor: '#0b0908',
+      backgroundColor: '#000000',
     },
   },
 };

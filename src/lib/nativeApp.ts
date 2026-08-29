@@ -9,7 +9,7 @@ import { SplashScreen } from '@capacitor/splash-screen';
  *
  * `Style.Dark` no plugin de status bar do Capacitor quer dizer "texto/ícones
  * claros" (pensado pra fundo escuro) — não "cor escura". Combina com o tema
- * do app inteiro (#0b0908).
+ * do app inteiro (#000000).
  */
 export async function initNativeApp(): Promise<void> {
   if (!Capacitor.isNativePlatform()) return;
@@ -17,7 +17,7 @@ export async function initNativeApp(): Promise<void> {
   try {
     await StatusBar.setStyle({ style: Style.Dark });
     if (Capacitor.getPlatform() === 'android') {
-      await StatusBar.setBackgroundColor({ color: '#0b0908' });
+      await StatusBar.setBackgroundColor({ color: '#000000' });
     }
   } catch {
     // Plugin ainda não pronto ou indisponível na plataforma -- não trava o

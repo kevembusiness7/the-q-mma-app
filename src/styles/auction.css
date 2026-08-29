@@ -114,17 +114,9 @@
   color: var(--bone, #ede7de);
 }
 
-/* CTA dourado — o .btn padrão do app é vermelho (--q-blood), o Vault usa
-   dourado como cor de ação principal, então ganha o próprio modificador. */
-.btn.gold {
-  background: var(--gold, #c8a03c);
-  color: #171312;
-}
-
 /* --------------------------------------------------------------- vitrine -- */
 
 .vault-screen {
-  background: #050402;
   min-height: 100%;
 }
 

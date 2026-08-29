@@ -87,14 +87,14 @@ export function BidBox({ item, live, bids }: BidBoxProps) {
       )}
 
       {status === 'live' && !usuario && (
-        <button type="button" className="btn gold" onClick={() => openOverlay({ name: 'auth' })}>
+        <button type="button" className="btn" onClick={() => openOverlay({ name: 'auth' })}>
           Sign in to bid
         </button>
       )}
 
       {status === 'live' && usuario && !carregandoVerificacao && !verificadoEm && (
         <>
-          <button type="button" className="btn gold" disabled={redirecionando} onClick={verificar}>
+          <button type="button" className="btn" disabled={redirecionando} onClick={verificar}>
             {redirecionando ? 'Redirecting…' : 'Verify card to bid'}
           </button>
           <p className="cart-note">
@@ -124,7 +124,7 @@ export function BidBox({ item, live, bids }: BidBoxProps) {
           </label>
           <button
             type="button"
-            className="btn gold"
+            className="btn"
             disabled={enviando || !valor || Math.round(Number(valor) * 100) < proximoLanceMinimo}
             onClick={aoConfirmar}
           >

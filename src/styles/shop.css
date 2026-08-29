@@ -485,6 +485,10 @@
   text-align: center;
 }
 
+/* Ação primária do app inteiro, em dourado. Era vermelha (--q-blood): o
+   vermelho ficou reservado ao .btn.danger abaixo, que é onde ele significa
+   alguma coisa. O degradê (claro em cima, fechado embaixo) é o mesmo
+   tratamento metálico do título da home e da borda dos cards. */
 .btn {
   display: block;
   width: 100%;
@@ -492,13 +496,32 @@
   padding: 13px;
   border-radius: 8px;
   border: 0;
-  background: var(--q-blood);
-  color: #fff;
+  background: linear-gradient(180deg, #ffd86a 0%, #e4b83d 42%, #c8a03c 100%);
+  color: #14110f;
   font-size: 12px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
+  box-shadow: 0 6px 18px rgba(200, 160, 60, 0.22);
+}
+
+.btn:active {
+  background: linear-gradient(180deg, #e4b83d 0%, #c8a03c 100%);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--q-gold);
+  outline-offset: 2px;
+}
+
+/* O único vermelho que sobrou, e de propósito: excluir a conta é a ação
+   irreversível do app. Com tudo dourado, um "Delete my account" dourado
+   pareceria só mais um botão -- é justamente o que ele não pode parecer. */
+.btn.danger {
+  background: var(--q-blood);
+  color: #fff;
+  box-shadow: none;
 }
 
 .btn:disabled {
@@ -877,6 +900,106 @@
   font-weight: 600;
 }
 
+/* Números da carreira em linha, logo abaixo do cargo: é o resumo que se lê
+   sem abrir a bio completa. Em 3 colunas fixas porque o rótulo ("Experience")
+   é mais largo que o valor -- deixar o grid automático faria as colunas
+   dançarem de largura entre um coach e outro. */
+.coach-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 0 0 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--q-line);
+  border-bottom: 1px solid var(--q-line);
+}
+
+.coach-stats dt {
+  font-family: var(--q-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--q-gold);
+}
+
+.coach-stats dd {
+  margin: 2px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.coach-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 0 10px;
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-family: var(--q-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--q-gold);
+}
+
+.coach-more svg {
+  width: 13px;
+  height: 13px;
+  transition: transform 0.2s ease;
+}
+
+.coach-more[aria-expanded='true'] svg {
+  transform: rotate(180deg);
+}
+
+.coach-more:focus-visible {
+  outline: 2px solid var(--q-gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.coach-full {
+  margin-bottom: 4px;
+}
+
+.coach-full .bio {
+  margin-bottom: 10px;
+}
+
+/* A frase da filosofia é fala do coach, não descrição sobre ele -- por isso
+   sai do corpo do texto e ganha a barra dourada. */
+.coach-quote {
+  margin: 0 0 12px;
+  padding: 2px 0 2px 12px;
+  border-left: 2px solid var(--q-gold);
+  font-size: 12.5px;
+  line-height: 1.5;
+  font-style: italic;
+  color: var(--q-bone, #ede7de);
+}
+
+.coach-athletes {
+  margin-bottom: 12px;
+}
+
+.coach-athletes-label {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--q-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--q-gold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coach-more svg {
+    transition: none;
+  }
+}
+
 /* Uma coluna só, igual aos coaches: cada patrocinador ocupa a largura inteira
    e a lista rola na vertical. Antes era um trilho horizontal (flex com
    overflow-x) de cards com largura fixa, o que deixava o único patrocinador
@@ -913,7 +1036,7 @@
 .sponsor-logo-wrap {
   position: relative;
   aspect-ratio: 16 / 9;
-  background: #0a0908;
+  background: #000000;
   border-bottom: 1px solid var(--q-line);
 }
 

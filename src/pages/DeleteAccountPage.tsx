@@ -71,7 +71,7 @@ export function DeleteAccountPage() {
           </p>
         )}
 
-        <button type="button" className="btn" disabled={!podeExcluir || excluindo} onClick={aoConfirmar}>
+        <button type="button" className="btn danger" disabled={!podeExcluir || excluindo} onClick={aoConfirmar}>
           {excluindo ? 'Deleting…' : 'Delete my account'}
         </button>
       </div>
