@@ -96,8 +96,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  /* Mesma altura do logo do outro lado (56px): os dois flanqueiam o topo do
+     hero e sao lidos como um par, entao tamanhos diferentes desequilibravam.
+     De quebra vira um alvo de toque bem acima do minimo confortavel. */
+  width: 56px;
+  height: 56px;
   padding: 0;
   border: 1px solid var(--gold, #c8a03c);
   border-radius: 50%;
@@ -112,8 +115,10 @@
 }
 
 .theq-you svg {
-  width: 20px;
-  height: 20px;
+  /* Proporcao mantida: o icone era 20 num botao de 38 (~53%), agora 30 num
+     de 56. Sem isso o circulo maior ficaria com um icone perdido no meio. */
+  width: 30px;
+  height: 30px;
   display: block;
 }
 
