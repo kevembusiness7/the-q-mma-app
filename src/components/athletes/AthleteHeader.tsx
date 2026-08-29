@@ -5,12 +5,7 @@ export function AthleteHeader() {
   const { closeOverlay, openOverlay } = useNav()
 
   return (
-    /* A seta de voltar desta tela flutua no topo sem appbar, entao o respiro
-       do topo seguro entra no proprio header. */
-    <header
-      className="relative overflow-hidden px-4 pt-4 pb-3 flex items-center justify-between"
-      style={{ paddingTop: 'calc(16px + var(--topo-seguro))' }}
-    >
+    <header className="relative overflow-hidden px-4 pt-4 pb-3 flex items-center justify-between">
       <span
         className="diagline"
         style={{ top: -30, right: 90, height: 70, transform: 'rotate(22deg)' }}

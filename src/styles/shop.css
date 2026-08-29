@@ -22,9 +22,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* O env() mantem a seta de voltar abaixo da status bar agora que o app
-     vai ate a borda de cima da tela. Na web vale 0. */
-  padding: calc(6px + var(--topo-seguro)) 18px 14px;
+  /* 16px no topo: mesma altura da .backbar e do header de atletas, pra toda
+     tela comecar na mesma linha. */
+  padding: 16px 18px 14px;
 }
 
 /* Voltar + título andam juntos à esquerda da appbar, para o espaço entre
@@ -95,11 +95,9 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  /* Mesmo topo da .appbar: as duas sao a primeira coisa da tela e tem de
-     comecar na mesma linha. Sem isto, Coaches e o item do Vault (que usam
-     .backbar) ficavam com a seta cortada pela status bar enquanto as telas
-     de .appbar ficavam certas. */
-  padding: calc(6px + var(--topo-seguro)) 18px 12px;
+  /* 16px, igual a .appbar: as duas sao a primeira coisa da tela. Com os 6px
+     de antes, a seta de Coaches e do item do Vault ficava alta demais. */
+  padding: 16px 18px 12px;
   color: var(--q-dust);
   font-size: 12px;
   letter-spacing: 0.14em;

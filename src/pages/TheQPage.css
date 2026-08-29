@@ -43,10 +43,12 @@
    como dois elementos soltos. Sai do centro pra esfera aparecer inteira. */
 .theq-hero-logo {
   position: absolute;
-  /* env() aqui e nao a --recuo-nativo: este e o recuo de verdade da area
-     segura, que a marca precisa respeitar pra nao ficar atras do relogio.
-     Na web ele vale 0 e nada muda. */
-  top: calc(10px + var(--topo-seguro));
+  /* 16px: o respiro de topo unico do app. O valor veio da tela de atletas,
+     que era a unica que caia na altura certa no aparelho -- as outras foram
+     alinhadas por ela. Sem somar env(safe-area-inset-top) aqui: no build
+     instalado o WKWebView ja empurra o conteudo por conta propria, e somar
+     de novo jogava tudo longe demais. */
+  top: 16px;
   left: 14px;
   z-index: 2;
   width: auto;
@@ -87,9 +89,8 @@
    WKWebView -- ver capacitor.config.ts; o ajuste certo é lá, no build.) */
 .theq-you {
   position: absolute;
-  /* O iPhone nao aceita toque na faixa da status bar, entao este botao tem
-     de ficar abaixo dela mesmo com a arte indo ate a borda de cima. */
-  top: calc(12px + var(--topo-seguro));
+  /* Mesmos 16px do logo ao lado -- ver o comentario la em cima. */
+  top: 16px;
   right: 14px;
   z-index: 5;
   display: flex;

@@ -6,7 +6,7 @@
   min-height: 100dvh;
   color: var(--bone, #ede7de);
   font-family: var(--body, system-ui, sans-serif);
-  padding: calc(32px + var(--topo-seguro)) 18px 60px;
+  padding: 32px 18px 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
