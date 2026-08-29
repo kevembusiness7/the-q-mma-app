@@ -14,6 +14,12 @@ import { SplashScreen } from '@capacitor/splash-screen';
 export async function initNativeApp(): Promise<void> {
   if (!Capacitor.isNativePlatform()) return;
 
+  // Marca o documento como app nativo pra o CSS poder travar a rolagem do
+  // documento (ver ios-webview.css). Precisa ser classe e não media query:
+  // o WKWebView do Capacitor não reporta display-mode standalone de forma
+  // confiável, e travar isso no desktop cortaria o preview em janela baixa.
+  document.documentElement.classList.add('app-nativo');
+
   try {
     await StatusBar.setStyle({ style: Style.Dark });
     if (Capacitor.getPlatform() === 'android') {

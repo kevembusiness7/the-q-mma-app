@@ -21,6 +21,33 @@ body {
   background: var(--color-bg-main, #000000);
 }
 
+/* Trava o elástico do iOS no topo.
+ *
+ * O `overscroll-behavior-y: none` acima não resolve sozinho: ele governa o
+ * ENCADEAMENTO da rolagem, mas o WKWebView balança o documento por conta
+ * própria mesmo quando não há o que rolar -- é daí que vinha a faixa preta
+ * aparecendo acima do logo ao puxar pra baixo.
+ *
+ * Com o body em position: fixed o documento passa a medir exatamente a
+ * viewport: não sobra distância pra ele se deslocar, então não há elástico.
+ * Quem rola é o <main> do AppShell, que já tem overflow-y: auto e o seu
+ * próprio overscroll-behavior.
+ *
+ * Só no app nativo (classe posta em nativeApp.ts): no preview de desktop o
+ * cartão do "celular" tem 880px de altura e precisa que a página role numa
+ * janela mais baixa que isso -- travar ali cortaria o cartão sem saída.
+ */
+html.app-nativo,
+html.app-nativo body {
+  overflow: hidden;
+  height: 100%;
+}
+
+html.app-nativo body {
+  position: fixed;
+  inset: 0;
+}
+
 /* Textos de interface não devem poder ser selecionados por toque longo.
    Campos de formulário e o corpo das notícias seguem selecionáveis. */
 button,

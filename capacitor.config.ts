@@ -27,6 +27,14 @@ const config: CapacitorConfig = {
     // Esta mudança só vale a partir do próximo build iOS (config é embutida
     // no instalador).
     contentInset: 'never',
+    // Desliga o scroll do UIScrollView do próprio WebView. Quem rola é o
+    // <main> do AppShell, não a página -- e é o scroll do WebView que
+    // produzia o elástico: puxar pra baixo deslocava tudo e abria uma faixa
+    // preta acima do logo. Com ele desligado o app fica colado no topo.
+    // O CSS em ios-webview.css resolve o mesmo pelo lado web e já vale sem
+    // build novo; esta linha é a trava de verdade, e como config nativa só
+    // passa a valer a partir do próximo build iOS.
+    scrollEnabled: false,
   },
   backgroundColor: '#000000',
   plugins: {
