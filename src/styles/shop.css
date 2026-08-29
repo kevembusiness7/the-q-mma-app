@@ -22,7 +22,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 18px 14px;
+  /* O env() mantem a seta de voltar abaixo da status bar agora que o app
+     vai ate a borda de cima da tela. Na web vale 0. */
+  padding: calc(6px + env(safe-area-inset-top, 0px)) 18px 14px;
 }
 
 /* Voltar + título andam juntos à esquerda da appbar, para o espaço entre

@@ -24,8 +24,10 @@
 }
 
 .fh-back {
+  /* Mesmo motivo do .appbar: esta tela nao tem appbar, a seta flutua sobre
+     a foto do atleta e precisa escapar da status bar. */
   position: absolute;
-  top: 14px;
+  top: calc(14px + env(safe-area-inset-top, 0px));
   left: 14px;
   z-index: 6;
   width: 34px;
