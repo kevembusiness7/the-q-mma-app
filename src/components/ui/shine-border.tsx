@@ -34,6 +34,11 @@ interface ShineBorderProps {
  * - Entrou `relative` na caixa de fora: o `before:absolute` precisa de um
  *   ancestral posicionado, e no componente original isso dependia de quem
  *   chamava lembrar de passar `relative` na className.
+ * - Entrou `before:pointer-events-none`. O ::before que desenha a borda é
+ *   absoluto e cobre o cartão INTEIRO; a máscara faz só o anel aparecer,
+ *   mas não muda onde o elemento recebe clique. Sem isso ele engole todo
+ *   toque no conteúdo -- no login, as abas Sign in/Create account ficavam
+ *   mortas e a tela travava no modo padrão.
  */
 export function ShineBorder({
   borderRadius = 8,
@@ -65,7 +70,7 @@ export function ShineBorder({
             "--background-radial-gradient": `radial-gradient(transparent,transparent, ${color instanceof Array ? color.join(",") : color},transparent,transparent)`,
           } as React.CSSProperties
         }
-        className={`before:absolute before:inset-0 before:aspect-square before:size-full before:rounded-[--border-radius] before:p-[--border-width] before:will-change-[background-position] before:content-[""] before:![-webkit-mask-composite:xor] before:![mask-composite:exclude] before:[background-image:--background-radial-gradient] before:[background-size:300%_300%] before:[mask:--mask-linear-gradient] motion-safe:before:animate-shine`}
+        className={`before:pointer-events-none before:absolute before:inset-0 before:aspect-square before:size-full before:rounded-[--border-radius] before:p-[--border-width] before:will-change-[background-position] before:content-[""] before:![-webkit-mask-composite:xor] before:![mask-composite:exclude] before:[background-image:--background-radial-gradient] before:[background-size:300%_300%] before:[mask:--mask-linear-gradient] motion-safe:before:animate-shine`}
       ></div>
       {children}
     </div>

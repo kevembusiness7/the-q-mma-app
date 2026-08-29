@@ -68,7 +68,7 @@ export function YouPage() {
             className="btn conta-entrar"
             onClick={() => openOverlay({ name: 'auth' })}
           >
-            Create account
+            Sign in or create account
           </button>
         )
       )}
