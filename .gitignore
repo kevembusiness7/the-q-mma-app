@@ -10,3 +10,8 @@ dist-ssr
 
 # Arquivos temporarios do Supabase CLI
 supabase/.temp/
+
+# Artes originais em PNG (~8MB) das quais os .webp servidos foram gerados.
+# Ficam fora de public/ pra nao irem pro build, e fora do git pra nao pesarem
+# o historico pra sempre. Guardar junto do resto do material de design.
+originais/

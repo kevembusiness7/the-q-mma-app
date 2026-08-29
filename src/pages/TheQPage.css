@@ -252,16 +252,170 @@
   display: block;
 }
 
-/* Respiro extra pra igualar o vão Shop Now -> Vault (~12px na tela, quase
-   todo embutido na arte do Shop Now). A arte de Coaches/Promotions quase não
-   tem preto embutido (~3px somados), então os ~9px que faltam entram aqui. */
-.banner-btn.banner-respiro {
-  margin-top: 9px;
-}
-
 .banner-btn:focus-visible {
   outline: 2px solid var(--gold, #c8a03c);
   outline-offset: -2px;
+}
+
+/* Promote, Visitor Class e Instagram viram cartões também, pra não destoarem
+   do carrossel logo acima -- 92% da largura e raio de 16px são os mesmos
+   números dos cartões de lá.
+
+   O seletor é `>` de propósito: os slides do carrossel também carregam a
+   classe .banner-btn, mas vivem dentro do trilho, que já os recua pelo
+   próprio padding. Sem o filho direto, eles levariam o recuo duas vezes. */
+.theq-screen > .banner-btn {
+  width: 92%;
+  margin: 0 auto 10px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6);
+}
+
+/* Carrossel VERTICAL dos banners de destino, em formato de cartão: o do meio
+   inteiro, o anterior e o próximo espiando acima e abaixo, menores e mais
+   apagados. Sobe sozinho a cada 4s (o relógio e a pausa ao toque vivem em
+   BannerCarousel.tsx).
+
+   A conta da altura, que é o coração disso:
+
+   As artes são 2172x724 (altura = largura/3), e aqui entram recuadas 4% de
+   cada lado, então cada cartão mede 92% da largura e 92%/3 de altura. Pra
+   sobrar espaço onde os vizinhos apareçam, o trilho é MAIS ALTO que um
+   cartão -- essa sobra é o padding de cima e de baixo, e é dentro dele que
+   os vizinhos aparecem (a área de padding faz parte da região rolável, então
+   o conteúdo que transborda continua visível ali).
+
+   Tudo em proporção da largura, nunca em px fixo, pra a espiada ficar igual
+   em qualquer tela. Com recuo de 4% e padding de 12%, o aspect-ratio que
+   fecha a conta é 2172/1187: a área de conteúdo dá exatamente um cartão e
+   sobram ~45px de cada vizinho.
+
+   O gap ENTRA nessa conta contra: ele fica entre o cartão atual e o vizinho,
+   dentro da sobra, então cada pixel de gap é um pixel a menos de espiada.
+   Por isso ele é pequeno (6px).
+
+   Esse mesmo padding é o que deixa o PRIMEIRO e o ÚLTIMO se centralizarem:
+   sem ele o scroll-snap-align: center não teria pra onde rolar nas pontas e
+   os dois ficariam presos fora do centro. */
+.banner-carousel {
+  padding-bottom: 12px;
+}
+
+.banner-trilho {
+  box-sizing: border-box;
+  aspect-ratio: 2172 / 1187;
+  padding-block: 12%;
+  padding-inline: 4%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  /* A barra some: quem indica posição são as bolinhas abaixo do trilho. */
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.banner-trilho::-webkit-scrollbar {
+  display: none;
+}
+
+/* center, não start: é o que põe o cartão atual no meio do trilho com as
+   sobras iguais em cima e embaixo. Com start ele encostaria no topo e a
+   espiada sairia toda de um lado só.
+
+   overflow: hidden junto do raio é o que faz a arte respeitar os cantos --
+   a imagem é filha do <button>, e sem isso ela vazaria por cima deles.
+
+   A opacidade dos vizinhos é 0.6, nao menos: medido, o brilho médio destas
+   artes é 25 de 255 -- elas já são escuras. Apagar demais sobre um fundo
+   preto some com o vizinho por completo. */
+.banner-slide {
+  flex: 0 0 auto;
+  width: 100%;
+  aspect-ratio: 2172 / 724;
+  scroll-snap-align: center;
+  border-radius: 16px;
+  overflow: hidden;
+  transform: scale(0.94);
+  opacity: 0.6;
+  transition: transform 0.35s ease, opacity 0.35s ease, box-shadow 0.35s ease;
+}
+
+/* A sombra só no ativo: é ela que descola o cartão do fundo preto e dá a
+   sensação de camada. Nos vizinhos ela só sujaria a espiada. */
+.banner-slide.is-active {
+  transform: scale(1);
+  opacity: 1;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6);
+}
+
+/* object-fit cover em vez do width:100%/height:auto dos banners soltos: aqui
+   a altura vem do aspect-ratio do slide, e sem o cover a arte esticaria. */
+.banner-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .banner-slide {
+    transition: none;
+  }
+}
+.banner-dots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 6px 4px;
+  margin-top: 10px;
+  padding: 0 18px;
+}
+
+/* O botão é bem maior que a bolinha que ele desenha -- a bolinha tem 6px,
+   mas o alvo de toque precisa dos ~20px pra ser pegável com o polegar. */
+.banner-dot {
+  width: 20px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.banner-dot::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--dust, #948a81);
+  opacity: 0.5;
+  transition: width 0.25s ease, background 0.25s ease, opacity 0.25s ease;
+}
+
+.banner-dot.is-active::after {
+  width: 16px;
+  background: var(--gold, #c8a03c);
+  opacity: 1;
+}
+
+.banner-dot:focus-visible {
+  outline: 2px solid var(--gold, #c8a03c);
+  outline-offset: 1px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .banner-dot::after {
+    transition: none;
+  }
 }
 
 /* Nenhuma margem extra entre o carrossel e o primeiro banner (Visitor Class):

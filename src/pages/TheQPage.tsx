@@ -1,5 +1,6 @@
 import { BannerLink } from '../components/theq/BannerLink';
 import RecursiveErosionBackground from '../components/ui/recursive-erosion';
+import { BannerCarousel } from '../components/theq/BannerCarousel';
 import { NewsCarousel } from '../components/theq/NewsCarousel';
 import { useNews } from '../hooks/useNews';
 import './TheQPage.css';
@@ -69,44 +70,51 @@ export function TheQPage({ onNavigate }: TheQPageProps) {
       )}
 
       <BannerLink
-        src="/images/brand/banner-visitorclass.png"
+        src="/images/brand/banner-promotions.webp"
+        alt="Divulgar sua marca com um atleta"
+        onClick={go('promotions')}
+      />
+      <BannerLink
+        src="/images/brand/banner-visitorclass.webp"
         alt="Pedir uma aula de visitante na academia"
         onClick={go('my-visitor-request')}
       />
-      <BannerLink
-        src="/images/brand/banner-athletes.jpg"
-        alt="Ver os atletas do time"
-        onClick={go('athletes')}
-      />
-      <BannerLink
-        src="/images/brand/banner-coaches.png"
-        alt="Conhecer os treinadores"
-        onClick={go('coaches')}
-      />
-      <BannerLink
-        src="/images/brand/banner-promotions.png"
-        alt="Divulgar sua marca com um atleta"
-        onClick={go('promotions')}
-        className="banner-respiro"
-      />
-      <BannerLink
-        src="/images/brand/banner-shopnow.png"
-        alt="Ir para a loja"
-        onClick={go('shop')}
-      />
-      <BannerLink
-        src="/images/brand/banner-vault.png"
-        alt="Ver o leilão de itens dos atletas"
-        onClick={go('vault')}
-      />
-      <BannerLink
-        src="/images/brand/banner-sponsors.jpg"
-        alt="Ver os patrocinadores oficiais"
-        onClick={go('sponsors')}
+
+      {/* Os cinco destinos principais num carrossel vertical: empilhados eram
+          cinco telas de rolagem só pra passar por eles. A ordem é a definida
+          pelo dono do app. */}
+      <BannerCarousel
+        slides={[
+          {
+            src: '/images/brand/banner-sponsors.webp',
+            alt: 'os patrocinadores oficiais',
+            onClick: go('sponsors'),
+          },
+          {
+            src: '/images/brand/banner-vault.webp',
+            alt: 'o leilão de itens dos atletas',
+            onClick: go('vault'),
+          },
+          {
+            src: '/images/brand/banner-shopnow.webp',
+            alt: 'a loja',
+            onClick: go('shop'),
+          },
+          {
+            src: '/images/brand/banner-coaches.webp',
+            alt: 'os treinadores',
+            onClick: go('coaches'),
+          },
+          {
+            src: '/images/brand/banner-athletes.webp',
+            alt: 'os atletas do time',
+            onClick: go('athletes'),
+          },
+        ]}
       />
 
       <BannerLink
-        src="/images/brand/banner-instagram.png"
+        src="/images/brand/banner-instagram.webp"
         alt="Seguir The Q MMA no Instagram"
         href={INSTAGRAM_URL}
       />
