@@ -69,22 +69,22 @@ export function TheQPage({ onNavigate }: TheQPageProps) {
         <NewsCarousel items={news} />
       )}
 
-      <BannerLink
-        src="/images/brand/banner-promotions.webp"
-        alt="Divulgar sua marca com um atleta"
-        onClick={go('promotions')}
-      />
-      <BannerLink
-        src="/images/brand/banner-visitorclass.webp"
-        alt="Pedir uma aula de visitante na academia"
-        onClick={go('my-visitor-request')}
-      />
-
-      {/* Os cinco destinos principais num carrossel vertical: empilhados eram
-          cinco telas de rolagem só pra passar por eles. A ordem é a definida
-          pelo dono do app. */}
+      {/* Os sete destinos principais num carrossel vertical: empilhados eram
+          sete telas de rolagem só pra passar por eles. A ordem é a definida
+          pelo dono do app -- os dois primeiros vinham soltos acima do
+          carrossel e mantêm o lugar que já tinham na leitura da tela. */}
       <BannerCarousel
         slides={[
+          {
+            src: '/images/brand/banner-promotions.webp',
+            alt: 'divulgar sua marca com um atleta',
+            onClick: go('promotions'),
+          },
+          {
+            src: '/images/brand/banner-visitorclass.webp',
+            alt: 'pedir uma aula de visitante na academia',
+            onClick: go('my-visitor-request'),
+          },
           {
             src: '/images/brand/banner-sponsors.webp',
             alt: 'os patrocinadores oficiais',
