@@ -79,6 +79,10 @@ export interface Coach {
   specialty: string;
   city: string;
   instagram: string;
+  /** Modalidades em que competiu/ensina — a linha "Muay Thai · MMA · Boxing". */
+  disciplines: string[];
+  /** Frentes de trabalho, o bloco "Expertise". */
+  expertise: string[];
   /** Atletas que o treinador prepara. */
   notable: string;
   /** Versão curta — é a que fica visível no card fechado. */
@@ -99,6 +103,8 @@ export interface Sponsor {
   logo: string;
   website?: string;
   instagram?: string;
+  /** Duas ou três frases curtas do que a parceria entrega, em pílulas. */
+  highlights?: string[];
   /** Destaca o card com borda dourada. */
   featured?: boolean;
 }

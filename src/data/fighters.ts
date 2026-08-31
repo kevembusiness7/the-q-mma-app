@@ -426,3 +426,31 @@ export const fighters: FighterProfile[] = [
     ],
   },
 ];
+
+/** "Jean-Paul Lebosnoyani" e "Jean Paul Lebosnoyani" viram a mesma chave. */
+export function chaveDoNome(nome: string): string {
+  return nome
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '');
+}
+
+/**
+ * País do atleta para as telas que só têm o cadastro do Supabase em mãos —
+ * `athletes` e `promotion_athletes` não guardam essa coluna, então a bandeira
+ * sai daqui.
+ *
+ * O slug é o caminho normal, mas nem toda tabela usa o mesmo: em
+ * promotion_athletes o Jean-Paul entrou como `jean-paul-lebosnoyani` e aqui
+ * ele é `jp-lebosnoyani`. Por isso o nome serve de segunda tentativa, sem
+ * acento, hífen nem espaço — assim um cadastro novo com slug diferente ainda
+ * acha a bandeira em vez de aparecer sem ela.
+ */
+export function paisDoAtleta(slug: string, nome?: string): FighterProfile['country'] | undefined {
+  const porSlug = fighters.find((f) => f.slug === slug);
+  if (porSlug) return porSlug.country;
+  if (!nome) return undefined;
+  const chave = chaveDoNome(nome);
+  return fighters.find((f) => chaveDoNome(f.name) === chave)?.country;
+}

@@ -1,0 +1,387 @@
+/* Ficha do atleta em Athlete Promotions -- feita a partir do cartaz enviado
+   pelo cliente: moldura dourada, foto com a bandeira do país atrás, três
+   métricas em quadros e os pacotes como linhas com preço e SELECT.
+
+   Vive num arquivo só dela porque nada aqui é reaproveitado da loja: a ficha
+   antiga usava .hero-img/.pdp emprestados do PDP de produto, e continuar em
+   cima deles significaria mexer no estilo de telas que não pediram mudança. */
+
+.promo-profile {
+  --pp-gold: #d6a62e;
+  --pp-gold-bright: #f2c24e;
+  --pp-gold-dim: rgba(214, 166, 46, 0.35);
+  padding: 8px 8px 20px;
+  background: #050403;
+}
+
+/* A moldura do cartaz. Os dois radiais deixam topo e pé mais quentes que o
+   miolo, como no original, sem precisar de imagem de textura. */
+.pp-frame {
+  position: relative;
+  border-radius: 22px;
+  padding: 0 0 20px;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 60% at 50% 0%, rgba(214, 166, 46, 0.12), transparent 70%),
+    radial-gradient(90% 50% at 50% 100%, rgba(214, 166, 46, 0.08), transparent 70%),
+    #0a0807;
+  box-shadow:
+    0 0 0 1px rgba(214, 166, 46, 0.5),
+    0 0 24px rgba(0, 0, 0, 0.8) inset;
+}
+
+/* ------------------------------------------------------------- topo ----- */
+
+.pp-hero {
+  position: relative;
+  height: clamp(300px, 48dvh, 380px);
+  overflow: hidden;
+}
+
+/* 16px: mesma linha de topo do resto do app (.appbar, .backbar). */
+.pp-logo {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 62px;
+  height: auto;
+  z-index: 3;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7));
+}
+
+/* O cartaz não tem botão de voltar -- mas a tela precisa de um. Fica do lado
+   oposto ao logo, redondo e discreto, para não brigar com a marca. */
+.pp-back {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--pp-gold-dim);
+  background: rgba(10, 8, 7, 0.55);
+  color: var(--pp-gold-bright);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+}
+
+/* Aqui a bandeira é protagonista, não marca d'água como no card da vitrine e
+   no topo da ficha completa: no cartaz ela aparece inteira atrás do atleta.
+   Por isso a opacidade alta e o brightness acima de 1 -- as SVGs são chapadas
+   e, sem isso, o verde do Brasil some no fundo preto. */
+.pp-flag {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  width: 104%;
+  height: auto;
+  z-index: 0;
+  opacity: 0.62;
+  filter: saturate(1.15) brightness(1.12) contrast(1.02);
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 45%, #000 40%, transparent 78%);
+  mask-image: radial-gradient(ellipse at 50% 45%, #000 40%, transparent 78%);
+}
+
+/* Ancorada embaixo: as fotos são recortes de proporções diferentes e é o pé
+   da imagem que precisa encostar no nome, não o topo. */
+.pp-photo {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  height: 100%;
+  width: auto;
+  max-width: 112%;
+  object-fit: contain;
+  object-position: bottom;
+  z-index: 1;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.55));
+}
+
+.pp-photo-vazia {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 56px;
+  opacity: 0.35;
+  z-index: 1;
+}
+
+/* Dissolve o pé da foto e da bandeira no fundo, senão a moldura corta as duas
+   numa linha reta. */
+.pp-scrim {
+  position: absolute;
+  inset: auto 0 0;
+  height: 45%;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(10, 8, 7, 0.75) 62%, #0a0807);
+}
+
+/* ------------------------------------------------------------- nome ----- */
+
+.pp-name {
+  margin: -6px 16px 0;
+  text-align: center;
+  font-family: var(--q-display);
+  font-size: clamp(34px, 11vw, 46px);
+  line-height: 0.95;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #ffffff 12%, #efe7d6 48%, #c39a37 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* O clip em texto apaga qualquer text-shadow, então o contorno escuro que
+     separa o nome do fundo vem do drop-shadow, que age sobre o recorte. */
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.8));
+}
+
+.pp-handle {
+  margin: 8px 16px 0;
+  text-align: center;
+  font-size: 16px;
+  color: var(--pp-gold-bright);
+}
+
+.pp-division {
+  margin: 4px 16px 0;
+  text-align: center;
+  font-size: 14px;
+  color: #e8e3db;
+}
+
+.pp-bio {
+  margin: 8px 24px 0;
+  text-align: center;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #9a938c;
+}
+
+/* --------------------------------------------------------- métricas ----- */
+
+.pp-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 16px 14px 0;
+}
+
+.pp-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 4px 10px;
+  border: 1px solid var(--pp-gold-dim);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(30, 25, 20, 0.75), rgba(10, 8, 7, 0.75));
+  color: var(--pp-gold);
+}
+
+.pp-stat b {
+  font-family: var(--q-display);
+  font-size: 26px;
+  line-height: 1;
+  letter-spacing: 0.5px;
+  color: #f5f2ec;
+}
+
+/* Os rótulos são o que mais cresce ("Avg. story views") e são eles que
+   decidem se as três colunas cabem em 430px -- daí o corpo pequeno. */
+.pp-stat span {
+  font-size: 9px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--pp-gold);
+}
+
+/* Data com um filete de cada lado, como no cartaz. */
+.pp-asof {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 20px 0;
+  font-size: 12px;
+  font-style: italic;
+  color: #8b8279;
+}
+
+.pp-asof::before,
+.pp-asof::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--pp-gold-dim), transparent);
+}
+
+/* --------------------------------------------------------- pacotes ------ */
+
+.pp-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 22px 16px 14px;
+  font-family: var(--q-display);
+  font-size: 22px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--pp-gold-bright);
+  white-space: nowrap;
+}
+
+.pp-section::before,
+.pp-section::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--pp-gold-dim), transparent);
+}
+
+.pp-packages {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 14px;
+}
+
+.pp-package {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #2a241f;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #14110f, #0b0a09);
+  text-align: left;
+  cursor: pointer;
+}
+
+/* O de maior alcance: mesma borda acesa e halo do cartaz. */
+.pp-package.best {
+  border-color: rgba(242, 194, 78, 0.85);
+  box-shadow:
+    0 0 18px rgba(214, 166, 46, 0.22),
+    0 0 0 1px rgba(242, 194, 78, 0.25);
+  background: linear-gradient(180deg, #1a1510, #0d0b09);
+}
+
+.pp-package-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  border: 1px solid var(--pp-gold-dim);
+  color: var(--pp-gold-bright);
+}
+
+.pp-package-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pp-package-text b {
+  font-size: 15px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #f5f2ec;
+}
+
+.pp-package-desc {
+  font-size: 12px;
+  line-height: 1.35;
+  color: #9a938c;
+}
+
+.pp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  align-self: flex-start;
+  margin-top: 6px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--pp-gold-bright), #b8862a);
+  color: #1a1206;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.pp-package-buy {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.pp-package-buy b {
+  font-family: var(--q-display);
+  font-size: 26px;
+  line-height: 1;
+  color: var(--pp-gold-bright);
+}
+
+/* Parece um botão, mas é um <span>: o card inteiro já é o <button> que abre a
+   reserva, e um botão dentro do outro seria HTML inválido. */
+.pp-select {
+  padding: 5px 14px;
+  border: 1px solid var(--pp-gold);
+  border-radius: 8px;
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--pp-gold-bright);
+}
+
+/* ---------------------------------------------------------- rodapé ------ */
+
+.pp-footer {
+  margin: 22px 20px 0;
+  text-align: center;
+}
+
+.pp-shield {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--pp-gold-dim);
+  color: var(--pp-gold);
+}
+
+.pp-footer p {
+  position: relative;
+  margin-top: 12px;
+  padding-top: 12px;
+  font-size: 12px;
+  font-style: italic;
+  color: #8b8279;
+}
+
+.pp-footer p::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--pp-gold-dim), transparent);
+}

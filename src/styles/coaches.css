@@ -1,0 +1,374 @@
+/* Aba Coaches no formato do cartaz enviado pelo cliente: foto do treinador de
+   ponta a ponta, nome em degradê, três números, os blocos "Coach profile" e
+   "Expertise", os dois botões e a cidade no rodapé.
+
+   Mesma família de promo-profile.css e promo-showcase.css (moldura dourada,
+   fundo preto, malha do octógono em CSS). Arquivo próprio porque o que existia
+   antes vivia em shop.css, misturado com loja e patrocinadores. */
+
+.coaches-screen {
+  --co-gold: #d6a62e;
+  --co-gold-bright: #f2c24e;
+  --co-gold-dim: rgba(214, 166, 46, 0.35);
+  position: relative;
+  min-height: 100%;
+  padding-bottom: 24px;
+  background: #050403;
+}
+
+/* ---------------------------------------------------------- barra topo -- */
+
+.co-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  /* 16px no topo: a mesma linha em que .appbar e .backbar comecam no resto do
+     app, pra tela nao parecer deslocada ao trocar de aba. */
+  padding: 16px 16px 14px;
+  border-bottom: 1px solid var(--co-gold-dim);
+}
+
+.co-bar-back {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--co-gold-bright);
+  cursor: pointer;
+}
+
+.co-bar-logo {
+  width: 38px;
+  height: auto;
+  margin-left: auto;
+}
+
+.co-bar-divisor {
+  width: 1px;
+  height: 24px;
+  background: var(--co-gold-dim);
+}
+
+.co-bar-titulo {
+  margin-right: auto;
+  font-family: var(--q-display);
+  font-size: 17px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #f5f2ec;
+}
+
+/* ------------------------------------------------------------- coach ---- */
+
+.co-card {
+  position: relative;
+  margin: 0 0 28px;
+}
+
+/* A malha da grade do octogono, atras do bloco inteiro: duas familias de
+   linhas cruzadas em vez de uma imagem -- e textura de ambientacao e assim nao
+   entra arquivo novo no bundle. */
+.co-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(60deg, rgba(214, 166, 46, 0.06) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(-60deg, rgba(214, 166, 46, 0.06) 0 1px, transparent 1px 26px);
+  -webkit-mask-image: linear-gradient(90deg, #000, transparent 26%, transparent 74%, #000);
+  mask-image: linear-gradient(90deg, #000, transparent 26%, transparent 74%, #000);
+}
+
+.co-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* A foto do coach nao e recorte com fundo transparente como a dos atletas --
+   e uma foto inteira, com o octogono ao fundo. Por isso ela ocupa a largura
+   toda e some no preto por baixo, em vez de ficar dentro de uma moldura. */
+.co-foto {
+  position: relative;
+  height: clamp(320px, 52dvh, 420px);
+  overflow: hidden;
+}
+
+.co-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.co-foto::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 45%;
+  background: linear-gradient(180deg, transparent, rgba(5, 4, 3, 0.75) 58%, #050403);
+}
+
+.co-nome {
+  margin: -8px 12px 0;
+  text-align: center;
+  font-family: var(--q-display);
+  font-size: clamp(30px, 9.4vw, 42px);
+  line-height: 0.95;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background-image: linear-gradient(180deg, #ffffff 10%, #efe7d6 45%, #c39a37 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* O clip em texto apaga text-shadow, entao o contorno escuro que separa o
+     nome da foto vem do drop-shadow, que age sobre o recorte. */
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.85));
+}
+
+.co-role {
+  margin: 8px 16px 0;
+  text-align: center;
+  font-family: var(--q-display);
+  font-size: 19px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--co-gold-bright);
+}
+
+.co-disciplinas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 8px 16px 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #f5f2ec;
+}
+
+/* O ponto entre as modalidades e desenhado, nao digitado: assim a lista pode
+   ter dois ou cinco itens sem ninguem editar separador na mao. */
+.co-disciplinas li + li::before {
+  content: '•';
+  margin-right: 10px;
+  color: var(--co-gold);
+}
+
+/* --------------------------------------------------------- numeros ------ */
+
+.co-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 18px 14px 0;
+}
+
+.co-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 4px 12px;
+  border: 1px solid var(--co-gold-dim);
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(28, 23, 18, 0.8), rgba(8, 7, 6, 0.8));
+  color: var(--co-gold);
+}
+
+.co-stat b {
+  font-family: var(--q-display);
+  font-size: 34px;
+  line-height: 1;
+  color: #f5f2ec;
+}
+
+/* Os rotulos sao o que mais cresce ("Professional bouts") e sao eles que
+   decidem se as tres colunas cabem em 430px -- dai o corpo pequeno. */
+.co-stat span {
+  font-size: 9px;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--co-gold);
+}
+
+/* ---------------------------------------------------------- secoes ------ */
+
+.co-sec-titulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 20px 16px 8px;
+  font-family: var(--q-display);
+  font-size: 17px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--co-gold-bright);
+}
+
+.co-box {
+  margin: 0 14px;
+  padding: 14px;
+  border: 1px solid var(--co-gold-dim);
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(20, 17, 14, 0.7), rgba(8, 7, 6, 0.7));
+}
+
+.co-box p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #ddd6cd;
+}
+
+.co-box p + p {
+  margin-top: 10px;
+}
+
+.co-quote {
+  margin-top: 12px;
+  padding-left: 12px;
+  border-left: 2px solid var(--co-gold-dim);
+  font-size: 13.5px;
+  font-style: italic;
+  line-height: 1.55;
+  color: #b9b2aa;
+}
+
+.co-label {
+  display: block;
+  margin: 14px 0 4px;
+  font-family: var(--q-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--co-gold);
+}
+
+/* ------------------------------------------------------- expertise ------ */
+
+.co-expertise {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 0 14px;
+  border: 1px solid var(--co-gold-dim);
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(20, 17, 14, 0.7), rgba(8, 7, 6, 0.7));
+}
+
+.co-expertise li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 14px 6px;
+  color: var(--co-gold);
+}
+
+/* O filete entre as colunas e a borda da vizinha, nao um elemento proprio --
+   com duas ou quatro frentes o desenho continua fechando. */
+.co-expertise li + li {
+  border-left: 1px solid var(--co-gold-dim);
+}
+
+.co-expertise span {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.25;
+  color: var(--co-gold-bright);
+}
+
+/* --------------------------------------------------------- botoes ------- */
+
+.co-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: calc(100% - 28px);
+  margin: 12px 14px 0;
+  padding: 13px 10px;
+  border: 1px solid var(--co-gold);
+  border-radius: 10px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--co-gold-bright);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* O Instagram e a acao principal do cartaz, entao vem preenchido. */
+.co-btn.cheio {
+  border-color: var(--co-gold-bright);
+  background: linear-gradient(180deg, #f0c65b, #c08f22);
+  color: #1a1206;
+  box-shadow: 0 0 16px rgba(214, 166, 46, 0.25);
+}
+
+/* ---------------------------------------------------------- rodape ------ */
+
+.co-local {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 22px 20px 0;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #cfc8c0;
+}
+
+.co-local::before,
+.co-local::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--co-gold-dim), transparent);
+}
+
+.co-local svg {
+  color: var(--co-gold);
+}
+
+/* ----------------------------------------------------------- icones ----- */
+
+/* Os desenhados aqui (Svg de AccountAndInfoPages) não trazem width/height, e
+   os do lucide trazem -- o tamanho vem daqui para os dois casos ficarem
+   iguais. */
+.co-stat svg {
+  width: 30px;
+  height: 30px;
+}
+
+.co-sec-titulo svg {
+  width: 19px;
+  height: 19px;
+}
+
+.co-expertise svg {
+  width: 28px;
+  height: 28px;
+}
+
+.co-btn svg {
+  width: 19px;
+  height: 19px;
+}
+
+.co-local svg {
+  width: 15px;
+  height: 15px;
+}

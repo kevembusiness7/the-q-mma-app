@@ -1,55 +1,65 @@
+import { ChevronLeft, ShieldCheck } from 'lucide-react'
 import { useNav } from '../context/NavigationContext'
 import { usePromotionAthletes } from '../hooks/useAthletePromotions'
 import { PromoAthleteCard } from '../components/promotions/PromoAthleteCard'
-import '../styles/shop.css'
-import '../styles/promotions.css'
+import '../styles/promo-showcase.css'
 
 /**
  * Vitrine de Athlete Promotions — escolher o atleta é o primeiro passo do
  * fluxo Choose Athlete → Choose Package → Select Date → Upload → Payment →
- * Review. As telas seguintes (ficha do atleta, reserva) chegam nas próximas
- * fases; por ora o card abre a ficha, que ainda mostra os pacotes só pra
- * leitura.
+ * Review.
+ *
+ * O desenho é o do cartaz enviado pelo cliente: chamada em duas cores, grade
+ * de dois com a bandeira do país atrás de cada atleta e o selo de revisão no
+ * rodapé. Os estilos ficam em promo-showcase.css.
  */
 export function PromotionsPage() {
   const { openOverlay, closeOverlay } = useNav()
   const { atletas, carregando, erro } = usePromotionAthletes()
 
   return (
-    <div className="shop-screen">
-      <header className="appbar">
-        <div className="appbar-lead">
-          <button type="button" className="appbar-back" onClick={closeOverlay} aria-label="Voltar">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-              <path d="M15 5l-7 7 7 7" />
-            </svg>
-          </button>
-          <span className="wordmark">Athlete promotions</span>
-        </div>
+    <div className="promo-showcase">
+      <header className="ps-bar">
+        <button type="button" className="ps-bar-back" onClick={closeOverlay} aria-label="Voltar">
+          <ChevronLeft size={24} strokeWidth={2} aria-hidden />
+        </button>
+        <span className="ps-bar-divisor" aria-hidden />
+        <img className="ps-bar-logo" src="/images/brand/logo-theq.png" alt="THE Q MMA" />
+        <h1 className="ps-bar-titulo">Athlete promotions</h1>
       </header>
 
-      <div className="sec">
-        <h3>Promote your brand with our fighters</h3>
-      </div>
-      <p className="empty" style={{ padding: '0 16px 16px', textAlign: 'left' }}>
-        Book a sponsored Instagram Story, Feed Post, or Reel from one of our athletes. Every
-        campaign is reviewed by our team before it goes live.
+      <h2 className="ps-titulo">
+        <span className="ouro">Promote your brand</span>
+        <span className="prata">With our fighters</span>
+      </h2>
+      <hr className="ps-rule" />
+      <p className="ps-sub">
+        Book an Instagram Story, Feed Post, or Reel directly with our athletes.
       </p>
 
-      {carregando && <p className="empty">Loading athletes…</p>}
-      {erro && <p className="empty">Could not load: {erro}</p>}
-      {!carregando && atletas.length === 0 && (
-        <p className="empty">No athletes available for promotion right now.</p>
+      {carregando && <p className="ps-vazio">Loading athletes…</p>}
+      {erro && <p className="ps-vazio">Could not load: {erro}</p>}
+      {!carregando && !erro && atletas.length === 0 && (
+        <p className="ps-vazio">No athletes available for promotion right now.</p>
       )}
 
-      <div className="promo-grid">
-        {atletas.map((atleta) => (
-          <PromoAthleteCard
-            key={atleta.slug}
-            atleta={atleta}
-            onOpen={() => openOverlay({ name: 'promotion-athlete', slug: atleta.slug })}
-          />
-        ))}
+      {atletas.length > 0 && (
+        <div className="ps-grid">
+          {atletas.map((atleta) => (
+            <PromoAthleteCard
+              key={atleta.slug}
+              atleta={atleta}
+              onOpen={() => openOverlay({ name: 'promotion-athlete', slug: atleta.slug })}
+            />
+          ))}
+        </div>
+      )}
+
+      <div className="ps-footer">
+        <span className="ps-shield" aria-hidden>
+          <ShieldCheck size={20} strokeWidth={1.6} />
+        </span>
+        <p>Every campaign is reviewed and approved before it goes live.</p>
       </div>
     </div>
   )

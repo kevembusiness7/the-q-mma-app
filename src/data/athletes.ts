@@ -1,4 +1,5 @@
 import type { AthleteWithFights, FightRecord } from '../types/athlete'
+import { chaveDoNome } from './fighters'
 
 /**
  * MOCK DATA — structured to match `supabase/schema.sql` exactly.
@@ -379,4 +380,20 @@ export const ATHLETES: AthleteWithFights[] = [
 
 export function getAthleteBySlug(slug: string): AthleteWithFights | undefined {
   return ATHLETES.find((a) => a.slug === slug)
+}
+
+/**
+ * "UFC Flyweight" para as telas de Athlete Promotions -- promotion_athletes
+ * não guarda organização nem categoria, então elas saem daqui.
+ *
+ * Casa por slug e, se falhar, pelo nome normalizado: o mesmo descasamento que
+ * a bandeira tem (o Jean-Paul é 'jean-paul-lebosnoyani' em promotions e
+ * 'jp-lebosnoyani' aqui). Ver paisDoAtleta em ./fighters.
+ */
+export function divisaoDoAtleta(slug: string, nome?: string): string | undefined {
+  const atleta =
+    ATHLETES.find((a) => a.slug === slug) ??
+    (nome ? ATHLETES.find((a) => chaveDoNome(a.name) === chaveDoNome(nome)) : undefined)
+  if (!atleta) return undefined
+  return [atleta.organization, atleta.division].filter(Boolean).join(' ')
 }

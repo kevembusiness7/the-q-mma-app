@@ -335,8 +335,10 @@ export const coaches: Coach[] = [
     role: 'Head Coach',
     belt: 'Black Belt · Muay Thai',
     specialty: 'Fight Camp Preparation',
-    city: 'Rio de Janeiro, RJ',
+    city: 'Rio de Janeiro, Brazil',
     instagram: 'https://www.instagram.com/matheusnaccache/',
+    disciplines: ['Muay Thai', 'MMA', 'Boxing'],
+    expertise: ['Fight strategy', 'Technical development', 'Game planning'],
     notable:
       'Aljamain Sterling, Osman "Ozzy" Diaz, Dione Barbosa, Jean-Paul Lebosnoyani, Levan Chokheli, César Almeida, Shane Collins, Nazim Sadykhov, Artur Minev',
     bio: 'Coach Naccache is the Head Coach of The Q MMA, with approximately 19 years of experience in combat sports. A former professional MMA, Muay Thai/Kickboxing, and Boxing competitor, he completed 46 professional bouts and has spent approximately 11 years coaching athletes. His methodology combines technical development, individualized strategy, and opponent-specific game planning.',
@@ -349,9 +351,9 @@ export const coaches: Coach[] = [
       'Beyond preparing athletes to compete, Coach Naccache emphasizes personal responsibility, discipline, and accountability for every decision.',
     ],
     stats: [
-      { label: 'Experience', value: '19 yrs' },
-      { label: 'Pro bouts', value: '46' },
-      { label: 'Coaching', value: '11 yrs' },
+      { label: 'Years experience', value: '19' },
+      { label: 'Professional bouts', value: '46' },
+      { label: 'Years coaching', value: '11' },
     ],
     quote:
       'Do what you want and think as you choose, but never blame anyone else for your results.',
@@ -367,6 +369,7 @@ export const sponsors: Sponsor[] = [
       'Official trading card partner of The Q MMA, producing collectible cards for the team roster.',
     logo: '/images/sponsors/blez-sports-cards.jpg',
     website: 'https://www.blezonline.com/',
+    highlights: ['Trading card partner', 'Collectible team cards'],
     featured: true,
   },
 ];

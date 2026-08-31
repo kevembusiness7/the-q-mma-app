@@ -1,0 +1,326 @@
+/* Vitrine de Athlete Promotions -- a tela de escolher o atleta, feita a partir
+   do cartaz enviado pelo cliente. Irmã de promo-profile.css: mesma paleta e
+   mesmas peças (moldura, bandeira atrás da foto, rodapé com escudo), só que
+   aqui em grade de dois.
+
+   Fora de promotions.css de propósito: aquele arquivo é do admin e do fluxo de
+   reserva, e o que sobrou de vitrine lá dentro virou este arquivo. */
+
+.promo-showcase {
+  --ps-gold: #d6a62e;
+  --ps-gold-bright: #f2c24e;
+  --ps-gold-dim: rgba(214, 166, 46, 0.35);
+  position: relative;
+  min-height: 100%;
+  padding-bottom: 24px;
+  background: #050403;
+}
+
+/* A tela de fundo do cartaz: brilho dourado nos cantos de cima e a malha da
+   grade do octógono. A malha são duas famílias de linhas cruzadas em vez de
+   uma imagem -- é textura de ambientação, ninguém olha de perto, e assim não
+   entra arquivo novo no bundle. */
+.promo-showcase::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 520px;
+  pointer-events: none;
+  background:
+    radial-gradient(70% 40% at 0% 0%, rgba(214, 166, 46, 0.16), transparent 70%),
+    radial-gradient(70% 40% at 100% 0%, rgba(214, 166, 46, 0.16), transparent 70%),
+    repeating-linear-gradient(60deg, rgba(214, 166, 46, 0.07) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(-60deg, rgba(214, 166, 46, 0.07) 0 1px, transparent 1px 26px);
+  -webkit-mask-image: radial-gradient(120% 100% at 50% 0%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(120% 100% at 50% 0%, #000 20%, transparent 75%);
+}
+
+/* Tudo que é conteúdo sobe acima da textura. */
+.promo-showcase > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------------------------------------------------------- barra topo -- */
+
+/* 16px no topo: a mesma linha em que .appbar e .backbar começam no resto do
+   app, para a tela não parecer deslocada ao trocar de aba. */
+.ps-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 16px 14px;
+  border-bottom: 1px solid var(--ps-gold-dim);
+}
+
+.ps-bar-back {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ps-gold-bright);
+  cursor: pointer;
+}
+
+.ps-bar-divisor {
+  width: 1px;
+  height: 24px;
+  background: var(--ps-gold-dim);
+}
+
+.ps-bar-logo {
+  width: 38px;
+  height: auto;
+}
+
+.ps-bar-titulo {
+  font-family: var(--q-display);
+  font-size: 17px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--ps-gold-bright);
+}
+
+/* -------------------------------------------------------------- lede ---- */
+
+.ps-titulo {
+  margin: 22px 16px 0;
+  text-align: center;
+  font-family: var(--q-display);
+  font-size: clamp(30px, 9.6vw, 42px);
+  line-height: 0.94;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* As duas linhas têm cores diferentes no cartaz: a primeira dourada, a
+   segunda prata. Como o gradiente é recortado no texto, cada uma precisa ser
+   seu próprio elemento -- daí os dois <span>. */
+.ps-titulo span {
+  display: block;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.8));
+}
+
+.ps-titulo .ouro {
+  background-image: linear-gradient(180deg, #ffe9ae 8%, #e0b445 45%, #a97c1d 100%);
+}
+
+.ps-titulo .prata {
+  background-image: linear-gradient(180deg, #ffffff 10%, #e4ded6 45%, #8f8a84 100%);
+}
+
+.ps-rule {
+  width: 96px;
+  height: 1px;
+  margin: 14px auto 0;
+  border: 0;
+  background: linear-gradient(90deg, transparent, var(--ps-gold), transparent);
+}
+
+.ps-sub {
+  max-width: 300px;
+  margin: 12px auto 0;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #b9b2aa;
+}
+
+/* ------------------------------------------------------------- grade ---- */
+
+.ps-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 20px 14px 0;
+}
+
+.ps-card {
+  display: flex;
+  flex-direction: column;
+  padding: 0 0 12px;
+  border: 1px solid var(--ps-gold-dim);
+  border-radius: 14px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #0d0b0a, #070605);
+  text-align: center;
+  cursor: pointer;
+}
+
+.ps-foto {
+  display: block;
+  position: relative;
+  aspect-ratio: 1 / 1.12;
+  overflow: hidden;
+}
+
+/* Mais forte que a marca d'água da lista antiga, mais fraca que a da ficha:
+   no cartaz a bandeira se lê atrás da cabeça e some antes do nome. O corte é
+   linear (e não radial como nas outras telas) porque aqui ela preenche a
+   largura inteira do quadro e só precisa sumir para baixo. */
+.ps-flag {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 122%;
+  height: auto;
+  z-index: 0;
+  opacity: 0.55;
+  filter: saturate(0.95) brightness(0.92) contrast(1);
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(180deg, #000 42%, transparent 88%);
+  mask-image: linear-gradient(180deg, #000 42%, transparent 88%);
+}
+
+/* object-position: top -- as fotos são recortes largos (o da Dione tem 888x764)
+   e, centralizadas, o corte comia a cabeça. */
+.ps-foto img.ps-atleta {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  z-index: 1;
+}
+
+.ps-foto-vazia {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 34px;
+  opacity: 0.35;
+  z-index: 1;
+}
+
+/* Funde o pé da foto no card, como no cartaz -- sem isso a foto termina numa
+   linha reta em cima do nome. */
+.ps-scrim {
+  position: absolute;
+  inset: auto 0 0;
+  height: 42%;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(9, 7, 6, 0.8) 60%, #0a0807);
+}
+
+.ps-nome {
+  display: block;
+  margin: -2px 8px 0;
+  font-family: var(--q-display);
+  font-size: 19px;
+  line-height: 1;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background-image: linear-gradient(180deg, #ffe9ae 10%, #e0b445 50%, #b6871f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  overflow-wrap: anywhere;
+}
+
+/* "Jean Paul Lebosnoyani" tem quase o dobro das letras de "Artur Minev" e
+   quebraria em duas linhas na metade da largura da tela. */
+.ps-nome.longo {
+  font-size: 15px;
+}
+
+.ps-handle {
+  display: block;
+  margin: 5px 8px 0;
+  font-size: 12.5px;
+  color: #cfc8c0;
+}
+
+.ps-card-rule {
+  display: block;
+  width: 72%;
+  height: 1px;
+  margin: 10px auto;
+  border: 0;
+  background: linear-gradient(90deg, transparent, var(--ps-gold-dim), transparent);
+}
+
+.ps-from {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  margin: 0 8px;
+}
+
+.ps-from span {
+  font-size: 9.5px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #9a938c;
+}
+
+.ps-from b {
+  font-family: var(--q-display);
+  font-size: 19px;
+  color: var(--ps-gold-bright);
+}
+
+/* Parece botão, mas é <span>: o card inteiro já é o <button> que abre a ficha,
+   e botão dentro de botão é HTML inválido. */
+.ps-cta {
+  display: block;
+  margin: 12px 10px 0;
+  padding: 8px 4px;
+  border: 1px solid var(--ps-gold);
+  border-radius: 8px;
+  font-size: 10.5px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--ps-gold-bright);
+}
+
+.ps-vazio {
+  padding: 28px 16px;
+  text-align: center;
+  font-size: 13px;
+  color: #8b8279;
+}
+
+/* ------------------------------------------------------------ rodapé ---- */
+
+.ps-footer {
+  margin: 26px 20px 0;
+  text-align: center;
+}
+
+.ps-shield {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--ps-gold-dim);
+  color: var(--ps-gold);
+}
+
+.ps-footer p {
+  position: relative;
+  margin-top: 12px;
+  padding-top: 12px;
+  font-size: 12px;
+  font-style: italic;
+  color: #8b8279;
+}
+
+.ps-footer p::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ps-gold-dim), transparent);
+}

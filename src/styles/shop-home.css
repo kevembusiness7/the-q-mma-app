@@ -1,0 +1,406 @@
+/* Aba Shop no formato do cartaz enviado pelo cliente: barra com sacola, hero
+   "Built for warriors", filtros em pílula, a vitrine "App exclusives" dentro
+   de uma moldura acesa, a grade geral e a faixa de confiança no rodapé.
+
+   Mesma família de coaches.css e promo-*.css. Arquivo próprio porque shop.css
+   é compartilhado com a página de produto, o carrinho e a ficha do atleta --
+   mexer lá dentro mudaria telas que não pediram mudança. */
+
+.sh-screen {
+  --sh-gold: #d6a62e;
+  --sh-gold-bright: #f2c24e;
+  --sh-gold-dim: rgba(214, 166, 46, 0.35);
+  min-height: 100%;
+  padding-bottom: 20px;
+  background: #050403;
+}
+
+/* ---------------------------------------------------------- barra topo -- */
+
+.sh-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  /* 16px no topo: a mesma linha em que .appbar e .backbar começam no resto do
+     app, pra tela não parecer deslocada ao trocar de aba. */
+  padding: 16px 16px 14px;
+  border-bottom: 1px solid var(--sh-gold-dim);
+}
+
+.sh-bar-back {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--sh-gold-bright);
+  cursor: pointer;
+}
+
+.sh-bar-logo {
+  width: 38px;
+  height: auto;
+  margin-left: auto;
+}
+
+.sh-bar-divisor {
+  width: 1px;
+  height: 24px;
+  background: var(--sh-gold-dim);
+}
+
+.sh-bar-titulo {
+  margin-right: auto;
+  font-family: var(--q-display);
+  font-size: 17px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #f5f2ec;
+}
+
+.sh-bag {
+  position: relative;
+  display: flex;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--sh-gold-bright);
+  cursor: pointer;
+}
+
+.sh-bag-count {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--sh-gold-bright), #c08f22);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 17px;
+  text-align: center;
+  color: #1a1206;
+}
+
+/* -------------------------------------------------------------- hero ---- */
+
+.sh-hero {
+  position: relative;
+  height: 210px;
+  overflow: hidden;
+  background: #080706;
+}
+
+/* A malha da grade do octógono, atrás do texto: duas famílias de linhas
+   cruzadas em CSS em vez de imagem -- é textura de ambientação e assim não
+   entra arquivo novo no bundle. */
+.sh-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(60% 70% at 0% 40%, rgba(214, 166, 46, 0.18), transparent 70%),
+    repeating-linear-gradient(60deg, rgba(214, 166, 46, 0.09) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(-60deg, rgba(214, 166, 46, 0.09) 0 1px, transparent 1px 26px);
+}
+
+/* A arte é o recorte do lado direito do banner "Shop now" (as luvas, a camisa
+   e o short sobre a fumaça dourada) -- ver hero-shop-gear.webp. A máscara à
+   esquerda dissolve o recorte no fundo, pra ele não virar um retângulo colado
+   em cima do texto. */
+.sh-hero-art {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: auto;
+  object-fit: cover;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 38%);
+  mask-image: linear-gradient(90deg, transparent, #000 38%);
+}
+
+.sh-hero-texto {
+  position: absolute;
+  inset: 0 auto 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 62%;
+  padding: 0 16px;
+}
+
+.sh-hero-texto h2 {
+  font-family: var(--q-display);
+  font-size: clamp(30px, 9vw, 40px);
+  line-height: 0.92;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* As duas linhas têm cores diferentes no cartaz. Como o gradiente é recortado
+   no texto, cada uma precisa ser seu próprio elemento -- daí os dois <span>. */
+.sh-hero-texto h2 span {
+  display: block;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.85));
+}
+
+.sh-hero-texto .ouro {
+  background-image: linear-gradient(180deg, #ffe9ae 8%, #e0b445 48%, #a97c1d 100%);
+}
+
+.sh-hero-texto .prata {
+  background-image: linear-gradient(180deg, #ffffff 10%, #e4ded6 45%, #8f8a84 100%);
+}
+
+.sh-hero-texto p {
+  margin-top: 10px;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: #ddd6cd;
+}
+
+/* ------------------------------------------------------------ filtros --- */
+
+.sh-chips {
+  display: flex;
+  gap: 10px;
+  padding: 16px 16px 4px;
+}
+
+.sh-chip {
+  padding: 9px 22px;
+  border: 1px solid var(--sh-gold-dim);
+  border-radius: 999px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #cfc8c0;
+  cursor: pointer;
+}
+
+.sh-chip.on {
+  border-color: var(--sh-gold-bright);
+  background: linear-gradient(180deg, #f0c65b, #c08f22);
+  color: #1a1206;
+  box-shadow: 0 0 14px rgba(214, 166, 46, 0.25);
+}
+
+/* ------------------------------------------------------------ seções ---- */
+
+.sh-sec {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 16px 12px;
+  font-family: var(--q-display);
+  font-size: 21px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  background-image: linear-gradient(180deg, #ffe9ae 10%, #e0b445 55%, #b6871f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Os filetes laterais são do <h3>, mas o gradiente do título é recortado no
+   texto -- e o recorte apagaria a cor deles. Por isso o background-clip volta
+   a border-box nos ::before/::after. */
+.sh-sec::before,
+.sh-sec::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  background: linear-gradient(90deg, transparent, var(--sh-gold-dim), transparent);
+}
+
+.sh-exclusivos {
+  margin: 0 14px;
+  padding: 10px;
+  border: 1px solid rgba(242, 194, 78, 0.7);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(26, 21, 16, 0.7), rgba(8, 7, 6, 0.7));
+  box-shadow: 0 0 20px rgba(214, 166, 46, 0.15);
+}
+
+.sh-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+/* A grade geral não tem a moldura dos exclusivos, então a margem lateral vem
+   dela mesma. */
+.sh-grid.solta {
+  margin: 0 14px;
+  gap: 12px;
+}
+
+.sh-vazio {
+  padding: 24px 16px;
+  text-align: center;
+  font-size: 13px;
+  color: #8b8279;
+}
+
+/* ------------------------------------------------------------- cards ---- */
+
+.sh-card {
+  position: relative;
+  border: 1px solid #221d19;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #131110, #0a0908);
+}
+
+.sh-card.destaque {
+  border-color: var(--sh-gold-dim);
+  background: linear-gradient(180deg, #17130f, #0b0a09);
+}
+
+.sh-card.esgotado .sh-thumb {
+  opacity: 0.55;
+}
+
+.sh-card-hit {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 0 12px;
+  border: 0;
+  background: none;
+  text-align: center;
+  cursor: pointer;
+}
+
+.sh-thumb {
+  display: block;
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.sh-thumb img,
+.sh-thumb svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Selo do canto: "App exclusive" no cartaz, mas também "Sold out" e "Low
+   stock", que continuam vindo do estoque das variações. */
+.sh-selo {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #f0c65b, #c08f22);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #1a1206;
+}
+
+.sh-selo.b-out {
+  background: linear-gradient(180deg, #6c6560, #3d3835);
+  color: #f0ece7;
+}
+
+.sh-selo.b-low {
+  background: linear-gradient(180deg, #d8402a, #96281a);
+  color: #fff;
+}
+
+.sh-nome {
+  margin: 0 10px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: #f5f2ec;
+}
+
+.sh-preco {
+  margin-top: 6px;
+  font-family: var(--q-display);
+  font-size: 19px;
+  color: var(--sh-gold-bright);
+}
+
+/* Parece botão, mas é <span>: o card inteiro já é o <button> que abre o
+   produto, e botão dentro de botão é HTML inválido. */
+.sh-view {
+  margin: 10px 12px 0;
+  padding: 7px 4px;
+  border: 1px solid var(--sh-gold);
+  border-radius: 8px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--sh-gold-bright);
+}
+
+/* O coração é irmão do botão do card, não filho -- são duas ações
+   diferentes, e um botão dentro do outro seria inválido. */
+.sh-fav {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 2;
+  display: flex;
+  padding: 6px;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--sh-gold-bright);
+  cursor: pointer;
+}
+
+.sh-fav.on {
+  color: #f0c65b;
+  filter: drop-shadow(0 0 6px rgba(240, 198, 91, 0.55));
+}
+
+/* ------------------------------------------------------------ rodapé ---- */
+
+.sh-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 26px 14px 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--sh-gold-dim);
+  font-family: var(--q-display);
+  font-size: 15px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--sh-gold-bright);
+}
+
+.sh-footer-ponto {
+  color: var(--sh-gold);
+}
+
+.sh-footer-icone {
+  display: flex;
+  color: var(--sh-gold);
+}
+
+.sh-footer-icone svg {
+  width: 22px;
+  height: 22px;
+}

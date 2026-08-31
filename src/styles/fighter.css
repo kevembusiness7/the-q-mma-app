@@ -60,11 +60,11 @@
   width: 118%;
   height: auto;
   z-index: 1;
-  /* Calibrado na tela: a 0.22 o losango amarelo do Brasil ficava mais claro
-     que a foto e roubava a atenção; o brightness segura os tons vivos sem
-     apagar a bandeira a ponto de ela não ser reconhecida. */
-  opacity: 0.18;
-  filter: saturate(0.85) brightness(0.8) contrast(0.95);
+  /* Recalibrado na tela: a 0.18 com brightness 0.8 a bandeira quase sumia no
+     fundo escuro. Mais opacidade e sem escurecer, a cor volta a ser legivel;
+     quem continua impedindo que ela dispute com a foto e a mascara radial. */
+  opacity: 0.3;
+  filter: saturate(1.05) brightness(1.06) contrast(0.98);
   pointer-events: none;
   -webkit-mask-image: radial-gradient(ellipse at 50% 45%, #000 34%, transparent 72%);
   mask-image: radial-gradient(ellipse at 50% 45%, #000 34%, transparent 72%);

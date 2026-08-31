@@ -1,15 +1,17 @@
 import { useState, type ReactNode } from 'react';
+import { ArrowLeft, BookOpen, Calendar, ChevronLeft, Crosshair, ExternalLink, MapPin, Settings, Star, User, Users } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useNav } from '../context/NavigationContext';
 import { useAuth } from '../context/AuthContext';
 import { coaches, sponsors } from '../data/shop';
-import type { Coach } from '../types/shop';
-import { BackBar } from '../components/shop/ShopParts';
+import type { Coach, Sponsor } from '../types/shop';
 import { useVisitorPendingCount } from '../hooks/useAdminVisitors';
 import '../styles/shop.css';
 import '../styles/auth.css';
 import '../styles/support.css';
 import '../styles/menu.css';
+import '../styles/coaches.css';
+import '../styles/sponsors.css';
 
 /* ---------------------------------------------------------------- You ---- */
 
@@ -370,25 +372,81 @@ function IconePessoa() {
 
 /* ------------------------------------------------------------ Coaches ---- */
 
+/* A luva, o escudo com estrela e o cavalo do xadrez do cartaz não existem no
+   lucide (a biblioteca de ícones do app), então vêm desenhados aqui. O resto
+   dos ícones da tela é lucide. */
+
+function IconeLuva() {
+  return (
+    <Svg>
+      <path d="M9 10a4.5 4.5 0 0 1 9 0v4.5a3.5 3.5 0 0 1-3.5 3.5h-2A3.5 3.5 0 0 1 9 14.5z" />
+      <path d="M9 11.5H7.5A2.5 2.5 0 0 0 7.5 16.5H9" />
+      <path d="M9.5 18h8v1.6a1.4 1.4 0 0 1-1.4 1.4h-5.2A1.4 1.4 0 0 1 9.5 19.6z" />
+    </Svg>
+  );
+}
+
+function IconeEscudoEstrela() {
+  return (
+    <Svg>
+      <path d="M12 3l7 2.8v5.2c0 4.3-3 8.1-7 9.3-4-1.2-7-5-7-9.3V5.8z" />
+      <path d="M12 8.4l1.25 2.5 2.75.4-2 1.95.47 2.75L12 14.7l-2.47 1.3.47-2.75-2-1.95 2.75-.4z" />
+    </Svg>
+  );
+}
+
+function IconeCavalo() {
+  return (
+    <Svg>
+      <path d="M7.5 21h9" />
+      <path d="M9.5 21c0-3.1 1.3-4.9 3.6-6.5" />
+      <path d="M13.1 14.5 9.6 15.7a2.1 2.1 0 0 1-2.4-3.1l2-2.9A7 7 0 0 1 12 7V3.9l2.7 1.7A7 7 0 0 1 18 11.6V21" />
+      <circle cx="10.4" cy="10.6" r="0.6" fill="currentColor" stroke="none" />
+    </Svg>
+  );
+}
+
+function IconeInstagram() {
+  return (
+    <Svg>
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+    </Svg>
+  );
+}
+
+/** Um ícone por número, na ordem em que os stats estão cadastrados. */
+const ICONES_STAT = [Calendar, IconeLuva, IconeEscudoEstrela];
+
+/** Idem para as frentes de trabalho do bloco Expertise. */
+const ICONES_EXPERTISE = [IconeCavalo, Settings, Crosshair];
+
 export function CoachesPage() {
   const { closeOverlay } = useNav();
 
   return (
-    <div className="sub-screen">
-      <BackBar label="Coaches" onBack={closeOverlay} />
-      <div className="coach-grid">
-        {coaches.map((coach) => (
-          <CoachCard key={coach.id} coach={coach} />
-        ))}
-      </div>
+    <div className="coaches-screen">
+      <header className="co-bar">
+        <button type="button" className="co-bar-back" onClick={closeOverlay} aria-label="Voltar">
+          <ArrowLeft size={22} strokeWidth={2} aria-hidden />
+        </button>
+        <img className="co-bar-logo" src="/images/brand/logo-theq.png" alt="THE Q MMA" />
+        <span className="co-bar-divisor" aria-hidden />
+        <h1 className="co-bar-titulo">Coaches</h1>
+      </header>
+
+      {coaches.map((coach) => (
+        <CoachCard key={coach.id} coach={coach} />
+      ))}
     </div>
   );
 }
 
 /**
  * A bio do coach tem duas versões: a curta fica sempre à vista e a completa
- * abre no botão. Cabe tudo num card só porque a longa passa de seis
- * parágrafos -- aberta de cara, ela empurraria o Instagram e o próximo coach
+ * abre no botão "Read full bio". Cabe tudo num bloco só porque a longa passa
+ * de seis parágrafos -- aberta de cara, ela empurraria o Instagram e a cidade
  * pra muito longe da dobra.
  */
 function CoachCard({ coach }: { coach: Coach }) {
@@ -396,115 +454,235 @@ function CoachCard({ coach }: { coach: Coach }) {
   const idBio = `coach-bio-${coach.id}`;
 
   return (
-    <article className="coach-card">
-      <div className="coach-photo">
+    <article className="co-card">
+      <div className="co-foto">
         <img src={coach.photo} alt={coach.name} loading="lazy" />
       </div>
-      <div className="coach-body">
-        <h4>{coach.name}</h4>
-        <div className="spec">{coach.role}</div>
 
-        {coach.stats.length > 0 && (
-          <dl className="coach-stats">
-            {coach.stats.map((stat) => (
-              <div key={stat.label}>
-                <dt>{stat.label}</dt>
-                <dd>{stat.value}</dd>
+      <h2 className="co-nome">{coach.name}</h2>
+      <p className="co-role">{coach.role}</p>
+      {coach.disciplines.length > 0 && (
+        <ul className="co-disciplinas">
+          {coach.disciplines.map((d) => (
+            <li key={d}>{d}</li>
+          ))}
+        </ul>
+      )}
+
+      {coach.stats.length > 0 && (
+        <div className="co-stats">
+          {coach.stats.map((stat, i) => {
+            const Icone = ICONES_STAT[i] ?? IconeEscudoEstrela;
+            return (
+              <div key={stat.label} className="co-stat">
+                <Icone aria-hidden />
+                <b>{stat.value}</b>
+                <span>{stat.label}</span>
               </div>
-            ))}
-          </dl>
-        )}
+            );
+          })}
+        </div>
+      )}
 
-        <p className="bio">{coach.bio}</p>
-
-        <button
-          type="button"
-          className="coach-more"
-          onClick={() => setAberto((estava) => !estava)}
-          aria-expanded={aberto}
-          aria-controls={idBio}
-        >
-          {aberto ? 'Show less' : 'Read full bio'}
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-            <path d="m6 9 6 6 6-6" />
-          </svg>
-        </button>
+      <h3 className="co-sec-titulo">
+        <User aria-hidden /> Coach profile
+      </h3>
+      <div className="co-box">
+        <p>{coach.bio}</p>
 
         {aberto && (
-          <div className="coach-full" id={idBio}>
+          <div id={idBio}>
             {coach.fullBio.map((paragrafo) => (
-              <p key={paragrafo.slice(0, 40)} className="bio">
-                {paragrafo}
-              </p>
+              <p key={paragrafo.slice(0, 40)}>{paragrafo}</p>
             ))}
 
-            {coach.quote && <blockquote className="coach-quote">{coach.quote}</blockquote>}
+            {coach.quote && <p className="co-quote">{coach.quote}</p>}
 
-            <div className="coach-athletes">
-              <span className="coach-athletes-label">Athletes coached</span>
-              <p className="bio">{coach.notable}</p>
-            </div>
+            <span className="co-label">Athletes coached</span>
+            <p>{coach.notable}</p>
+
+            <span className="co-label">Credentials</span>
+            <p>
+              {coach.belt} · {coach.specialty}
+            </p>
           </div>
         )}
+      </div>
 
-        <p className="bio coach-meta">
-          {coach.belt}
-          <br />
-          {coach.city}
-        </p>
-        <a
-          className="coach-ig"
-          href={coach.instagram}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-            <rect x="3" y="3" width="18" height="18" rx="5" />
-            <circle cx="12" cy="12" r="4" />
-            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" />
-          </svg>
-          <b>Instagram</b>
-        </a>
+      {coach.expertise.length > 0 && (
+        <>
+          <h3 className="co-sec-titulo">
+            <Star aria-hidden /> Expertise
+          </h3>
+          <ul className="co-expertise">
+            {coach.expertise.map((item, i) => {
+              const Icone = ICONES_EXPERTISE[i] ?? Star;
+              return (
+                <li key={item}>
+                  <Icone aria-hidden />
+                  <span>{item}</span>
+                </li>
+              );
+            })}
+          </ul>
+        </>
+      )}
+
+      <button
+        type="button"
+        className="co-btn"
+        onClick={() => setAberto((estava) => !estava)}
+        aria-expanded={aberto}
+        aria-controls={idBio}
+      >
+        <BookOpen aria-hidden />
+        {aberto ? 'Show less' : 'Read full bio'}
+      </button>
+
+      <a
+        className="co-btn cheio"
+        href={coach.instagram}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <IconeInstagram />
+        Instagram
+      </a>
+
+      <p className="co-local">
+        <MapPin aria-hidden />
+        {coach.city}
+      </p>
+    </article>
+  );
+}
+
+
+/* ----------------------------------------------------------- Sponsors ---- */
+
+/** Carta de coleção do primeiro destaque -- o lucide não tem esse desenho. */
+function IconeCarta() {
+  return (
+    <Svg>
+      <rect x="6" y="3.5" width="12" height="17" rx="2" />
+      <path d="M12 8l1.15 2.3 2.55.37-1.85 1.8.44 2.53L12 13.8l-2.29 1.2.44-2.53-1.85-1.8 2.55-.37z" />
+    </Svg>
+  );
+}
+
+/** Um ícone por destaque, na ordem em que estão cadastrados. */
+const ICONES_HIGHLIGHT = [IconeCarta, Users];
+
+export function SponsorsPage() {
+  const { closeOverlay, openOverlay } = useNav();
+
+  const destaques = sponsors.filter((s) => s.featured);
+  const demais = sponsors.filter((s) => !s.featured);
+
+  return (
+    <div className="sp-screen">
+      <header className="sp-bar">
+        <button type="button" className="sp-bar-back" onClick={closeOverlay} aria-label="Voltar">
+          <ChevronLeft size={24} strokeWidth={2} aria-hidden />
+        </button>
+        <img className="sp-bar-logo" src="/images/brand/logo-theq.png" alt="THE Q MMA" />
+        <span className="sp-bar-divisor" aria-hidden />
+        <h1 className="sp-bar-titulo">Official sponsors</h1>
+      </header>
+
+      <div className="sp-hero">
+        <img
+          className="sp-hero-art"
+          src="/images/brand/hero-sponsors-arena.webp"
+          alt=""
+          aria-hidden
+        />
+        <div className="sp-hero-texto">
+          <h2>
+            <span>Powering</span>
+            <span>the team</span>
+          </h2>
+          <p>Meet the partners supporting The Q MMA.</p>
+        </div>
+      </div>
+
+      {destaques.length > 0 && (
+        <>
+          <h3 className="sp-sec">{destaques.length > 1 ? 'Featured partners' : 'Featured partner'}</h3>
+          {destaques.map((sponsor) => (
+            <SponsorCard key={sponsor.id} sponsor={sponsor} />
+          ))}
+        </>
+      )}
+
+      {demais.length > 0 && (
+        <>
+          <h3 className="sp-sec">Partners</h3>
+          {demais.map((sponsor) => (
+            <SponsorCard key={sponsor.id} sponsor={sponsor} />
+          ))}
+        </>
+      )}
+
+      {sponsors.length === 0 && <p className="sp-vazio">No partners announced yet.</p>}
+
+      {/* "Become a partner" abre o suporte: é o único canal de contato que o
+          app tem hoje, e um botão que não leva a lugar nenhum seria pior que
+          não ter botão. */}
+      <div className="sp-cta">
+        <img className="sp-cta-crest" src="/images/brand/crest-theq.webp" alt="" aria-hidden />
+        <div className="sp-cta-texto">
+          <h3>Build with The Q</h3>
+          <p>Connect your brand with our athletes, events, and community.</p>
+          <button type="button" onClick={() => openOverlay({ name: 'support' })}>
+            Become a partner
+          </button>
+        </div>
+      </div>
+
+      <footer className="sp-footer">
+        Official partnerships <span aria-hidden>•</span> The Q MMA
+      </footer>
+    </div>
+  );
+}
+
+function SponsorCard({ sponsor }: { sponsor: Sponsor }) {
+  return (
+    <article className={`sp-card ${sponsor.featured ? 'destaque' : ''}`}>
+      <div className="sp-logo">
+        {sponsor.featured && <span className="sp-selo">Official partner</span>}
+        <img src={sponsor.logo} alt={sponsor.name} loading="lazy" />
+      </div>
+
+      <div className="sp-info">
+        <h4>{sponsor.name}</h4>
+        <p>{sponsor.description}</p>
+
+        {sponsor.highlights && sponsor.highlights.length > 0 && (
+          <ul className="sp-highlights">
+            {sponsor.highlights.map((item, i) => {
+              const Icone = ICONES_HIGHLIGHT[i] ?? IconeCarta;
+              return (
+                <li key={item}>
+                  <span className="sp-highlight-icone" aria-hidden>
+                    <Icone />
+                  </span>
+                  <span>{item}</span>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+
+        {sponsor.website && (
+          <a className="sp-visit" href={sponsor.website} target="_blank" rel="noopener noreferrer">
+            Visit partner
+            <ExternalLink size={17} strokeWidth={1.8} aria-hidden />
+          </a>
+        )}
       </div>
     </article>
   );
 }
 
-/* ----------------------------------------------------------- Sponsors ---- */
-
-export function SponsorsPage() {
-  const { closeOverlay } = useNav();
-
-  return (
-    <div className="sub-screen">
-      <BackBar label="Official sponsors" onBack={closeOverlay} />
-      <div className="sponsor-rail">
-        {sponsors.map((sponsor) => (
-          <article
-            key={sponsor.id}
-            className={`sponsor-card ${sponsor.featured ? 'featured' : ''}`}
-          >
-            <div className="sponsor-logo-wrap">
-              <img src={sponsor.logo} alt={sponsor.name} loading="lazy" />
-              {sponsor.featured && <span className="sponsor-badge">Official partner</span>}
-            </div>
-            <div className="sponsor-info">
-              <div className="sname">{sponsor.name}</div>
-              <p className="sdesc">{sponsor.description}</p>
-              {sponsor.website && (
-                <a
-                  className="slearn"
-                  href={sponsor.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Check It Out
-                </a>
-              )}
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  );
-}
